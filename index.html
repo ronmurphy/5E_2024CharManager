@@ -379,46 +379,6 @@
     flex: 1;
     margin: 0 5px;
 }
-
-/* .inventory-layout {
-    display: flex;
-    justify-content: space-between;
-}
-.inventory-info {
-    width: 30%;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    border: 1px solid #ccc; 
-}
-.inventory-grid {
-    width: 65%;
-}
-#item-info {
-    min-height: 100px;
-    padding: 10px;
-    background-color: white;
-} */ 
-
-/* .inventory-layout {
-    display: flex;
-    justify-content: space-between;
-}
-.inventory-info {
-    width: 30%;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-.inventory-grid {
-    width: 65%;
-}
-#item-info {
-    border: 2px solid red;
-    min-height: 100px;
-} */
-
 #combat-page table {
     width: 100%;
     border-collapse: collapse;
@@ -674,7 +634,7 @@
                 { name: "Quarterstaff", type: "weapon", damage: "1d6", damageType: "bludgeoning", properties: ["Versatile (1d8)"], cost: "2 sp", weight: "4 lb.", width: 1, height: 3 },
                 { name: "Sickle", type: "weapon", damage: "1d4", damageType: "slashing", properties: ["Light"], cost: "1 gp", weight: "2 lb.", width: 2, height: 1 },
                 { name: "Spear", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Thrown (range 20/60)", "Versatile (1d8)"], cost: "1 gp", weight: "3 lb.", width: 1, height: 3 },
-                { name: "Crossbow, light", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Loading", "Two-handed"], cost: "25 gp", weight: "5 lb.", width: 3, height: 1 },
+                { name: "Crossbow light", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Loading", "Two-handed"], cost: "25 gp", weight: "5 lb.", width: 3, height: 1 },
                 { name: "Dart", type: "weapon", damage: "1d4", damageType: "piercing", properties: ["Finesse", "Thrown (range 20/60)"], cost: "5 cp", weight: "1/4 lb.", width: 1, height: 1 },
                 { name: "Shortbow", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Two-handed"], cost: "25 gp", weight: "2 lb.", width: 1, height: 2 },
                 { name: "Sling", type: "weapon", damage: "1d4", damageType: "bludgeoning", properties: ["Ammunition (range 30/120)"], cost: "1 sp", weight: "0 lb.", width: 1, height: 1 },
@@ -1444,32 +1404,6 @@ wizard: [
     console.error('Add item button not found');
 }
 
-// inventoryCanvas.addEventListener('click', (e) => {
-//     console.log('Canvas clicked');
-//     const rect = inventoryCanvas.getBoundingClientRect();
-//     const clickX = e.clientX - rect.left;
-//     const clickY = e.clientY - rect.top;
-//     const x = Math.floor(clickX / CELL_SIZE);
-//     const y = Math.floor(clickY / CELL_SIZE);
-//     console.log('Click coordinates (grid):', x, y);
-//     console.log('Click coordinates (pixels):', clickX, clickY);
-
-//     console.log('Current inventory:', character.inventory);
-
-//     const clickedItem = character.inventory.find(item => 
-//         x >= item.x && x < item.x + item.width && 
-//         y >= item.y && y < item.y + item.height
-//     );
-
-//     if (clickedItem) {
-//         console.log('Item clicked:', clickedItem);
-//         displayItemInfo(clickedItem);
-//     } else {
-//         console.log('No item found at click location');
-//         document.getElementById('item-info').innerHTML = 'No item selected. Click coordinates: ' + x + ', ' + y;
-//     }
-// });
-
 inventoryCanvas.addEventListener('click', (e) => {
     console.log('Canvas clicked', e);
     const rect = e.target.getBoundingClientRect();
@@ -1574,11 +1508,6 @@ inventoryCanvas.addEventListener('mousedown', (e) => {
             updateCharacterInventory();
         }
     });
-
-    
-
-    // document.getElementById('add-item-btn').addEventListener('click', addItemToInventory);
-    // document.getElementById('character-sheet-add-item-btn').addEventListener('click', addItemToInventory);
 
     drawGrid();
 
@@ -1754,6 +1683,7 @@ function updateCharacterInventory() {
     
     // Add class-specific toolkit
     const classToolkits = {
+        artificer: "Alchemist's supplies",
         barbarian: "Smith's tools",
         bard: "Musical instrument",
         cleric: "Healer's kit",
@@ -2371,70 +2301,7 @@ function getSpellcastingAbility(characterClass) {
     let draggedItem = null;
     let dragOffset = { x: 0, y: 0 };
 
-    // function drawGrid() {
-    //     inventoryCtx.clearRect(0, 0, inventoryCanvas.width, inventoryCanvas.height);
-    //     for (let i = 0; i < GRID_SIZE; i++) {
-    //         for (let j = 0; j < GRID_SIZE; j++) {
-    //             inventoryCtx.strokeStyle = '#ddd';
-    //             inventoryCtx.strokeRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-    //         }
-    //     }
-    //     character.inventory.forEach(drawItem);
-    // }
-
-    // function drawItem(item) {
-    //     inventoryCtx.fillStyle = item.color || '#999';
-    //     inventoryCtx.fillRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
-    //     inventoryCtx.fillStyle = 'black';
-    //     inventoryCtx.font = '12px Arial';
-    //     inventoryCtx.fillText(item.name, item.x * CELL_SIZE + 5, item.y * CELL_SIZE + 15);
-    // }
-
-//     function drawItem(item) {
-//     const inventoryCanvas = document.getElementById('inventory-canvas');
-//     const inventoryCtx = inventoryCanvas.getContext('2d');
-    
-//     const imageName = item.name.replace(/'/g, '').replace(/ /g, '_') + '.png';
-//     const imagePath = `assets/images/${imageName}`;
-//     console.log('Image path:', imageName, imagePath);
-
-//     const img = new Image();
-//     img.onload = () => {
-//         inventoryCtx.drawImage(img, item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
-//     };
-//     img.onerror = () => {
-//         // Fallback to grey block if image doesn't load
-//         inventoryCtx.fillStyle = '#999';
-//         inventoryCtx.fillRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
-        
-//         // Draw item name
-//         inventoryCtx.fillStyle = 'black';
-//         inventoryCtx.font = '12px Arial';
-//         inventoryCtx.fillText(item.name, item.x * CELL_SIZE + 5, item.y * CELL_SIZE + 15);
-//     };
-//     img.src = imagePath;
-// }
-
-//     function drawItem(item) {
-//     const inventoryCanvas = document.getElementById('inventory-canvas');
-//     const inventoryCtx = inventoryCanvas.getContext('2d');
-    
-//     // Draw item background
-//     inventoryCtx.fillStyle = item.color || '#999';
-//     inventoryCtx.fillRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
-    
-//     // Draw item border
-//     inventoryCtx.strokeStyle = '#000';
-//     inventoryCtx.strokeRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
-    
-//     // Draw item name
-//     inventoryCtx.fillStyle = 'black';
-//     inventoryCtx.font = '12px Arial';
-//     inventoryCtx.fillText(item.name, item.x * CELL_SIZE + 5, item.y * CELL_SIZE + 15);
-
-//     console.log(`Drew item ${item.name} at (${item.x}, ${item.y}), size: ${item.width}x${item.height}`);
-// }
-
+   
 
     function findAvailablePosition(item) {
         for (let y = 0; y <= GRID_SIZE - item.height; y++) {
@@ -2546,17 +2413,6 @@ if (addItemBtn && !addItemBtn.hasEventListener) {
 
     drawGrid();
 
-    // character.inventory.forEach((item, index) => {
-    //     if (item.x === undefined || item.y === undefined) {
-    //         const position = findAvailablePosition(item);
-    //         if (position) {
-    //             item.x = position.x;
-    //             item.y = position.y;
-    //         } else {
-    //             console.warn(`Couldn't place item ${item.name} in the inventory grid.`);
-    //         }
-    //     }
-    // });
 
     character.inventory.forEach((item, index) => {
     if (item.x === undefined || item.y === undefined || item.width === undefined || item.height === undefined) {
