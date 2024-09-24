@@ -1,0 +1,2602 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D 2024 Character Creator</title>
+    <meta name="description" content="Create your D&D 2024 character with this comprehensive step-by-step generator.">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        select, input[type="number"], input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .hidden {
+            display: none;
+        }
+        .dice {
+            width: 50px;
+            height: 50px;
+            background-color: #e74c3c;
+            color: white;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            border-radius: 10px;
+            margin: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .dice:hover {
+            background-color: #c0392b;
+        }
+        .info-area {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+        .stat-value-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 2px;
+        }
+        .stat-value-btn:hover {
+            background-color: #27ae60;
+        }
+        .subclass-option {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        .inventory-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .inventory-item button {
+            font-size: 14px;
+            padding: 5px 10px;
+        }
+        #ability-scores {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        #ability-scores > div {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .character-sheet {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .character-sheet h2 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .character-sheet .section {
+            margin-bottom: 30px;
+        }
+        .character-sheet .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .character-sheet .ability-score {
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .character-sheet .ability-score .score {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .character-sheet .ability-score .modifier {
+            font-size: 20px;
+            color: #666;
+        }
+        .character-sheet .skills {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .character-sheet .skill {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .character-sheet .weapons {
+            display: flex;
+            flex-direction: column;
+        }
+        .character-sheet .weapon {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .character-sheet .weapon button {
+            font-size: 14px;
+            padding: 5px 10px;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            display: none;
+        }
+        .character-sheet-header {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .character-sheet-header .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .character-sheet-header .stat {
+            text-align: center;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .character-sheet-content {
+            height: 75vh;
+            overflow-y: auto;
+        }
+        .character-sheet-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f0f0f0;
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .spell-list {
+            margin-top: 20px;
+        }
+        .spell-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        .spell-item .spell-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .spell-item .spell-details {
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+        .feat-item {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .feat-item h4 {
+            margin: 0 0 5px 0;
+        }
+        .feat-item p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .proficiency-bonus {
+            font-weight: bold;
+            color: #3498db;
+        }
+        .saving-throws {
+            margin-top: 15px;
+        }
+        .saving-throw {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+        .saving-throw-proficient {
+            font-weight: bold;
+            color: #2ecc71;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        .action-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .action-button:hover {
+            background-color: #2980b9;
+        }
+        .notes-section {
+            margin-top: 20px;
+        }
+        .notes-section textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        #roll-results {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        #roll-results .roll-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        #roll-results .roll-item:last-child {
+            border-bottom: none;
+        }
+        .inventory-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .inventory-item-name {
+            flex: 0 0 60%;
+        }
+        .inventory-item-actions {
+            flex: 0 0 40%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .inventory-item-actions button {
+            flex: 0 0 48%;
+        }
+        @media (min-width: 768px) {
+            .container {
+                max-width: 750px;
+            }
+            #ability-scores {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .character-sheet .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .character-sheet .skills {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .inventory-grid {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+    align-items: center;
+}
+#inventory-canvas {
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+    border: 1px solid #333;
+    border-radius: 5px;
+    position: relative;
+    z-index: 2;
+}
+.inventory-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.inventory-controls select, .inventory-controls button {
+    flex: 1;
+    margin: 0 5px;
+}
+
+/* .inventory-layout {
+    display: flex;
+    justify-content: space-between;
+}
+.inventory-info {
+    width: 30%;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    border: 1px solid #ccc; 
+}
+.inventory-grid {
+    width: 65%;
+}
+#item-info {
+    min-height: 100px;
+    padding: 10px;
+    background-color: white;
+} */ 
+
+/* .inventory-layout {
+    display: flex;
+    justify-content: space-between;
+}
+.inventory-info {
+    width: 30%;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.inventory-grid {
+    width: 65%;
+}
+#item-info {
+    border: 2px solid red;
+    min-height: 100px;
+} */
+
+#combat-page table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#combat-page th, #combat-page td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#combat-page th {
+    background-color: #f2f2f2;
+}
+
+#combat-page button {
+    width: 100%;
+    padding: 5px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#combat-page button:hover {
+    background-color: #2980b9;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="start-menu" class="card">
+            <h1><i class="bi bi-dice-6-fill"></i> D&D 2024 Character Creator</h1>
+            <p>Choose an option to begin:</p>
+            <button id="new-character-btn"><i class="bi bi-plus-circle"></i> Create New Character</button>
+            <button id="load-character-btn"><i class="bi bi-folder-open"></i> Load Character</button>
+            <button id="random-character-btn"><i class="bi bi-shuffle"></i> Generate Random Character</button>
+            <input type="file" id="file-input" accept=".json" class="hidden">
+        </div>
+        <div id="character-creator" class="hidden">
+            <div id="step1" class="card">
+                <h2><i class="bi bi-person-fill"></i> Basic Information</h2>
+                <div>
+                    <label for="character-name">Character Name:</label>
+                    <input type="text" id="character-name" placeholder="Enter character name">
+                    <button id="random-name-btn"><i class="bi bi-dice-5"></i> Random Name</button>
+                </div>
+                <h3>Choose Your Race</h3>
+                <select id="race">
+                    <option value="">Select a race</option>
+                </select>
+                <div id="race-info" class="info-area"></div>
+                <button id="next1"><i class="bi bi-arrow-right"></i> Next</button>
+            </div>
+            <div id="step2" class="hidden card">
+                <h2><i class="bi bi-trophy-fill"></i> Choose Your Class and Level</h2>
+                <select id="class">
+                    <option value="">Select a class</option>
+                </select>
+                <div id="class-info" class="info-area"></div>
+                <label for="level">Choose your level (1-20):</label>
+                <input type="number" id="level" min="1" max="20" value="1">
+                <div id="subclass-options"></div>
+                <button id="next2"><i class="bi bi-arrow-right"></i> Next</button>
+            </div>
+            <div id="step3" class="hidden card">
+                <h2><i class="bi bi-bar-chart-fill"></i> Determine Ability Scores</h2>
+                <p>Click on each die to roll for your ability scores. You can roll up to 3 times per stat:</p>
+                <div id="ability-scores"></div>
+                <button id="next3"><i class="bi bi-arrow-right"></i> Next</button>
+            </div>
+            <div id="step4" class="hidden card">
+                <h2><i class="bi bi-person-badge-fill"></i> Choose Background</h2>
+                <select id="background">
+                    <option value="">Select a background</option>
+                </select>
+                <div id="background-info" class="info-area"></div>
+                <button id="next4"><i class="bi bi-arrow-right"></i> Next</button>
+            </div>
+            <div id="step5" class="hidden card">
+                <h2><i class="bi bi-gear-fill"></i> Choose Skills and Feats</h2>
+                <div id="skills-selection">
+                    <h3>Skills</h3>
+                    <p>Select skills based on your class and background:</p>
+                    <div id="skill-checkboxes"></div>
+                </div>
+                <div id="feats-selection">
+                    <h3>Feats</h3>
+                    <p>Select feats if available at your level:</p>
+                    <div id="feat-options"></div>
+                </div>
+                <button id="next5"><i class="bi bi-arrow-right"></i> Next</button>
+            </div>
+            <div id="step6" class="hidden card">
+                <h2><i class="bi bi-bag-fill"></i> Inventory Manager</h2>
+                <div id="inventory-manager">
+                    <h3>Available Items</h3>
+                    <select id="item-select">
+                        <option value="">Select an item</option>
+                    </select>
+                    <button id="add-item-btn">Add to Inventory</button>
+
+                    <h3>Your Inventory</h3>
+                    <div id="character-inventory"></div>
+                </div>
+                <button id="finish"><i class="bi bi-check-circle"></i> Finish Character</button>
+            </div>
+        </div>
+        <div id="character-sheet" class="hidden character-sheet">
+            <div class="character-sheet-header">
+                <div class="row">
+                    <h2 id="character-name-display"></h2>
+                    <span id="character-level-race-class"></span>
+                </div>
+                <div class="row">
+                    <div class="stat">
+                        <strong>HP:</strong> <span id="character-hp"></span>
+                    </div>
+                    <div class="stat">
+                        <strong>AC:</strong> <span id="character-ac"></span>
+                    </div>
+                    <div class="stat">
+                        <strong>Initiative:</strong> <span id="character-initiative"></span>
+                    </div>
+                    <div class="stat">
+                        <strong>Prof. Bonus:</strong> <span id="character-proficiency"></span>
+                    </div>
+                    <button id="long-rest-btn">Long Rest</button>
+                </div>
+            </div>
+            <div class="character-sheet-content">
+                <div class="character-sheet-nav">
+                    <button id="prev-category"><i class="bi bi-arrow-left"></i></button>
+                    <h3 id="category-name">Attributes</h3>
+                    <button id="next-category"><i class="bi bi-arrow-right"></i></button>
+                </div>
+                <div id="attributes-page" class="category-page"></div>
+                <div id="skills-feats-page" class="category-page hidden"></div>
+                <div id="inventory-page" class="category-page hidden">
+                    <h3>Inventory</h3>
+                    <div class="inventory-grid">
+                        <canvas id="inventory-canvas" width="400" height="400"></canvas>
+                    </div>
+                    <div class="inventory-controls">
+                        <select id="item-select">
+                            <option value="">Select an item</option>
+                        </select>
+                        <button id="add-item-btn">Add Item</button>
+                    </div>
+                    <div id="character-inventory"></div>
+                </div>
+                <div id="spells-page" class="category-page hidden"></div>
+                <div id="notes-page" class="category-page hidden">
+                    <h3>Character Notes</h3>
+                    <textarea id="character-notes" placeholder="Add your character notes here..."></textarea>
+                </div>
+                <div id="roll-results-page" class="category-page hidden">
+                    <h3>Roll Results</h3>
+                    <div id="roll-results"></div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button id="save-character"><i class="bi bi-save"></i> Save Character</button>
+                <button id="roll-new-character" class="hidden"><i class="bi bi-shuffle"></i> Roll a New Character</button>
+                <button id="edit-character"><i class="bi bi-pencil"></i> Edit Character</button>
+            </div>
+        </div>
+    </div>
+    <div id="notification" class="notification"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const character = {
+                name: '',
+                race: '',
+                class: '',
+                subclass: '',
+                level: 1,
+                background: '',
+                abilityScores: {},
+                skills: [],
+                feats: [],
+                inventory: [],
+                spells: [],
+                hp: 0,
+                maxHp: 0,
+                ac: 10,
+                initiative: 0,
+                proficiencyBonus: 2,
+                savingThrows: {},
+                notes: ''
+            };
+
+            const raceInfo = {
+                human: "Versatile and adaptable, humans gain +1 to all ability scores.",
+                elf: "Graceful and long-lived, elves have keen senses and a connection to nature. They gain +2 Dexterity.",
+                dwarf: "Sturdy and resilient, dwarves gain +2 Constitution, along with darkvision and resistance to poison.",
+                halfling: "Small and nimble, halflings gain +2 Dexterity, along with lucky and brave traits.",
+                dragonborn: "Draconic humanoids, dragonborn gain +2 Strength and +1 Charisma, along with a breath weapon based on their draconic ancestry.",
+                gnome: "Small and inventive, gnomes gain +2 Intelligence, along with darkvision and gnome cunning.",
+                "half-elf": "Charismatic and versatile, half-elves gain +2 Charisma and +1 to two other ability scores of their choice.",
+                "half-orc": "Strong and enduring, half-orcs gain +2 Strength and +1 Constitution, along with relentless endurance and savage attacks.",
+                tiefling: "Infernal-touched humanoids, tieflings gain +2 Charisma and +1 Intelligence, along with darkvision and resistance to fire damage.",
+                ardling: "Celestial-touched beings, ardlings gain flight at higher levels and have resistance to radiant damage.",
+                goliath: "Large and powerful, goliaths gain +2 Strength and +1 Constitution, along with stone's endurance and powerful build.",
+                orc: "Fierce and strong, orcs gain +2 Strength and +1 Constitution, along with aggressive and powerful build traits."
+            };
+
+            const classInfo = {
+                barbarian: "Fierce warriors who enter a battle rage, barbarians excel in combat with high strength and constitution.",
+                bard: "Magical entertainers who use music and oration to inspire allies and hinder foes.",
+                cleric: "Divine spellcasters who serve deities and channel holy power to heal and protect.",
+                druid: "Nature-oriented spellcasters who can shapeshift into animals and control the elements.",
+                fighter: "Versatile warriors skilled in all forms of combat and martial techniques.",
+                monk: "Martial artists who harness the power of their body and soul in combat.",
+                paladin: "Holy warriors who combine martial prowess with divine magic to uphold justice.",
+                ranger: "Skilled hunters and trackers who use a mix of martial and magical abilities.",
+                rogue: "Stealthy and skilled characters who excel at subterfuge and precision attacks.",
+                sorcerer: "Innate spellcasters who draw magic from their bloodline or magical essence.",
+                warlock: "Spellcasters who gain their powers through pacts with powerful otherworldly entities.",
+                wizard: "Scholarly magic-users who learn and cast spells through rigorous study and practice."
+            };
+
+            const backgroundInfo = {
+                acolyte: "You have spent your life in service to a temple, learning religious lore and rituals.",
+                charlatan: "You're an expert in deception, using your quick wit and charm to manipulate others.",
+                criminal: "You have a history of breaking the law and still maintain contacts in the criminal underworld.",
+                entertainer: "You thrive in front of an audience, whether as a musician, actor, or storyteller.",
+                "folk-hero": "You come from a humble background but are destined for greatness in the eyes of commoners.",
+                "guild-artisan": "You're a skilled craftsperson, associated with an artisan's guild in a large city.",
+                hermit: "You lived in seclusion, either in a sheltered community or entirely alone, for a formative part of your life.",
+                noble: "You were born into wealth and power, and your family name carries weight in high society.",
+                outlander: "You grew up in the wilds, far from civilization and the comforts of town and technology.",
+                sage: "You spent years learning the lore of the multiverse, studying ancient tomes and manuscripts.",
+                sailor: "You sailed on a seagoing vessel for years, facing storms and sea monsters.",
+                soldier: "You were a member of an army, city watch, or local militia, trained in martial combat.",
+                urchin: "You grew up on the streets, orphaned and poor, learning to survive through cunning and agility.",
+                gladiator: "You fought for glory in arenas, honing your combat skills for the entertainment of others.",
+                guard: "You served as a protector of a city or a powerful individual, trained in defense and security.",
+                spy: "You were trained in the arts of deception and information gathering, serving as a covert agent."
+            };
+
+            const items = [
+                // Weapons
+                { name: "Club", type: "weapon", damage: "1d4", damageType: "bludgeoning", properties: ["Light"], cost: "1 sp", weight: "2 lb.", width: 1, height: 2 },
+                { name: "Dagger", type: "weapon", damage: "1d4", damageType: "piercing", properties: ["Finesse", "Light", "Thrown (range 20/60)"], cost: "2 gp", weight: "1 lb.", width: 1, height: 1 },
+                { name: "Greatclub", type: "weapon", damage: "1d8", damageType: "bludgeoning", properties: ["Two-handed"], cost: "2 sp", weight: "10 lb.", width: 1, height: 2 },
+                { name: "Handaxe", type: "weapon", damage: "1d6", damageType: "slashing", properties: ["Light", "Thrown (range 20/60)"], cost: "5 gp", weight: "2 lb.", width: 1, height: 1 },
+                { name: "Javelin", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Thrown (range 30/120)"], cost: "5 sp", weight: "2 lb." , width: 1, height: 3},
+                { name: "Light hammer", type: "weapon", damage: "1d4", damageType: "bludgeoning", properties: ["Light", "Thrown (range 20/60)"], cost: "2 gp", weight: "2 lb." , width: 1, height: 1},
+                { name: "Mace", type: "weapon", damage: "1d6", damageType: "bludgeoning", properties: [], cost: "5 gp", weight: "4 lb.", width: 1, height: 2 },
+                { name: "Quarterstaff", type: "weapon", damage: "1d6", damageType: "bludgeoning", properties: ["Versatile (1d8)"], cost: "2 sp", weight: "4 lb.", width: 1, height: 3 },
+                { name: "Sickle", type: "weapon", damage: "1d4", damageType: "slashing", properties: ["Light"], cost: "1 gp", weight: "2 lb.", width: 2, height: 1 },
+                { name: "Spear", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Thrown (range 20/60)", "Versatile (1d8)"], cost: "1 gp", weight: "3 lb.", width: 1, height: 3 },
+                { name: "Crossbow, light", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Loading", "Two-handed"], cost: "25 gp", weight: "5 lb.", width: 3, height: 1 },
+                { name: "Dart", type: "weapon", damage: "1d4", damageType: "piercing", properties: ["Finesse", "Thrown (range 20/60)"], cost: "5 cp", weight: "1/4 lb.", width: 1, height: 1 },
+                { name: "Shortbow", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Two-handed"], cost: "25 gp", weight: "2 lb.", width: 1, height: 2 },
+                { name: "Sling", type: "weapon", damage: "1d4", damageType: "bludgeoning", properties: ["Ammunition (range 30/120)"], cost: "1 sp", weight: "0 lb.", width: 1, height: 1 },
+                { name: "Battleaxe", type: "weapon", damage: "1d8", damageType: "slashing", properties: ["Versatile (1d10)"], cost: "10 gp", weight: "4 lb.", width: 1, height: 2 },
+                { name: "Flail", type: "weapon", damage: "1d8", damageType: "bludgeoning", properties: [], cost: "10 gp", weight: "2 lb.", width: 1, height: 2 },
+                { name: "Glaive", type: "weapon", damage: "1d10", damageType: "slashing", properties: ["Heavy", "Reach", "Two-handed"], cost: "20 gp", weight: "6 lb.", width: 1, height: 3 },
+                { name: "Greataxe", type: "weapon", damage: "1d12", damageType: "slashing", properties: ["Heavy", "Two-handed"], cost: "30 gp", weight: "7 lb." , width: 1, height: 3},
+                { name: "Greatsword", type: "weapon", damage: "2d6", damageType: "slashing", properties: ["Heavy", "Two-handed"], cost: "50 gp", weight: "6 lb.", width: 1, height: 3 },
+                { name: "Halberd", type: "weapon", damage: "1d10", damageType: "slashing", properties: ["Heavy", "Reach", "Two-handed"], cost: "20 gp", weight: "6 lb.", width: 1, height: 3 },
+                { name: "Lance", type: "weapon", damage: "1d12", damageType: "piercing", properties: ["Reach", "Special"], cost: "10 gp", weight: "6 lb.", width: 1, height: 3 },
+                { name: "Longsword", type: "weapon", damage: "1d8", damageType: "slashing", properties: ["Versatile (1d10)"], cost: "15 gp", weight: "3 lb.", width: 1, height: 2 },
+                { name: "Maul", type: "weapon", damage: "2d6", damageType: "bludgeoning", properties: ["Heavy", "Two-handed"], cost: "10 gp", weight: "10 lb.", width: 1, height: 2 },
+                { name: "Morningstar", type: "weapon", damage: "1d8", damageType: "piercing", properties: [], cost: "15 gp", weight: "4 lb.", width: 1, height: 2 },
+                { name: "Pike", type: "weapon", damage: "1d10", damageType: "piercing", properties: ["Heavy", "Reach", "Two-handed"], cost: "5 gp", weight: "18 lb.", width: 1, height: 3 },
+                { name: "Rapier", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Finesse"], cost: "25 gp", weight: "2 lb.", width: 1, height: 2 },
+                { name: "Scimitar", type: "weapon", damage: "1d6", damageType: "slashing", properties: ["Finesse", "Light"], cost: "25 gp", weight: "3 lb.", width: 1, height: 2 },
+                { name: "Shortsword", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Finesse", "Light"], cost: "10 gp", weight: "2 lb.", width: 1, height: 2 },
+                { name: "Trident", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Thrown (range 20/60)", "Versatile (1d8)"], cost: "5 gp", weight: "4 lb." , width: 1, height: 3},
+                { name: "War pick", type: "weapon", damage: "1d8", damageType: "piercing", properties: [], cost: "5 gp", weight: "2 lb.", width: 1, height: 3 },
+                { name: "Warhammer", type: "weapon", damage: "1d8", damageType: "bludgeoning", properties: ["Versatile (1d10)"], cost: "15 gp", weight: "2 lb." , width: 1, height: 2},
+                { name: "Whip", type: "weapon", damage: "1d4", damageType: "slashing", properties: ["Finesse", "Reach"], cost: "2 gp", weight: "3 lb.", width: 1, height: 2 },
+                { name: "Blowgun", type: "weapon", damage: "1", damageType: "piercing", properties: ["Ammunition (range 25/100)", "Loading"], cost: "10 gp", weight: "1 lb.", width: 1, height: 2 },
+                { name: "Crossbow, hand", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Ammunition (range 30/120)", "Light", "Loading"], cost: "75 gp", weight: "3 lb.", width: 3, height: 1 },
+                { name: "Crossbow, heavy", type: "weapon", damage: "1d10", damageType: "piercing", properties: ["Ammunition (range 100/400)", "Heavy", "Loading", "Two-handed"], cost: "50 gp", weight: "18 lb.", width: 3, height: 2 },
+                { name: "Longbow", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 150/600)", "Heavy", "Two-handed"], cost: "50 gp", weight: "2 lb." , width: 2, height: 3},
+                { name: "Net", type: "weapon", damage: "0", damageType: "0", properties: ["Special", "Thrown (range 5/15)"], cost: "1 gp", weight: "3 lb." , width: 1, height: 2},
+                // Armor
+                { name: "Padded", type: "armor", armorType: "Light", ac: 11, addDex: true, stealthDisadvantage: true, cost: "5 gp", weight: "8 lb." , width: 2, height: 3},
+                { name: "Leather", type: "armor", armorType: "Light", ac: 11, addDex: true, stealthDisadvantage: false, cost: "10 gp", weight: "10 lb." , width: 2, height: 3 },
+                { name: "Studded leather", type: "armor", armorType: "Light", ac: 12, addDex: true, stealthDisadvantage: false, cost: "45 gp", weight: "13 lb." , width: 2, height: 3 },
+                { name: "Hide", type: "armor", armorType: "Medium", ac: 12, addDex: true, maxDex: 2, stealthDisadvantage: false, cost: "10 gp", weight: "12 lb." , width: 2, height: 3 },
+                { name: "Chain shirt", type: "armor", armorType: "Medium", ac: 13, addDex: true, maxDex: 2, stealthDisadvantage: false, cost: "50 gp", weight: "20 lb." , width: 2, height: 3 },
+                { name: "Scale mail", type: "armor", armorType: "Medium", ac: 14, addDex: true, maxDex: 2, stealthDisadvantage: true, cost: "50 gp", weight: "45 lb." , width: 2, height: 3 },
+                { name: "Breastplate", type: "armor", armorType: "Medium", ac: 14, addDex: true, maxDex: 2, stealthDisadvantage: false, cost: "400 gp", weight: "20 lb." , width: 2, height: 3 },
+                { name: "Half plate", type: "armor", armorType: "Medium", ac: 15, addDex: true, maxDex: 2, stealthDisadvantage: true, cost: "750 gp", weight: "40 lb." , width: 2, height: 3 },
+                { name: "Ring mail", type: "armor", armorType: "Heavy", ac: 14, addDex: false, stealthDisadvantage: true, cost: "30 gp", weight: "40 lb." , width: 2, height: 3 },
+                { name: "Chain mail", type: "armor", armorType: "Heavy", ac: 16, addDex: false, stealthDisadvantage: true, strengthRequirement: 13, cost: "75 gp", weight: "55 lb." , width: 2, height: 3 },
+                { name: "Splint", type: "armor", armorType: "Heavy", ac: 17, addDex: false, stealthDisadvantage: true, strengthRequirement: 15, cost: "200 gp", weight: "60 lb." , width: 2, height: 3 },
+                { name: "Plate", type: "armor", armorType: "Heavy", ac: 18, addDex: false, stealthDisadvantage: true, strengthRequirement: 15, cost: "1,500 gp", weight: "65 lb." , width: 2, height: 3 },
+                { name: "Shield", type: "armor", armorType: "Shield", ac: 2, addDex: false, stealthDisadvantage: false, cost: "10 gp", weight: "6 lb." , width: 2, height: 3 },
+                // Other items
+                { name: "Backpack", type: "gear", cost: "2 gp", weight: "5 lb." , width: 2, height: 2 },
+                { name: "Bedroll", type: "gear", cost: "1 gp", weight: "7 lb." , width: 2, height: 1 },
+                { name: "Mess kit", type: "gear", cost: "2 sp", weight: "1 lb.", width: 1, height: 1  },
+                { name: "Tinderbox", type: "gear", cost: "5 sp", weight: "1 lb.", width: 1, height: 1 },
+                { name: "Torch", type: "gear", cost: "1 cp", weight: "1 lb.", width: 1, height: 2  },
+                { name: "Rations (1 day)", type: "gear", cost: "5 sp", weight: "2 lb.", width: 1, height: 1 },
+                { name: "Waterskin", type: "gear", cost: "2 sp", weight: "5 lb. (full)", width: 1, height: 1  },
+                { name: "Rope, hempen (50 feet)", type: "gear", cost: "1 gp", weight: "10 lb.", width: 2, height: 2  },
+                { name: "Rope, silk (50 feet)", type: "gear", cost: "10 gp", weight: "5 lb." , width: 2, height: 2 },
+                { name: "Climber's kit", type: "gear", cost: "25 gp", weight: "12 lb." , width: 2, height: 2 },
+                { name: "Fishing tackle", type: "gear", cost: "1 gp", weight: "4 lb.", width: 2, height: 2  },
+                { name: "Healer's kit", type: "gear", cost: "5 gp", weight: "3 lb.", width: 2, height: 2  },
+                { name: "Herbalism kit", type: "gear", cost: "5 gp", weight: "3 lb." , width: 2, height: 2 },
+                { name: "Disguise kit", type: "gear", cost: "25 gp", weight: "3 lb.", width: 2, height: 2  },
+                { name: "Forgery kit", type: "gear", cost: "15 gp", weight: "5 lb.", width: 2, height: 2  },
+                { name: "Alchemist's supplies", type: "gear", cost: "50 gp", weight: "8 lb.", width: 2, height: 2  },
+                { name: "Brewer's supplies", type: "gear", cost: "20 gp", weight: "9 lb.", width: 2, height: 2  },
+                { name: "Calligrapher's supplies", type: "gear", cost: "10 gp", weight: "5 lb." , width: 2, height: 2 },
+                { name: "Carpenter's tools", type: "gear", cost: "8 gp", weight: "6 lb.", width: 2, height: 2  },
+                { name: "Cartographer's tools", type: "gear", cost: "15 gp", weight: "6 lb." , width: 2, height: 2 },
+                { name: "Cobbler's tools", type: "gear", cost: "5 gp", weight: "5 lb.", width: 2, height: 2  },
+                { name: "Cook's utensils", type: "gear", cost: "1 gp", weight: "8 lb.", width: 2, height: 2  },
+                { name: "Glassblower's tools", type: "gear", cost: "30 gp", weight: "5 lb." , width: 2, height: 2 },
+                { name: "Jeweler's tools", type: "gear", cost: "25 gp", weight: "2 lb.", width: 2, height: 2  },
+                { name: "Leatherworker's tools", type: "gear", cost: "5 gp", weight: "5 lb.", width: 2, height: 2  },
+                { name: "Mason's tools", type: "gear", cost: "10 gp", weight: "8 lb." , width: 2, height: 2 },
+                { name: "Painter's supplies", type: "gear", cost: "10 gp", weight: "5 lb.", width: 2, height: 2  },
+                { name: "Potter's tools", type: "gear", cost: "10 gp", weight: "3 lb.", width: 2, height: 2  },
+                { name: "Smith's tools", type: "gear", cost: "20 gp", weight: "8 lb." , width: 2, height: 2 },
+                { name: "Tinker's tools", type: "gear", cost: "50 gp", weight: "10 lb.", width: 2, height: 2  },
+                { name: "Weaver's tools", type: "gear", cost: "1 gp", weight: "5 lb.", width: 2, height: 2  },
+                { name: "Woodcarver's tools", type: "gear", cost: "1 gp", weight: "5 lb.", width: 2, height: 2  },
+                { name: "Navigator's tools", type: "gear", cost: "25 gp", weight: "2 lb.", width: 2, height: 2  },
+                { name: "Thieves' tools", type: "gear", cost: "25 gp", weight: "1 lb.", width: 2, height: 2  },
+                { name: "Musical instrument", type: "gear", cost: "varies", weight: "varies", width: 2, height: 2  }
+            ];
+
+            const skills = [
+                "Acrobatics", "Animal Handling", "Arcana", "Athletics", "Deception", "History",
+                "Insight", "Intimidation", "Investigation", "Medicine", "Nature", "Perception",
+                "Performance", "Persuasion", "Religion", "Sleight of Hand", "Stealth", "Survival"
+            ];
+
+            const feats = [
+                { name: "Alert", description: "+5 to initiative, can't be surprised while conscious, no advantage for hidden attackers" },
+                { name: "Athlete", description: "Increase Strength or Dexterity by 1, better at jumping and standing from prone" },
+                { name: "Actor", description: "Increase Charisma by 1, advantage on Deception and Performance checks for impersonation" },
+                { name: "Charger", description: "Dash and melee attack as a single action, +5 damage if you move 10 feet in a straight line" },
+                { name: "Crossbow Expert", description: "Ignore loading property of crossbows, no disadvantage on ranged attacks within 5 feet, bonus action hand crossbow attack" },
+                { name: "Defensive Duelist", description: "Use reaction to add Dexterity modifier to AC against one melee attack" },
+                { name: "Dual Wielder", description: "+1 AC when wielding separate melee weapons in each hand, can use two-weapon fighting with non-light weapons" },
+                { name: "Dungeon Delver", description: "Advantage on perception and investigation checks for secret doors, advantage on saving throws against traps" },
+                { name: "Durable", description: "Increase Constitution by 1, minimum HP gained on a Hit Die roll is twice your Constitution modifier" },
+                { name: "Elemental Adept", description: "Spells you cast ignore resistance to damage of the chosen type, treat 1s on damage dice as 2s" },
+                { name: "Grappler", description: "Advantage on attack rolls against grappled creatures, can pin a grappled creature" },
+                { name: "Great Weapon Master", description: "Can make an extra melee attack on a critical hit or reducing a creature to 0 HP, can take -5 penalty to attack roll for +10 damage" },
+                { name: "Healer", description: "Using a healer's kit to stabilize also restores 1 HP, can use action to restore 1d6+4+creature's number of Hit Dice HP" },
+                { name: "Heavily Armored", description: "Increase Strength by 1, gain proficiency with heavy armor" },
+                { name: "Heavy Armor Master", description: "Increase Strength by 1, reduce non-magical bludgeoning, piercing, and slashing damage by 3 while wearing heavy armor" }
+            ];
+
+            const startMenu = document.getElementById('start-menu');
+            const characterCreator = document.getElementById('character-creator');
+            const newCharacterBtn = document.getElementById('new-character-btn');
+            const loadCharacterBtn = document.getElementById('load-character-btn');
+            const randomCharacterBtn = document.getElementById('random-character-btn');
+            const fileInput = document.getElementById('file-input');
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5', 'step6'];
+            let currentStep = 0;
+
+            const GRID_SIZE = 10;
+const CELL_SIZE = 40;
+
+function findAvailablePosition(item) {
+    for (let y = 0; y <= GRID_SIZE - item.height; y++) {
+        for (let x = 0; x <= GRID_SIZE - item.width; x++) {
+            if (canPlaceItem(item, x, y)) {
+                return { x, y };
+            }
+        }
+    }
+    return null;
+}
+
+function canPlaceItem(item, x, y) {
+    for (let i = 0; i < item.height; i++) {
+        for (let j = 0; j < item.width; j++) {
+            if (isOccupied(x + j, y + i)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function isOccupied(x, y) {
+    return character.inventory.some(item =>
+        x >= item.x && x < item.x + item.width &&
+        y >= item.y && y < item.y + item.height
+    );
+}
+
+// function drawGrid() {
+//     const inventoryCanvas = document.getElementById('inventory-canvas');
+//     const inventoryCtx = inventoryCanvas.getContext('2d');
+//     inventoryCtx.clearRect(0, 0, inventoryCanvas.width, inventoryCanvas.height);
+//     for (let i = 0; i < GRID_SIZE; i++) {
+//         for (let j = 0; j < GRID_SIZE; j++) {
+//             inventoryCtx.strokeStyle = '#ddd';
+//             inventoryCtx.strokeRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+//         }
+//     }
+//     character.inventory.forEach(drawItem);
+// }
+
+// function drawGrid() {
+//     const inventoryCanvas = document.getElementById('inventory-canvas');
+//     const inventoryCtx = inventoryCanvas.getContext('2d');
+//     inventoryCtx.clearRect(0, 0, inventoryCanvas.width, inventoryCanvas.height);
+//     for (let i = 0; i < GRID_SIZE; i++) {
+//         for (let j = 0; j < GRID_SIZE; j++) {
+//             inventoryCtx.strokeStyle = '#ddd';
+//             inventoryCtx.strokeRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+            
+//             // Add cell coordinates for debugging
+//             inventoryCtx.fillStyle = '#999';
+//             inventoryCtx.font = '10px Arial';
+//             inventoryCtx.fillText(`${i},${j}`, i * CELL_SIZE + 2, j * CELL_SIZE + 10);
+//         }
+//     }
+
+//     // Add debugging information
+//     inventoryCtx.fillStyle = 'black';
+//     inventoryCtx.font = '14px Arial';
+//     inventoryCtx.fillText(`Canvas size: ${inventoryCanvas.width}x${inventoryCanvas.height}`, 10, 20);
+//     inventoryCtx.fillText(`Grid size: ${GRID_SIZE}x${GRID_SIZE}`, 10, 40);
+//     inventoryCtx.fillText(`Cell size: ${CELL_SIZE}px`, 10, 60);
+//     inventoryCtx.fillText(`Items: ${character.inventory.length}`, 10, 80);
+
+//     character.inventory.forEach(drawItem);
+//     console.log('Grid drawn with', character.inventory.length, 'items');
+// }
+
+function drawGrid() {
+    const inventoryCanvas = document.getElementById('inventory-canvas');
+    const inventoryCtx = inventoryCanvas.getContext('2d');
+    inventoryCtx.clearRect(0, 0, inventoryCanvas.width, inventoryCanvas.height);
+    for (let i = 0; i < GRID_SIZE; i++) {
+        for (let j = 0; j < GRID_SIZE; j++) {
+            inventoryCtx.strokeStyle = '#ddd';
+            inventoryCtx.strokeRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        }
+    }
+    character.inventory.forEach(drawItem);
+}
+
+// function drawItem(item) {
+//     const inventoryCanvas = document.getElementById('inventory-canvas');
+//     const inventoryCtx = inventoryCanvas.getContext('2d');
+    
+//     // Draw item background
+//     inventoryCtx.fillStyle = item.color || '#999';
+//     inventoryCtx.fillRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
+    
+//     // Draw item border
+//     inventoryCtx.strokeStyle = '#000';
+//     inventoryCtx.strokeRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
+    
+//     // Draw item name
+//     inventoryCtx.fillStyle = 'black';
+//     inventoryCtx.font = '12px Arial';
+//     inventoryCtx.fillText(item.name, item.x * CELL_SIZE + 5, item.y * CELL_SIZE + 15);
+
+//     console.log(`Drew item ${item.name} at (${item.x}, ${item.y}), size: ${item.width}x${item.height}`);
+// }
+
+function drawItem(item) {
+    const inventoryCanvas = document.getElementById('inventory-canvas');
+    const inventoryCtx = inventoryCanvas.getContext('2d');
+    
+    const imageName = item.name.replace(/'/g, '').replace(/ /g, '_') + '.png';
+    const imagePath = `assets/images/${imageName}`;
+    console.log('Image path:', imageName, imagePath);
+
+    const img = new Image();
+    img.onload = () => {
+        inventoryCtx.drawImage(img, item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
+    };
+    img.onerror = () => {
+        // Fallback to grey block if image doesn't load
+        inventoryCtx.fillStyle = '#999';
+        inventoryCtx.fillRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
+        
+        // Draw item name
+        inventoryCtx.fillStyle = 'black';
+        inventoryCtx.font = '12px Arial';
+        inventoryCtx.fillText(item.name, item.x * CELL_SIZE + 5, item.y * CELL_SIZE + 15);
+    };
+    img.src = imagePath;
+}
+
+            function initializeUI() {
+                populateDropdowns();
+                setupEventListeners();
+                setupAbilityScores();
+                populateItemDropdown(); // Add this line
+            }
+
+            function populateDropdowns() {
+                populateDropdown('race', Object.keys(raceInfo));
+                populateDropdown('class', Object.keys(classInfo));
+                populateDropdown('background', Object.keys(backgroundInfo));
+                populateDropdown('item-select', items.map(item => item.name));
+            }
+
+            function populateDropdown(id, options) {
+                const select = document.getElementById(id);
+                options.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option;
+                    optionElement.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+                    select.appendChild(optionElement);
+                });
+            }
+
+            function setupEventListeners() {
+                newCharacterBtn.addEventListener('click', startNewCharacter);
+                loadCharacterBtn.addEventListener('click', () => fileInput.click());
+                randomCharacterBtn.addEventListener('click', generateRandomCharacter);
+                fileInput.addEventListener('change', loadCharacterFromFile);
+                document.getElementById('random-name-btn').addEventListener('click', generateRandomName);
+                document.getElementById('race').addEventListener('change', updateRaceInfo);
+                document.getElementById('class').addEventListener('change', updateClassInfo);
+                document.getElementById('level').addEventListener('change', updateSubclassOptions);
+                document.getElementById('background').addEventListener('change', updateBackgroundInfo);
+                document.getElementById('save-character').addEventListener('click', saveCharacter);
+                document.getElementById('edit-character').addEventListener('click', editCharacter);
+                document.getElementById('long-rest-btn').addEventListener('click', longRest);
+                // document.getElementById('add-item-btn').addEventListener('click', addItemToInventory);
+
+                steps.forEach((step, index) => {
+                    if (index < steps.length - 1) {
+                        document.getElementById(`next${index + 1}`).addEventListener('click', () => nextStep(index));
+                    }
+                });
+
+                document.getElementById('finish').addEventListener('click', finishCharacter);
+            }
+
+            function setupAbilityScores() {
+                const abilityScores = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+                const abilityScoresContainer = document.getElementById('ability-scores');
+                
+                abilityScores.forEach(ability => {
+                    const abilityDiv = document.createElement('div');
+                    abilityDiv.innerHTML = `
+                        <label for="${ability}">${ability.charAt(0).toUpperCase() + ability.slice(1)}:</label>
+                        <div class="dice" data-ability="${ability}"><i class="bi bi-dice-6"></i></div>
+                        <span id="${ability}-score"></span>
+                        <div id="${ability}-buttons"></div>
+                    `;
+                    abilityScoresContainer.appendChild(abilityDiv);
+
+                    const dice = abilityDiv.querySelector('.dice');
+                    const scoreSpan = abilityDiv.querySelector(`#${ability}-score`);
+                    const buttonsDiv = abilityDiv.querySelector(`#${ability}-buttons`);
+
+                    dice.addEventListener('click', () => rollAbilityScore(ability, dice, scoreSpan, buttonsDiv));
+                });
+            }
+
+            function startNewCharacter() {
+                startMenu.classList.add('hidden');
+                characterCreator.classList.remove('hidden');
+                document.getElementById(steps[currentStep]).classList.remove('hidden');
+            }
+
+            function loadCharacterFromFile(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const loadedCharacter = JSON.parse(event.target.result);
+                console.log('Loaded character data:', loadedCharacter);
+                
+                // Check for required properties
+                const requiredProps = ['name', 'race', 'class', 'level', 'abilityScores', 'inventory'];
+                for (let prop of requiredProps) {
+                    if (!(prop in loadedCharacter)) {
+                        throw new Error(`Missing required property: ${prop}`);
+                    }
+                }
+                
+                // Assign loaded data to character object
+                Object.assign(character, loadedCharacter);
+                
+                // Ensure inventory items have necessary properties
+                character.inventory = character.inventory.map(item => {
+                    if (typeof item === 'string') {
+                        // If item is just a string (name), find the full item data
+                        return items.find(i => i.name === item) || { name: item, width: 1, height: 1 };
+                    }
+                    return item;
+                });
+
+                displayLoadedCharacter();
+                showNotification('Character loaded successfully!');
+            } catch (error) {
+                console.error('Error parsing JSON file:', error);
+                showNotification(`Error loading character file: ${error.message}`);
+            }
+        };
+        reader.readAsText(file);
+    }
+}
+
+function displayLoadedCharacter() {
+    document.getElementById('character-name').value = character.name;
+    document.getElementById('race').value = character.race;
+    document.getElementById('class').value = character.class;
+    document.getElementById('level').value = character.level;
+    document.getElementById('background').value = character.background;
+
+    // Update ability scores
+    Object.entries(character.abilityScores).forEach(([ability, score]) => {
+        const scoreSpan = document.getElementById(`${ability}-score`);
+        if (scoreSpan) {
+            scoreSpan.textContent = `${score} (Modifier: ${getModifierString(score)}) (Selected)`;
+        }
+        const dice = document.querySelector(`.dice[data-ability="${ability}"]`);
+        if (dice) {
+            dice.style.display = 'none';
+        }
+    });
+
+    // Update other character information
+    updateRaceInfo();
+    updateClassInfo();
+    updateBackgroundInfo();
+    updateSubclassOptions();
+
+    // Only update skills and feats if the necessary elements exist
+    const skillCheckboxes = document.getElementById('skill-checkboxes');
+    const featOptions = document.getElementById('feat-options');
+    if (skillCheckboxes && featOptions) {
+        updateSkillsAndFeats();
+    }
+
+    // Switch to character sheet view
+    document.getElementById('character-creator').classList.add('hidden');
+    document.getElementById('character-sheet').classList.remove('hidden');
+    displayCharacterSheet();
+    setupInventoryManager();
+    document.getElementById('start-menu').classList.add('hidden');
+}
+
+            function generateRandomName() {
+                const names = ["Aric", "Bree", "Cade", "Dara", "Elara", "Finn", "Gwen", "Holt", "Ivy", "Jace", "Kira", "Lark", "Mira", "Nox", "Orion", "Piper", "Quinn", "Rook", "Sage", "Thorne"];
+                document.getElementById('character-name').value = names[Math.floor(Math.random() * names.length)];
+            }
+
+            function updateRaceInfo() {
+                const selectedRace = document.getElementById('race').value;
+                const raceInfoDiv = document.getElementById('race-info');
+                raceInfoDiv.textContent = raceInfo[selectedRace] || "Select a race to see information.";
+            }
+
+            function updateClassInfo() {
+                const selectedClass = document.getElementById('class').value;
+                const classInfoDiv = document.getElementById('class-info');
+                classInfoDiv.textContent = classInfo[selectedClass] || "Select a class to see information.";
+            }
+
+            function updateSubclassOptions() {
+                const selectedClass = document.getElementById('class').value;
+                const selectedLevel = parseInt(document.getElementById('level').value);
+                const subclassOptionsDiv = document.getElementById('subclass-options');
+                subclassOptionsDiv.innerHTML = '';
+
+                if (selectedLevel >= 3) {
+                    const subclasses = getSubclasses(selectedClass);
+                    if (subclasses.length > 0) {
+                        const subclassSelect = document.createElement('select');
+                        subclassSelect.id = 'subclass';
+                        subclassSelect.innerHTML = '<option value="">Select a subclass</option>';
+                        subclasses.forEach(subclass => {
+                            const option = document.createElement('option');
+                            option.value = subclass.name;
+                            option.textContent = subclass.name;
+                            subclassSelect.appendChild(option);
+                        });
+                        subclassOptionsDiv.appendChild(subclassSelect);
+
+                        const subclassInfoDiv = document.createElement('div');
+                        subclassInfoDiv.id = 'subclass-info';
+                        subclassInfoDiv.classList.add('info-area');
+                        subclassOptionsDiv.appendChild(subclassInfoDiv);
+
+                        subclassSelect.addEventListener('change', () => {
+                            const selectedSubclass = subclasses.find(sc => sc.name === subclassSelect.value);
+                            subclassInfoDiv.textContent = selectedSubclass ? selectedSubclass.description : '';
+                            character.subclass = selectedSubclass ? selectedSubclass.name : '';
+                        });
+                    }
+                }
+            }
+
+            function getSubclasses(className) {
+                const subclasses = {
+                    barbarian: [
+                        { name: "Path of the Berserker", description: "A frenzy of rage that channels primal ferocity." },
+                        { name: "Path of the Totem Warrior", description: "A spiritual connection with nature and animal totems." }
+                    ],
+                    bard: [
+                        { name: "College of Lore", description: "Masters of knowledge and arcane secrets." },
+                        { name: "College of Valor", description: "Inspirational warriors who lead through heroic deeds." }
+                    ],
+                    cleric: [
+                        { name: "Knowledge Domain", description: "Seekers of truth and keepers of ancient lore." },
+                        { name: "Life Domain", description: "Supreme healers blessed with divine power." },
+                        { name: "Light Domain", description: "Guardians against darkness, wielding radiant energy." }
+                    ],
+                    druid: [
+                        { name: "Circle of the Land", description: "Mystics attuned to specific natural environments." },
+                        { name: "Circle of the Moon", description: "Shapeshifters who embody the raw power of nature." }
+                    ],
+                    fighter: [
+                        { name: "Champion", description: "Masters of physical perfection and combat prowess." },
+                        { name: "Battle Master", description: "Tactical experts who use maneuvers to control the battlefield." },
+                        { name: "Eldritch Knight", description: "Warriors who combine martial skills with arcane magic." }
+                    ],
+                    monk: [
+                        { name: "Way of the Open Hand", description: "Masters of martial arts techniques." },
+                        { name: "Way of Shadow", description: "Stealthy monks who manipulate darkness and deception." }
+                    ],
+                    paladin: [
+                        { name: "Oath of Devotion", description: "Paragons of knightly virtue and righteousness." },
+                        { name: "Oath of the Ancients", description: "Guardians of nature and light against darkness." }
+                    ],
+                    ranger: [
+                        { name: "Hunter", description: "Specialized warriors against dangerous prey." },
+                        { name: "Beast Master", description: "Rangers with a deep connection to an animal companion." }
+                    ],
+                    rogue: [
+                        { name: "Thief", description: "Masters of stealth, agility, and burglary." },
+                        { name: "Assassin", description: "Stealthy killers skilled in disguise and poison." }
+                    ],
+                    sorcerer: [
+                        { name: "Draconic Bloodline", description: "Sorcerers with the power of dragons in their veins." },
+                        { name: "Wild Magic", description: "Chaotic spellcasters with unpredictable magical effects." }
+                    ],
+                    warlock: [
+                        { name: "The Archfey", description: "Servants of capricious and powerful fey entities." },
+                        { name: "The Fiend", description: "Those who have made pacts with infernal powers." }
+                    ],
+                    wizard: [
+                        { name: "School of Evocation", description: "Masters of powerful elemental magic." },
+                        { name: "School of Abjuration", description: "Experts in protective and warding magic." }
+                    ]
+                };
+                return subclasses[className] || [];
+            }
+
+            function updateBackgroundInfo() {
+                const selectedBackground = document.getElementById('background').value;
+                const backgroundInfoDiv = document.getElementById('background-info');
+                backgroundInfoDiv.textContent = backgroundInfo[selectedBackground] || "Select a background to see information.";
+            }
+
+            function rollAbilityScore(ability, dice, scoreSpan, buttonsDiv) {
+                if (character.abilityScores[ability]) return;
+
+                const rolls = [
+                    Math.floor(Math.random() * 6) + 1,
+                    Math.floor(Math.random() * 6) + 1,
+                    Math.floor(Math.random() * 6) + 1,
+                    Math.floor(Math.random() * 6) + 1
+                ];
+                rolls.sort((a, b) => b - a);
+                const total = rolls[0] + rolls[1] + rolls[2];
+                const modifier = Math.floor((total - 10) / 2);
+                scoreSpan.textContent = `Roll: ${total} (Modifier: ${modifier >= 0 ? '+' : ''}${modifier})`;
+                
+                const button = document.createElement('button');
+                button.textContent = total;
+                button.classList.add('stat-value-btn');
+                button.addEventListener('click', () => {
+                    character.abilityScores[ability] = total;
+                    dice.style.display = 'none';
+                    buttonsDiv.innerHTML = '';
+                    scoreSpan.textContent = `${total} (Modifier: ${modifier >= 0 ? '+' : ''}${modifier}) (Selected)`;
+                });
+                buttonsDiv.appendChild(button);
+
+                if (buttonsDiv.children.length === 3) {
+                    dice.style.pointerEvents = 'none';
+                    dice.style.opacity = '0.5';
+                }
+            }
+
+            function nextStep(index) {
+                document.getElementById(steps[index]).classList.add('hidden');
+                document.getElementById(steps[index + 1]).classList.remove('hidden');
+                currentStep++;
+
+                switch (index) {
+                    case 0:
+                        character.name = document.getElementById('character-name').value;
+                        character.race = document.getElementById('race').value;
+                        updateRaceInfo();
+                        break;
+                    case 1:
+                        character.class = document.getElementById('class').value;
+                        character.level = parseInt(document.getElementById('level').value);
+                        updateClassInfo();
+                        updateSubclassOptions();
+                        break;
+                    case 3:
+                        character.background = document.getElementById('background').value;
+                        updateBackgroundInfo();
+                        break;
+                    case 4:
+                        updateSkillsAndFeats();
+                        break;
+                    case 5:
+                        setupInventoryManager();
+                        break;
+                }
+            }
+
+            function updateSkillsAndFeats() {
+    const skillsSelection = document.getElementById('skills-selection');
+    const featsSelection = document.getElementById('feats-selection');
+    const skillCheckboxes = document.getElementById('skill-checkboxes');
+    const featOptions = document.getElementById('feat-options');
+    
+    if (!skillsSelection || !featsSelection || !skillCheckboxes || !featOptions) {
+        console.warn('Some elements for skills and feats are missing. Skipping update.');
+        return;
+    }
+    
+    skillsSelection.innerHTML = '<h3>Skills</h3><p>Select skills based on your class and background:</p>';
+    featsSelection.innerHTML = '<h3>Feats</h3><p>Select feats if available at your level:</p>';
+
+    const classSkills = getClassSkills(character.class);
+    const backgroundSkills = getBackgroundSkills(character.background);
+    const availableSkills = [...new Set([...classSkills, ...backgroundSkills])];
+
+    skillCheckboxes.innerHTML = '';
+
+    availableSkills.forEach(skill => {
+        const skillCheckbox = document.createElement('input');
+        skillCheckbox.type = 'checkbox';
+        skillCheckbox.id = `skill-${skill}`;
+        skillCheckbox.name = 'skills';
+        skillCheckbox.value = skill;
+        skillCheckbox.checked = character.skills.includes(skill);
+
+        const skillLabel = document.createElement('label');
+        skillLabel.htmlFor = `skill-${skill}`;
+        skillLabel.textContent = skill;
+
+        skillCheckboxes.appendChild(skillCheckbox);
+        skillCheckboxes.appendChild(skillLabel);
+        skillCheckboxes.appendChild(document.createElement('br'));
+    });
+
+    featOptions.innerHTML = '';
+
+    if (character.level >= 4) {
+        feats.forEach(feat => {
+            const featCheckbox = document.createElement('input');
+            featCheckbox.type = 'checkbox';
+            featCheckbox.id = `feat-${feat.name}`;
+            featCheckbox.name = 'feats';
+            featCheckbox.value = feat.name;
+            featCheckbox.checked = character.feats.includes(feat.name);
+
+            const featLabel = document.createElement('label');
+            featLabel.htmlFor = `feat-${feat.name}`;
+            featLabel.textContent = `${feat.name}: ${feat.description}`;
+
+            featOptions.appendChild(featCheckbox);
+            featOptions.appendChild(featLabel);
+            featOptions.appendChild(document.createElement('br'));
+        });
+    } else {
+        featOptions.innerHTML = '<p>Feats are available starting at level 4.</p>';
+    }
+}
+
+            function getClassSkills(className) {
+                const classSkills = {
+                    barbarian: ["Animal Handling", "Athletics", "Intimidation", "Nature", "Perception", "Survival"],
+                    bard: skills,
+                    cleric: ["History", "Insight", "Medicine", "Persuasion", "Religion"],
+                    druid: ["Arcana", "Animal Handling", "Insight", "Medicine", "Nature", "Perception", "Religion", "Survival"],
+                    fighter: ["Acrobatics", "Animal Handling", "Athletics", "History", "Insight", "Intimidation", "Perception", "Survival"],
+                    monk: ["Acrobatics", "Athletics", "History", "Insight", "Religion", "Stealth"],
+                    paladin: ["Athletics", "Insight", "Intimidation", "Medicine", "Persuasion", "Religion"],
+                    ranger: ["Animal Handling", "Athletics", "Insight", "Investigation", "Nature", "Perception", "Stealth", "Survival"],
+                    rogue: ["Acrobatics", "Athletics", "Deception", "Insight", "Intimidation", "Investigation", "Perception", "Performance", "Persuasion", "Sleight of Hand", "Stealth"],
+                    sorcerer: ["Arcana", "Deception", "Insight", "Intimidation", "Persuasion", "Religion"],
+                    warlock: ["Arcana", "Deception", "History", "Intimidation", "Investigation", "Nature", "Religion"],
+                    wizard: ["Arcana", "History", "Insight", "Investigation", "Medicine", "Religion"]
+                };
+                return classSkills[className] || [];
+            }
+
+            function getBackgroundSkills(background) {
+                const backgroundSkills = {
+                    acolyte: ["Insight", "Religion"],
+                    charlatan: ["Deception", "Sleight of Hand"],
+                    criminal: ["Deception", "Stealth"],
+                    entertainer: ["Acrobatics", "Performance"],
+                    "folk-hero": ["Animal Handling", "Survival"],
+                    "guild-artisan": ["Insight", "Persuasion"],
+                    hermit: ["Medicine", "Religion"],
+                    noble: ["History", "Persuasion"],
+                    outlander: ["Athletics", "Survival"],
+                    sage: ["Arcana", "History"],
+                    sailor: ["Athletics", "Perception"],
+                    soldier: ["Athletics", "Intimidation"],
+                    urchin: ["Sleight of Hand", "Stealth"],
+                    gladiator: ["Acrobatics", "Performance"],
+                    guard: ["Perception", "Insight"],
+                    spy: ["Deception", "Stealth"]
+                };
+                return backgroundSkills[background] || [];
+            }
+
+            function populateCombatPage() {
+    const combatPage = document.getElementById('combat-page');
+    combatPage.innerHTML = '<h3>Combat</h3>';
+
+    const weaponsTable = document.createElement('table');
+    weaponsTable.innerHTML = `
+        <tr>
+            <th style="width: 50%;">Weapon</th>
+            <th style="width: 25%;">To Hit</th>
+            <th style="width: 25%;">Damage</th>
+        </tr>
+    `;
+
+    character.inventory.filter(item => item.type === 'weapon').forEach(weapon => {
+        const row = weaponsTable.insertRow();
+        row.innerHTML = `
+            <td>${weapon.name}</td>
+            <td><button onclick="rollToHit('${weapon.name}')">Roll To Hit</button></td>
+            <td><button onclick="rollDamage('${weapon.name}')">Roll Damage</button></td>
+        `;
+    });
+
+    combatPage.appendChild(weaponsTable);
+
+    // Add spells section if the character is a spellcaster
+    if (isSpellcaster(character.class)) {
+        const spellsTable = document.createElement('table');
+        spellsTable.innerHTML = `
+            <tr>
+                <th colspan="3">Spells</th>
+            </tr>
+            <tr>
+                <th style="width: 50%;">Spell</th>
+                <th style="width: 25%;">To Hit</th>
+                <th style="width: 25%;">Damage/Effect</th>
+            </tr>
+        `;
+
+        character.spells.forEach(spell => {
+            const row = spellsTable.insertRow();
+            row.innerHTML = `
+                <td>${spell.name}</td>
+                <td><button onclick="rollSpellToHit('${spell.name}')">Roll To Hit</button></td>
+                <td><button onclick="rollSpellDamage('${spell.name}')">Roll Damage/Effect</button></td>
+            `;
+        });
+
+        combatPage.appendChild(spellsTable);
+    }
+}
+
+            function setupInventoryManager() {
+                console.log('Setting up inventory manager...'); 
+    const inventoryCanvas = document.getElementById('inventory-canvas');
+    const inventoryCtx = inventoryCanvas.getContext('2d');
+
+    let draggedItem = null;
+    let dragOffset = { x: 0, y: 0 };
+
+    populateItemDropdown(); // Add this line at the beginning of the function
+
+    const addItemBtn = document.getElementById('character-sheet-add-item-btn');
+    console.log('Add item button element:', addItemBtn);
+
+    if (addItemBtn && !addItemBtn.hasEventListener) {
+    console.log('Add item button found, adding event listener...');
+    addItemBtn.addEventListener('click', addItemToInventory);
+    addItemBtn.hasEventListener = true;
+    console.log('Event listener added to add item button.');
+} else if (addItemBtn) {
+    console.log('Add item button already has an event listener');
+} else {
+    console.error('Add item button not found');
+}
+
+// inventoryCanvas.addEventListener('click', (e) => {
+//     console.log('Canvas clicked');
+//     const rect = inventoryCanvas.getBoundingClientRect();
+//     const clickX = e.clientX - rect.left;
+//     const clickY = e.clientY - rect.top;
+//     const x = Math.floor(clickX / CELL_SIZE);
+//     const y = Math.floor(clickY / CELL_SIZE);
+//     console.log('Click coordinates (grid):', x, y);
+//     console.log('Click coordinates (pixels):', clickX, clickY);
+
+//     console.log('Current inventory:', character.inventory);
+
+//     const clickedItem = character.inventory.find(item => 
+//         x >= item.x && x < item.x + item.width && 
+//         y >= item.y && y < item.y + item.height
+//     );
+
+//     if (clickedItem) {
+//         console.log('Item clicked:', clickedItem);
+//         displayItemInfo(clickedItem);
+//     } else {
+//         console.log('No item found at click location');
+//         document.getElementById('item-info').innerHTML = 'No item selected. Click coordinates: ' + x + ', ' + y;
+//     }
+// });
+
+inventoryCanvas.addEventListener('click', (e) => {
+    console.log('Canvas clicked', e);
+    const rect = e.target.getBoundingClientRect();
+    const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
+    const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
+    console.log('Click coordinates (grid):', x, y);
+    console.log('Click coordinates (pixels):', e.clientX - rect.left, e.clientY - rect.top);
+
+    console.log('Current inventory:', character.inventory);
+
+    const clickedItem = character.inventory.find(item => 
+        x >= item.x && x < item.x + item.width && 
+        y >= item.y && y < item.y + item.height
+    );
+
+    if (clickedItem) {
+        console.log('Item clicked:', clickedItem);
+        displayItemInfo(clickedItem);
+    } else {
+        console.log('No item found at click location');
+        const itemInfoDiv = document.getElementById('item-info');
+        if (itemInfoDiv) {
+            itemInfoDiv.innerHTML = 'No item selected. Click coordinates: ' + x + ', ' + y;
+        } else {
+            console.error('item-info div not found');
+        }
+    }
+});
+
+
+inventoryCanvas.addEventListener('pointerdown', (e) => {
+    console.log('Canvas pointerdown event', e);
+    console.log('Canvas clicked', e);
+    const rect = e.target.getBoundingClientRect();
+    const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
+    const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
+    console.log('Click coordinates (grid):', x, y);
+    console.log('Click coordinates (pixels):', e.clientX - rect.left, e.clientY - rect.top);
+
+    console.log('Current inventory:', character.inventory);
+
+    const clickedItem = character.inventory.find(item => 
+        x >= item.x && x < item.x + item.width && 
+        y >= item.y && y < item.y + item.height
+    );
+
+    if (clickedItem) {
+        console.log('Item clicked:', clickedItem);
+        displayItemInfo(clickedItem);
+    } else {
+        console.log('No item found at click location');
+        document.getElementById('item-info').innerHTML = 'No item selected. Click coordinates: ' + x + ', ' + y;
+    }});
+
+
+
+inventoryCanvas.addEventListener('mousedown', (e) => {
+    console.log('Canvas mousedown event', e);
+});
+
+    inventoryCanvas.addEventListener('mousedown', (e) => {
+        const x = Math.floor(e.offsetX / CELL_SIZE);
+        const y = Math.floor(e.offsetY / CELL_SIZE);
+
+        draggedItem = character.inventory.find(item => x >= item.x && x < item.x + item.width && y >= item.y && y < item.y + item.height);
+
+        if (draggedItem) {
+            dragOffset.x = x - draggedItem.x;
+            dragOffset.y = y - draggedItem.y;
+        }
+    });
+
+    inventoryCanvas.addEventListener('mousemove', (e) => {
+        if (!draggedItem) return;
+
+        const x = Math.floor(e.offsetX / CELL_SIZE);
+        const y = Math.floor(e.offsetY / CELL_SIZE);
+
+        draggedItem.x = x - dragOffset.x;
+        draggedItem.y = y - dragOffset.y;
+
+        drawGrid();
+
+        if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
+            const inventoryCtx = inventoryCanvas.getContext('2d');
+            inventoryCtx.globalAlpha = 0.5;
+            inventoryCtx.fillStyle = 'red';
+            inventoryCtx.fillRect(draggedItem.x * CELL_SIZE, draggedItem.y * CELL_SIZE, draggedItem.width * CELL_SIZE, draggedItem.height * CELL_SIZE);
+            inventoryCtx.globalAlpha = 1;
+        }
+    });
+
+    inventoryCanvas.addEventListener('mouseup', () => {
+        if (draggedItem) {
+            if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
+                const originalPosition = character.inventory.find(item => item === draggedItem);
+                draggedItem.x = originalPosition.x;
+                draggedItem.y = originalPosition.y;
+            }
+            draggedItem = null;
+            drawGrid();
+            updateCharacterInventory();
+        }
+    });
+
+    
+
+    // document.getElementById('add-item-btn').addEventListener('click', addItemToInventory);
+    // document.getElementById('character-sheet-add-item-btn').addEventListener('click', addItemToInventory);
+
+    drawGrid();
+
+    character.inventory.forEach((item, index) => {
+        if (item.x === undefined || item.y === undefined) {
+            const position = findAvailablePosition(item);
+            if (position) {
+                item.x = position.x;
+                item.y = position.y;
+            } else {
+                console.warn(`Couldn't place item ${item.name} in the inventory grid.`);
+            }
+        }
+    });
+    drawGrid();
+    updateCharacterInventory();
+
+}
+
+function displayItemInfo(item) {
+    console.log('Displaying item info:', item);
+    const itemInfoDiv = document.getElementById('item-info');
+    if (!itemInfoDiv) {
+        console.error('item-info div not found');
+        return;
+    }
+    let infoHtml = `
+        <h4>${item.name}</h4>
+        <p>Type: ${item.type}</p>
+        <p>Weight: ${item.weight}</p>
+        <p>Cost: ${item.cost}</p>
+    `;
+
+    if (item.type === 'weapon') {
+        infoHtml += `
+            <p>Damage: ${item.damage} ${item.damageType}</p>
+            <p>Properties: ${item.properties.join(', ')}</p>
+            <button onclick="rollToHit('${item.name}')">Roll To Hit</button>
+            <button onclick="rollDamage('${item.name}')">Roll Damage</button>
+        `;
+    } else if (item.type === 'armor') {
+        infoHtml += `
+            <p>AC: ${item.ac}</p>
+            <p>Type: ${item.armorType}</p>
+        `;
+    }
+
+    itemInfoDiv.innerHTML = infoHtml;
+    console.log('Updated item-info HTML:', infoHtml);
+    
+    // Add this line to make a very visible change
+    itemInfoDiv.style.border = '2px solid red';
+    
+    // Add this line to test if the function is being called
+    alert('Item info updated: ' + item.name);
+}
+
+function addItemToInventory() {
+    console.log('addItemToInventory function called');
+    
+    const itemSelect = document.getElementById('character-sheet-item-select');
+    console.log('Item select element:', itemSelect);
+    
+    if (!itemSelect) {
+        console.error('Character sheet item select element not found');
+        return;
+    }
+
+    const selectedItemName = itemSelect.value;
+    console.log('Selected item name:', selectedItemName);
+
+    const selectedItem = items.find(item => item.name === selectedItemName);
+    console.log('Selected item object:', selectedItem);
+
+    if (selectedItem) {
+        const newItem = { 
+            ...selectedItem, 
+            x: 0, 
+            y: 0
+        };
+        console.log("New item to be added:", newItem);
+        const position = findAvailablePosition(newItem);
+        if (position) {
+            newItem.x = position.x;
+            newItem.y = position.y;
+            character.inventory.push(newItem);
+            console.log("Item added to inventory:", newItem);
+            drawGrid();
+            updateCharacterInventory();
+            showNotification(`${newItem.name} added to inventory.`);
+        } else {
+            showNotification('No space available in the inventory!');
+        }
+    } else {
+        console.log('No item selected or item not found');
+        showNotification('Please select an item to add.');
+    }
+}
+
+function updateCharacterInventory() {
+    const inventoryDiv = document.getElementById('character-inventory');
+    if (!inventoryDiv) {
+        console.error('Character inventory div not found');
+        return;
+    }
+    inventoryDiv.innerHTML = character.inventory.map((item, index) => `
+        <div class="inventory-item">
+            <span>${item.name}</span>
+            <button class="remove-item" data-index="${index}">Remove</button>
+        </div>
+    `).join('');
+
+    inventoryDiv.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const index = parseInt(e.target.getAttribute('data-index'));
+            character.inventory.splice(index, 1);
+            updateCharacterInventory();
+            drawGrid();
+        });
+    });
+}
+
+            function updateCharacterAC(newArmor) {
+                let baseAC = 10;
+                const dexModifier = Math.floor((character.abilityScores.dexterity - 10) / 2);
+
+                if (newArmor) {
+                    baseAC = newArmor.ac;
+                    if (newArmor.addDex) {
+                        if (newArmor.maxDex) {
+                            character.ac = baseAC + Math.min(dexModifier, newArmor.maxDex);
+                        } else {
+                            character.ac = baseAC + dexModifier;
+                        }
+                    } else {
+                        character.ac = baseAC;
+                    }
+                } else {
+                    character.ac = baseAC + dexModifier;
+                }
+
+                const hasShield = character.inventory.some(item => item.name.toLowerCase() === 'shield');
+                if (hasShield) {
+                    character.ac += 2;
+                }
+
+                const acElement = document.getElementById('character-ac');
+                if (acElement) {
+                    acElement.textContent = character.ac;
+                }
+            }
+
+            function finishCharacter() {
+                character.skills = Array.from(document.querySelectorAll('input[name="skills"]:checked')).map(skill => skill.value);
+                character.feats = Array.from(document.querySelectorAll('input[name="feats"]:checked')).map(feat => feat.value);
+
+                character.maxHp = calculateHP(character.class, character.level, character.abilityScores.constitution);
+                character.hp = character.maxHp;
+
+                character.initiative = Math.floor((character.abilityScores.dexterity - 10) / 2);
+                character.proficiencyBonus = Math.floor((character.level - 1) / 4) + 2;
+
+                calculateSavingThrows();
+
+                document.getElementById('step6').classList.add('hidden');
+                document.getElementById('character-sheet').classList.remove('hidden');
+                displayCharacterSheet();
+                setupInventoryManager(); // Add this line
+
+ // Add default items
+ character.inventory = [];
+    character.inventory.push(items.find(item => item.name === "Dagger"));
+    
+    // Add class-specific toolkit
+    const classToolkits = {
+        barbarian: "Smith's tools",
+        bard: "Musical instrument",
+        cleric: "Healer's kit",
+        druid: "Herbalism kit",
+        fighter: "Smith's tools",
+        monk: "Calligrapher's supplies",
+        paladin: "Smith's tools",
+        ranger: "Navigator's tools",
+        rogue: "Thieves' tools",
+        sorcerer: "Alchemist's supplies",
+        warlock: "Alchemist's supplies",
+        wizard: "Alchemist's supplies"
+    };
+
+    const toolkit = items.find(item => item.name === classToolkits[character.class]);
+    if (toolkit) {
+        character.inventory.push(toolkit);
+    }
+
+                            }
+
+            function displayCharacterSheet() {
+                const characterNameDisplay = document.getElementById('character-name-display');
+                const characterLevelRaceClass = document.getElementById('character-level-race-class');
+                const characterHp = document.getElementById('character-hp');
+                const characterAc = document.getElementById('character-ac');
+                const characterInitiative = document.getElementById('character-initiative');
+                const characterProficiency = document.getElementById('character-proficiency');
+                const attributesPage = document.getElementById('attributes-page');
+                const skillsFeatsPage = document.getElementById('skills-feats-page');
+                const inventoryPage = document.getElementById('inventory-page');
+                const spellsPage = document.getElementById('spells-page');
+                const notesPage = document.getElementById('notes-page');
+                const rollResultsPage = document.getElementById('roll-results-page');
+
+                characterNameDisplay.textContent = character.name;
+                characterLevelRaceClass.textContent = `Level ${character.level} ${character.race} ${character.class}`;
+                characterHp.textContent = `${character.hp}/${character.maxHp}`;
+                characterAc.textContent = character.ac;
+                characterInitiative.textContent = `+${character.initiative}`;
+                characterProficiency.textContent = `+${character.proficiencyBonus}`;
+
+                const combatPage = document.createElement('div');
+    combatPage.id = 'combat-page';
+    combatPage.classList.add('category-page', 'hidden');
+    document.querySelector('.character-sheet-content').appendChild(combatPage);
+
+                // Populate attributes page
+                attributesPage.innerHTML = `
+                    <div class="grid">
+                        ${Object.entries(character.abilityScores).map(([ability, score]) => `
+                            <div class="ability-score" onclick="rollAbility('${ability}', ${score})">
+                                <div>${ability.charAt(0).toUpperCase() + ability.slice(1)}</div>
+                                <div class="score">${score}</div>
+                                <div class="modifier">${getModifierString(score)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="saving-throws">
+                        <h3>Saving Throws</h3>
+                        ${Object.entries(character.savingThrows).map(([ability, modifier]) => `
+                            <div class="saving-throw">
+                                <span>${ability.charAt(0).toUpperCase() + ability.slice(1)}</span>
+                                <span class="${modifier.proficient ? 'saving-throw-proficient' : ''}">${getModifierString(modifier.value)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                // Populate skills and feats page
+                skillsFeatsPage.innerHTML = `
+                    <h3>Skills</h3>
+                    <div class="skills">
+                        ${skills.map(skill => `
+                            <div class="skill" onclick="rollSkill('${skill}')">
+                                <span>${skill}</span>
+                                <span class="${character.skills.includes(skill) ? 'proficiency-bonus' : ''}">${getSkillModifier(skill)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <h3>Feats</h3>
+                    <div class="feats">
+                        ${character.feats.map(feat => `
+                            <div class="feat-item">
+                                <h4>${feat}</h4>
+                                <p>${feats.find(f => f.name === feat).description}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+// Populate inventory page
+inventoryPage.innerHTML = `
+    <div class="inventory-grid">
+        <canvas id="inventory-canvas" width="400" height="400"></canvas>
+    </div>
+    <div class="inventory-controls">
+        <select id="character-sheet-item-select"></select>
+        <button id="character-sheet-add-item-btn">Add Item</button>
+    </div>
+    <div id="character-inventory"></div>
+`;
+populateCharacterSheetItemDropdown();
+setupInventoryManager();
+populateCombatPage();
+//brad
+                // document.getElementById('add-item-btn').addEventListener('click', addItemToInventory);
+
+                // Populate spells page if character is a spellcaster
+                if (isSpellcaster(character.class)) {
+                    spellsPage.innerHTML = `
+                        <h3>Spells</h3>
+                        <select id="spell-select">
+                            <option value="">Select a spell</option>
+                        </select>
+                        <button id="add-spell-btn">Add Spell</button>
+                        <div id="spell-list" class="spell-list"></div>
+                    `;
+                    populateSpellList();
+                    setupSpellManager();
+                } else {
+                    spellsPage.innerHTML = `<p>This character does not have spellcasting abilities.</p>`;
+                }
+
+                // Populate notes page
+                notesPage.querySelector('#character-notes').value = character.notes;
+
+                // Populate roll results page
+                rollResultsPage.innerHTML = `
+                    <h3>Roll Results</h3>
+                    <div id="roll-results"></div>
+                `;
+
+                // Set up navigation between pages
+                const categoryPages = ['attributes-page', 'skills-feats-page', 'inventory-page', 'spells-page', 'combat-page','notes-page', 'roll-results-page'];
+                let currentCategoryIndex = 0;
+
+                document.getElementById('prev-category').addEventListener('click', () => {
+                    currentCategoryIndex = (currentCategoryIndex - 1 + categoryPages.length) % categoryPages.length;
+                    updateCategoryDisplay();
+                });
+
+                document.getElementById('next-category').addEventListener('click', () => {
+                    currentCategoryIndex = (currentCategoryIndex + 1) % categoryPages.length;
+                    updateCategoryDisplay();
+                });
+
+                function updateCategoryDisplay() {
+                    categoryPages.forEach(pageId => {
+                        document.getElementById(pageId).classList.add('hidden');
+                    });
+                    document.getElementById(categoryPages[currentCategoryIndex]).classList.remove('hidden');
+                    document.getElementById('category-name').textContent = categoryPages[currentCategoryIndex].split('-')[0].charAt(0).toUpperCase() + categoryPages[currentCategoryIndex].split('-')[0].slice(1);
+                }
+
+                updateCategoryDisplay();
+            }
+
+            function getModifierString(score) {
+                const modifier = Math.floor((score - 10) / 2);
+                return modifier >= 0 ? `+${modifier}` : `${modifier}`;
+            }
+
+            function calculateHP(characterClass, level, constitutionScore) {
+                const hitDice = {
+                    barbarian: 12,
+                    fighter: 10,
+                    paladin: 10,
+                    ranger: 10,
+                    bard: 8,
+                    cleric: 8,
+                    druid: 8,
+                    monk: 8,
+                    rogue: 8,
+                    warlock: 8,
+                    sorcerer: 6,
+                    wizard: 6
+                };
+
+                const conModifier = Math.floor((constitutionScore - 10) / 2);
+                const classHitDie = hitDice[characterClass] || 8;
+
+                // First level: full hit die + CON modifier
+                let hp = classHitDie + conModifier;
+
+                // Subsequent levels: average roll on hit die + CON modifier
+                for (let i = 1; i < level; i++) {
+                    hp += Math.floor((classHitDie / 2) + 1) + conModifier;
+                }
+
+                return Math.max(hp, 1); // Ensure HP is at least 1
+            }
+
+            function calculateSavingThrows() {
+                const proficientSaves = getProficientSaves(character.class);
+                character.savingThrows = {};
+
+                Object.entries(character.abilityScores).forEach(([ability, score]) => {
+                    const modifier = Math.floor((score - 10) / 2);
+                    const proficient = proficientSaves.includes(ability);
+                    character.savingThrows[ability] = {
+                        value: modifier + (proficient ? character.proficiencyBonus : 0),
+                        proficient: proficient
+                    };
+                });
+            }
+
+            function getProficientSaves(characterClass) {
+                const savingThrowProficiencies = {
+                    barbarian: ['strength', 'constitution'],
+                    bard: ['dexterity', 'charisma'],
+                    cleric: ['wisdom', 'charisma'],
+                    druid: ['intelligence', 'wisdom'],
+                    fighter: ['strength', 'constitution'],
+                    monk: ['strength', 'dexterity'],
+                    paladin: ['wisdom', 'charisma'],
+                    ranger: ['strength', 'dexterity'],
+                    rogue: ['dexterity', 'intelligence'],
+                    sorcerer: ['constitution', 'charisma'],
+                    warlock: ['wisdom', 'charisma'],
+                    wizard: ['intelligence', 'wisdom']
+                };
+
+                return savingThrowProficiencies[characterClass] || [];
+            }
+
+            function getSkillModifier(skill) {
+                const relevantAbility = getRelevantAbility(skill);
+                const abilityModifier = Math.floor((character.abilityScores[relevantAbility] - 10) / 2);
+                const proficiencyBonus = character.skills.includes(skill) ? character.proficiencyBonus : 0;
+                const totalModifier = abilityModifier + proficiencyBonus;
+                return totalModifier >= 0 ? `+${totalModifier}` : `${totalModifier}`;
+            }
+
+            function generateRandomCharacter() {
+                character.name = generateRandomName();
+                character.race = getRandomItem(Object.keys(raceInfo));
+                character.class = getRandomItem(Object.keys(classInfo));
+                character.level = Math.floor(Math.random() * 20) + 1;
+                character.background = getRandomItem(Object.keys(backgroundInfo));
+
+                // Generate ability scores
+                ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'].forEach(ability => {
+                    const rolls = [
+                        Math.floor(Math.random() * 6) + 1,
+                        Math.floor(Math.random() * 6) + 1,
+                        Math.floor(Math.random() * 6) + 1,
+                        Math.floor(Math.random() * 6) + 1
+                    ];
+                    rolls.sort((a, b) => b - a);
+                    character.abilityScores[ability] = rolls[0] + rolls[1] + rolls[2];
+                });
+
+                // Select random skills
+                const availableSkills = getClassSkills(character.class).concat(getBackgroundSkills(character.background));
+                const numSkills = 4; // Adjust this number based on class/background
+                character.skills = [];
+                for (let i = 0; i < numSkills; i++) {
+                    if (availableSkills.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * availableSkills.length);
+                        character.skills.push(availableSkills.splice(randomIndex, 1)[0]);
+                    }
+                }
+
+                // Select random feats if level is 4 or higher
+                character.feats = [];
+                if (character.level >= 4) {
+                    const availableFeats = [...feats];
+                    const numFeats = Math.floor((character.level - 1) / 4);
+                    for (let i = 0; i < numFeats; i++) {
+                        if (availableFeats.length > 0) {
+                            const randomIndex = Math.floor(Math.random() * availableFeats.length);
+                            character.feats.push(availableFeats.splice(randomIndex, 1)[0].name);
+                        }
+                    }
+                }
+
+                // Add random inventory items
+                character.inventory = [];
+                const numItems = Math.floor(Math.random() * 3) + 1;
+                for (let i = 0; i < numItems; i++) {
+                    character.inventory.push(getRandomItem(items));
+                }
+
+                // Calculate HP and AC
+                character.maxHp = calculateHP(character.class, character.level, character.abilityScores.constitution);
+                character.hp = character.maxHp;
+                updateCharacterAC(character.inventory.find(item => item.type === 'armor')); // Find the armor in inventory
+
+                // Calculate other derived stats
+                character.initiative = Math.floor((character.abilityScores.dexterity - 10) / 2);
+                character.proficiencyBonus = Math.floor((character.level - 1) / 4) + 2;
+
+                // Calculate saving throws
+                calculateSavingThrows();
+
+                // Display the generated character
+                displayCharacterSheet();
+                setupInventoryManager();
+                document.getElementById('roll-new-character').classList.remove('hidden');
+                document.getElementById('start-menu').classList.add('hidden');
+                document.getElementById('character-sheet').classList.remove('hidden');
+            }
+
+            function getRandomItem(array) {
+                return array[Math.floor(Math.random() * array.length)];
+            }
+
+            function showNotification(message) {
+    const notification = document.getElementById('notification');
+    if (!notification) {
+        console.error('Notification element not found');
+        return;
+    }
+    notification.textContent = message;
+    notification.style.display = 'block';
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
+            function rollAbility(ability, score) {
+                const roll = Math.floor(Math.random() * 20) + 1;
+                const modifier = Math.floor((score - 10) / 2);
+                const total = roll + modifier;
+                const result = `${ability.charAt(0).toUpperCase() + ability.slice(1)} check: ${roll} + ${modifier} = ${total}`;
+                showNotification(result);
+                addRollResult(result);
+            }
+
+            function rollSkill(skill) {
+                const roll = Math.floor(Math.random() * 20) + 1;
+                const relevantAbility = getRelevantAbility(skill);
+                const abilityModifier = Math.floor((character.abilityScores[relevantAbility] - 10) / 2);
+                const proficiencyBonus = character.skills.includes(skill) ? character.proficiencyBonus : 0;
+                const total = roll + abilityModifier + proficiencyBonus;
+                const result = `${skill} check: ${roll} + ${abilityModifier} (${relevantAbility}) + ${proficiencyBonus} (prof) = ${total}`;
+                showNotification(result);
+                addRollResult(result);
+            }
+
+            function getRelevantAbility(skill) {
+                const skillAbilities = {
+                    "Acrobatics": "dexterity",
+                    "Animal Handling": "wisdom",
+                    "Arcana": "intelligence",
+                    "Athletics": "strength",
+                    "Deception": "charisma",
+                    "History": "intelligence",
+                    "Insight": "wisdom",
+                    "Intimidation": "charisma",
+                    "Investigation": "intelligence",
+                    "Medicine": "wisdom",
+                    "Nature": "intelligence",
+                    "Perception": "wisdom",
+                    "Performance": "charisma",
+                    "Persuasion": "charisma",
+                    "Religion": "intelligence",
+                    "Sleight of Hand": "dexterity",
+                    "Stealth": "dexterity",
+                    "Survival": "wisdom"
+                };
+                return skillAbilities[skill] || "intelligence";
+            }
+
+            function rollToHit(weaponName) {
+    const weapon = character.inventory.find(item => item.name === weaponName && item.type === 'weapon');
+    if (!weapon) return;
+
+    const relevantAbility = weapon.properties.includes("Finesse") ? 
+        (character.abilityScores.dexterity > character.abilityScores.strength ? "dexterity" : "strength") :
+        (weapon.properties.includes("Ranged") ? "dexterity" : "strength");
+
+    const abilityModifier = Math.floor((character.abilityScores[relevantAbility] - 10) / 2);
+    const proficiencyBonus = character.proficiencyBonus;
+
+    const roll = Math.floor(Math.random() * 20) + 1;
+    const total = roll + abilityModifier + proficiencyBonus;
+
+    const result = `${weaponName} to hit: ${roll} + ${abilityModifier} (${relevantAbility}) + ${proficiencyBonus} (prof) = ${total}`;
+    showNotification(result);
+    addRollResult(result);
+}
+
+function rollDamage(weaponName) {
+    const weapon = character.inventory.find(item => item.name === weaponName && item.type === 'weapon');
+    if (!weapon) return;
+
+    const [diceCount, diceType] = weapon.damage.split('d').map(Number);
+    let damageRoll = 0;
+    for (let i = 0; i < diceCount; i++) {
+        damageRoll += Math.floor(Math.random() * diceType) + 1;
+    }
+
+    const relevantAbility = weapon.properties.includes("Finesse") ? 
+        (character.abilityScores.dexterity > character.abilityScores.strength ? "dexterity" : "strength") :
+        (weapon.properties.includes("Ranged") ? "dexterity" : "strength");
+
+    const abilityModifier = Math.floor((character.abilityScores[relevantAbility] - 10) / 2);
+    const total = damageRoll + abilityModifier;
+
+    const result = `${weaponName} damage: ${damageRoll} + ${abilityModifier} (${relevantAbility}) = ${total} ${weapon.damageType}`;
+    showNotification(result);
+    addRollResult(result);
+}
+
+function rollSpellToHit(spellName) {
+    const spell = character.spells.find(s => s.name === spellName);
+    if (!spell) return;
+
+    const spellcastingAbility = getSpellcastingAbility(character.class);
+    const abilityModifier = Math.floor((character.abilityScores[spellcastingAbility] - 10) / 2);
+    const proficiencyBonus = character.proficiencyBonus;
+
+    const roll = Math.floor(Math.random() * 20) + 1;
+    const total = roll + abilityModifier + proficiencyBonus;
+
+    const result = `${spellName} to hit: ${roll} + ${abilityModifier} (${spellcastingAbility}) + ${proficiencyBonus} (prof) = ${total}`;
+    showNotification(result);
+    addRollResult(result);
+}
+
+function rollSpellDamage(spellName) {
+    const spell = character.spells.find(s => s.name === spellName);
+    if (!spell) return;
+
+    // This is a simplified version. You'd need to implement proper spell damage calculations.
+    const damageRoll = Math.floor(Math.random() * 10) + 1;
+    const result = `${spellName} damage/effect: ${damageRoll}`;
+    showNotification(result);
+    addRollResult(result);
+}
+
+function getSpellcastingAbility(characterClass) {
+    const spellcastingAbilities = {
+        wizard: 'intelligence',
+        cleric: 'wisdom',
+        druid: 'wisdom',
+        sorcerer: 'charisma',
+        warlock: 'charisma',
+        paladin: 'charisma',
+        bard: 'charisma',
+        ranger: 'wisdom'
+    };
+    return spellcastingAbilities[characterClass] || 'intelligence';
+}
+
+
+            function isSpellcaster(characterClass) {
+                return ['bard', 'cleric', 'druid', 'paladin', 'ranger', 'sorcerer', 'warlock', 'wizard'].includes(characterClass);
+            }
+
+            function populateSpellList() {
+                const spellSelect = document.getElementById('spell-select');
+                getSpellsForClass(character.class).forEach(spell => {
+                    const option = document.createElement('option');
+                    option.value = spell.name;
+                    option.textContent = `${spell.name} (Level ${spell.level})`;
+                    spellSelect.appendChild(option);
+                });
+            }
+
+            function setupSpellManager() {
+                const addSpellBtn = document.getElementById('add-spell-btn');
+                const spellSelect = document.getElementById('spell-select');
+                const spellList = document.getElementById('spell-list');
+
+                addSpellBtn.addEventListener('click', () => {
+                    const selectedSpell = getSpellsForClass(character.class).find(spell => spell.name === spellSelect.value);
+                    if (selectedSpell && !character.spells.some(s => s.name === selectedSpell.name)) {
+                        character.spells.push(selectedSpell);
+                        updateSpellList();
+                    }
+                });
+
+                function updateSpellList() {
+                    spellList.innerHTML = '';
+                    character.spells.sort((a, b) => a.level - b.level).forEach(spell => {
+                        const spellItem = document.createElement('div');
+                        spellItem.classList.add('spell-item');
+                        spellItem.innerHTML = `
+                            <div class="spell-header">
+                                <span>${spell.name} (Level ${spell.level})</span>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="spell-details hidden">
+                                <p><strong>Casting Time:</strong> ${spell.castingTime}</p>
+                                <p><strong>Range:</strong> ${spell.range}</p>
+                                <p><strong>Components:</strong> ${spell.components}</p>
+                                <p><strong>Duration:</strong> ${spell.duration}</p>
+                                <p>${spell.description}</p>
+                            </div>
+                        `;
+                        spellList.appendChild(spellItem);
+
+                        spellItem.querySelector('.spell-header').addEventListener('click', () => {
+                            spellItem.querySelector('.spell-details').classList.toggle('hidden');
+                            spellItem.querySelector('.bi-chevron-down').classList.toggle('bi-chevron-up');
+                        });
+                    });
+                }
+
+                updateSpellList();
+            }
+
+            function getSpellsForClass(characterClass) {
+                // This is a simplified list of spells. In a real application, you'd have a much more comprehensive list.
+                const spells = [
+                    { name: "Magic Missile", level: 1, castingTime: "1 action", range: "120 feet", components: "V, S", duration: "Instantaneous", description: "You create three glowing darts of magical force. Each dart hits a creature of your choice that you can see within range. A dart deals 1d4+1 force damage to its target." },
+                    { name: "Cure Wounds", level: 1, castingTime: "1 action", range: "Touch", components: "V, S", duration: "Instantaneous", description: "A creature you touch regains a number of hit points equal to 1d8 + your spellcasting ability modifier." },
+                    { name: "Fireball", level: 3, castingTime: "1 action", range: "150 feet", components: "V, S, M", duration: "Instantaneous", description: "A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw. A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one." },
+                    { name: "Mage Hand", level: 0, castingTime: "1 action", range: "30 feet", components: "V, S", duration: "1 minute", description: "A spectral, floating hand appears at a point you choose within range. You can use your action to control the hand. You can use the hand to manipulate an object, open an unlocked door or container, stow or retrieve an item from an open container, or pour the contents out of a vial." },
+                    { name: "Healing Word", level: 1, castingTime: "1 bonus action", range: "60 feet", components: "V", duration: "Instantaneous", description: "A creature of your choice that you can see within range regains hit points equal to 1d4 + your spellcasting ability modifier." }
+                ];
+
+                // Filter spells based on character class and level
+                return spells.filter(spell => {
+                    switch (characterClass) {
+                        case 'wizard':
+                        case 'sorcerer':
+                            return spell.level <= Math.ceil(character.level / 2);
+                        case 'cleric':
+                        case 'druid':
+                        case 'bard':
+                            return spell.level <= Math.ceil(character.level / 2) - 1;
+                        case 'paladin':
+                        case 'ranger':
+                            return spell.level <= Math.ceil(character.level / 3);
+                        default:
+                            return false;
+                    }
+                });
+            }
+
+            function saveCharacter() {
+                const characterData = JSON.stringify(character);
+                const blob = new Blob([characterData], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${character.name}_character.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                saveCharacterToCookie(character);
+                showNotification('Character saved successfully!');
+            }
+
+            function saveCharacterToCookie(character) {
+                const cookieName = `character_${encodeURIComponent(character.name)}`;
+                const existingCookies = document.cookie.split(';').map(c => c.trim());
+                const characterCookies = existingCookies.filter(c => c.startsWith('character_'));
+                
+                if (characterCookies.length >= 10) {
+                    const oldestCookie = characterCookies[0].split('=')[0];
+                    document.cookie = `${oldestCookie}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                }
+
+                const encodedData = encodeURIComponent(JSON.stringify(character));
+                document.cookie = `${cookieName}=${encodedData}; max-age=31536000; path=/`;
+            }
+
+            function editCharacter() {
+                document.getElementById('character-sheet').classList.add('hidden');
+                characterCreator.classList.remove('hidden');
+                document.getElementById(steps[0]).classList.remove('hidden');
+                currentStep = 0;
+
+                document.getElementById('character-name').value = character.name;
+                document.getElementById('race').value = character.race;
+                document.getElementById('class').value = character.class;
+                document.getElementById('level').value = character.level;
+                document.getElementById('background').value = character.background;
+
+                Object.entries(character.abilityScores).forEach(([ability, score]) => {
+                    const scoreSpan = document.getElementById(`${ability}-score`);
+                    scoreSpan.textContent = `${score} (Modifier: ${getModifierString(score)}) (Selected)`;
+                    document.querySelector(`.dice[data-ability="${ability}"]`).style.display = 'none';
+                });
+
+                updateRaceInfo();
+                updateClassInfo();
+                updateBackgroundInfo();
+                updateSubclassOptions();
+                updateSkillsAndFeats();
+                setupInventoryManager();
+                updateCharacterInventory();
+            }
+
+            function addRollResult(result) {
+                const rollResults = document.getElementById('roll-results');
+                const rollItem = document.createElement('div');
+                rollItem.classList.add('roll-item');
+                rollItem.textContent = result;
+                rollResults.insertBefore(rollItem, rollResults.firstChild);
+
+                while (rollResults.children.length > 10) {
+                    rollResults.removeChild(rollResults.lastChild);
+                }
+            }
+
+            function longRest() {
+                character.hp = character.maxHp;
+                document.getElementById('character-hp').textContent = `${character.hp}/${character.maxHp}`;
+                showNotification('Long rest completed. HP restored to maximum.');
+            }
+
+            function setupInventoryManager() {
+    console.log('Setting up inventory manager...'); // Log when this part of the code is reached
+    const inventoryCanvas = document.getElementById('inventory-canvas');
+    const inventoryCtx = inventoryCanvas.getContext('2d');
+
+    let draggedItem = null;
+    let dragOffset = { x: 0, y: 0 };
+
+    // function drawGrid() {
+    //     inventoryCtx.clearRect(0, 0, inventoryCanvas.width, inventoryCanvas.height);
+    //     for (let i = 0; i < GRID_SIZE; i++) {
+    //         for (let j = 0; j < GRID_SIZE; j++) {
+    //             inventoryCtx.strokeStyle = '#ddd';
+    //             inventoryCtx.strokeRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+    //         }
+    //     }
+    //     character.inventory.forEach(drawItem);
+    // }
+
+    // function drawItem(item) {
+    //     inventoryCtx.fillStyle = item.color || '#999';
+    //     inventoryCtx.fillRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
+    //     inventoryCtx.fillStyle = 'black';
+    //     inventoryCtx.font = '12px Arial';
+    //     inventoryCtx.fillText(item.name, item.x * CELL_SIZE + 5, item.y * CELL_SIZE + 15);
+    // }
+
+//     function drawItem(item) {
+//     const inventoryCanvas = document.getElementById('inventory-canvas');
+//     const inventoryCtx = inventoryCanvas.getContext('2d');
+    
+//     const imageName = item.name.replace(/'/g, '').replace(/ /g, '_') + '.png';
+//     const imagePath = `assets/images/${imageName}`;
+//     console.log('Image path:', imageName, imagePath);
+
+//     const img = new Image();
+//     img.onload = () => {
+//         inventoryCtx.drawImage(img, item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
+//     };
+//     img.onerror = () => {
+//         // Fallback to grey block if image doesn't load
+//         inventoryCtx.fillStyle = '#999';
+//         inventoryCtx.fillRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
+        
+//         // Draw item name
+//         inventoryCtx.fillStyle = 'black';
+//         inventoryCtx.font = '12px Arial';
+//         inventoryCtx.fillText(item.name, item.x * CELL_SIZE + 5, item.y * CELL_SIZE + 15);
+//     };
+//     img.src = imagePath;
+// }
+
+//     function drawItem(item) {
+//     const inventoryCanvas = document.getElementById('inventory-canvas');
+//     const inventoryCtx = inventoryCanvas.getContext('2d');
+    
+//     // Draw item background
+//     inventoryCtx.fillStyle = item.color || '#999';
+//     inventoryCtx.fillRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
+    
+//     // Draw item border
+//     inventoryCtx.strokeStyle = '#000';
+//     inventoryCtx.strokeRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
+    
+//     // Draw item name
+//     inventoryCtx.fillStyle = 'black';
+//     inventoryCtx.font = '12px Arial';
+//     inventoryCtx.fillText(item.name, item.x * CELL_SIZE + 5, item.y * CELL_SIZE + 15);
+
+//     console.log(`Drew item ${item.name} at (${item.x}, ${item.y}), size: ${item.width}x${item.height}`);
+// }
+
+
+    function findAvailablePosition(item) {
+        for (let y = 0; y <= GRID_SIZE - item.height; y++) {
+            for (let x = 0; x <= GRID_SIZE - item.width; x++) {
+                if (canPlaceItem(item, x, y)) {
+                    return { x, y };
+                }
+            }
+        }
+        return null;
+    }
+
+    function canPlaceItem(item, x, y) {
+        for (let i = 0; i < item.height; i++) {
+            for (let j = 0; j < item.width; j++) {
+                if (isOccupied(x + j, y + i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function isOccupied(x, y) {
+        return character.inventory.some(item =>
+            x >= item.x && x < item.x + item.width &&
+            y >= item.y && y < item.y + item.height
+        );
+    }
+
+    const addItemBtn = document.getElementById('character-sheet-add-item-btn');
+console.log('Add item button element:', addItemBtn);
+if (addItemBtn && !addItemBtn.hasEventListener) {
+    console.log('Add item button found, adding event listener...');
+    addItemBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        addItemToInventory();
+    });
+    addItemBtn.hasEventListener = true;
+    console.log('Event listener added to add item button.');
+} else if (addItemBtn) {
+    console.log('Add item button already has an event listener');
+} else {
+    console.error('Add item button not found');
+}
+
+    const itemSelect = document.getElementById('character-sheet-item-select');
+    if (itemSelect) {
+        itemSelect.addEventListener('change', function(event) {
+            console.log('Selected item:', event.target.value);
+        });
+    }
+
+    inventoryCanvas.addEventListener('mousedown', (e) => {
+        const x = Math.floor(e.offsetX / CELL_SIZE);
+        const y = Math.floor(e.offsetY / CELL_SIZE);
+
+        draggedItem = character.inventory.find(item => x >= item.x && x < item.x + item.width && y >= item.y && y < item.y + item.height);
+
+        if (draggedItem) {
+            dragOffset.x = x - draggedItem.x;
+            dragOffset.y = y - draggedItem.y;
+        }
+    });
+
+    inventoryCanvas.addEventListener('mousemove', (e) => {
+        if (!draggedItem) return;
+
+        const x = Math.floor(e.offsetX / CELL_SIZE);
+        const y = Math.floor(e.offsetY / CELL_SIZE);
+
+        draggedItem.x = x - dragOffset.x;
+        draggedItem.y = y - dragOffset.y;
+
+        drawGrid();
+
+        if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
+            inventoryCtx.globalAlpha = 0.5;
+            inventoryCtx.fillStyle = 'red';
+            inventoryCtx.fillRect(draggedItem.x * CELL_SIZE, draggedItem.y * CELL_SIZE, draggedItem.width * CELL_SIZE, draggedItem.height * CELL_SIZE);
+            inventoryCtx.globalAlpha = 1;
+        }
+    });
+
+    inventoryCanvas.addEventListener('mouseup', () => {
+        if (draggedItem) {
+            if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
+                const originalPosition = character.inventory.find(item => item === draggedItem);
+                draggedItem.x = originalPosition.x;
+                draggedItem.y = originalPosition.y;
+            }
+            draggedItem = null;
+            drawGrid();
+            updateCharacterInventory();
+        }
+    });
+
+    function checkOverlap(item) {
+        return character.inventory.some(other => {
+            if (other === item) return false;
+            return !(item.x + item.width <= other.x || item.x >= other.x + other.width ||
+                     item.y + item.height <= other.y || item.y >= other.y + other.height);
+        });
+    }
+
+    function isWithinGrid(item) {
+        return item.x >= 0 && item.y >= 0 && item.x + item.width <= GRID_SIZE && item.y + item.height <= GRID_SIZE;
+    }
+
+    drawGrid();
+
+    // character.inventory.forEach((item, index) => {
+    //     if (item.x === undefined || item.y === undefined) {
+    //         const position = findAvailablePosition(item);
+    //         if (position) {
+    //             item.x = position.x;
+    //             item.y = position.y;
+    //         } else {
+    //             console.warn(`Couldn't place item ${item.name} in the inventory grid.`);
+    //         }
+    //     }
+    // });
+
+    character.inventory.forEach((item, index) => {
+    if (item.x === undefined || item.y === undefined || item.width === undefined || item.height === undefined) {
+        console.warn(`Item ${item.name} is missing position or size information:`, item);
+        // Assign default values if missing
+        item.x = item.x || Math.floor(index / GRID_SIZE);
+        item.y = item.y || index % GRID_SIZE;
+        item.width = item.width || 1;
+        item.height = item.height || 1;
+    }
+});
+    console.log('Inventory after placement:', character.inventory);
+    drawGrid();
+    updateCharacterInventory();
+
+
+    console.log('Canvas dimensions:', inventoryCanvas.width, 'x', inventoryCanvas.height);
+console.log('Grid size:', GRID_SIZE, 'x', GRID_SIZE, 'cells');
+console.log('Cell size:', CELL_SIZE, 'pixels');
+
+}
+
+
+function populateItemDropdown() {
+    const itemSelect = document.getElementById('item-select');
+    if (itemSelect) {
+        itemSelect.innerHTML = '<option value="">Select an item</option>';
+        items.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.name;
+            option.textContent = `${item.name} (${item.width}x${item.height})`;
+            itemSelect.appendChild(option);
+        });
+    } else {
+        console.error('Item select element not found');
+    }
+}
+
+function populateCharacterSheetItemDropdown() {
+    const itemSelect = document.getElementById('character-sheet-item-select');
+    if (itemSelect) {
+        itemSelect.innerHTML = '<option value="">Select an item</option>';
+        items.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.name;
+            option.textContent = `${item.name} (${item.width}x${item.height})`;
+            itemSelect.appendChild(option);
+        });
+    } else {
+        console.error('Character sheet item select element not found');
+    }
+}
+
+            // Initialize the application
+            initializeUI();
+
+            // Make these functions globally available for onclick events
+            window.rollAbility = rollAbility;
+            window.rollSkill = rollSkill;
+            window.rollToHit = rollToHit;
+            window.rollDamage = rollDamage;
+        });
+    </script>
+    </body>
+</html>
