@@ -1122,13 +1122,18 @@ function drawItem(item) {
     img.src = imagePath;
 }
 
-            function initializeUI() {
-                populateDropdowns();
-                setupEventListeners();
-                setupAbilityScores();
-                populateItemDropdown(); // Add this line
-                document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
-            }
+function initializeUI() {
+    populateDropdowns();
+    setupEventListeners();
+    setupAbilityScores();
+    populateItemDropdown();
+    document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
+    
+    // If spells are already loaded, display the character sheet
+    if (spells.length > 0) {
+        displayCharacterSheet();
+    }
+}
 
             function populateDropdowns() {
                 populateDropdown('race', Object.keys(raceInfo));
@@ -2869,20 +2874,24 @@ function isSpellcaster(characterClass) {
             // }
 
             function populateSpellList() {
+    console.log('Populating spell list for', character.class);
     const spellSelect = document.getElementById('spell-select');
     if (!spellSelect) {
         console.error('Spell select element not found');
         return;
     }
     spellSelect.innerHTML = '<option value="">Select a spell</option>';
+    let spellCount = 0;
     spells.forEach(spell => {
         if (spell.classes.includes(character.class)) {
             const option = document.createElement('option');
             option.value = spell.name;
             option.textContent = `${spell.name} (Level ${spell.level})`;
             spellSelect.appendChild(option);
+            spellCount++;
         }
     });
+    console.log(`Added ${spellCount} spells to the list`);
 }
 
             function setupSpellManager() {
@@ -3676,10 +3685,9 @@ fetch('spells.json')
         spells = data;
         console.log('Spells loaded:', spells.length);
         
-        // Call functions that need spell data here
-        if (isSpellcaster(character.class)) {
-            populateSpellList();
-            updateSpellSlots();
+        // If the character sheet is already displayed, update it
+        if (document.getElementById('character-sheet').style.display !== 'none') {
+            displayCharacterSheet();
         }
     })
     .catch(error => console.error('Error loading spells:', error));
