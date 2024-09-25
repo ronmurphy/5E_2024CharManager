@@ -3752,15 +3752,15 @@ function scrollToSpellLevel(level) {
     }
 }
 
+// Make it available globally
 
 let spells = [];
-
 fetch('spells.json')
     .then(response => response.json())
     .then(data => {
         spells = data;
         console.log('Spells loaded:', spells.length);
-        
+       
         // If the character sheet is already displayed, update it
         if (document.getElementById('character-sheet').style.display !== 'none') {
             displayCharacterSheet();
@@ -3768,7 +3768,7 @@ fetch('spells.json')
     })
     .catch(error => console.error('Error loading spells:', error));
 
-    console.log('All loaded spells:', spells);
+
             // Initialize the application
             initializeUI();
 
@@ -3783,6 +3783,8 @@ window.character = character;
 window.editCharacterName = editCharacterName;
 window.generateRandomName = generateRandomName;
 window.longRest = longRest;
+window.scrollToSpellLevel = scrollToSpellLevel;
+
 
 window.onerror = function(message, source, lineno, colno, error) {
     console.error('An error occurred:', message, 'at', source, 'line', lineno);
