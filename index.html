@@ -2380,17 +2380,7 @@ skillsFeatsPage.innerHTML = `
     </div>
 `;
 
-// Populate inventory page
-// inventoryPage.innerHTML = `
-//     <div class="inventory-grid">
-//         <canvas id="inventory-canvas" width="400" height="400"></canvas>
-//     </div>
-//     <div class="inventory-controls">
-//         <select id="character-sheet-item-select"></select>
-//         <button id="character-sheet-add-item-btn">Add Item</button>
-//     </div>
-//     <div id="character-inventory"></div>
-// `;
+
 
 inventoryPage.innerHTML = `
     <div class="inventory-container">
@@ -2436,36 +2426,6 @@ inventoryPage.innerHTML = `
     <div id="character-inventory"></div>
 `;
 
-// const currencyHtml = `
-//     <div id="currency-tracker">
-//         <h4>Currency</h4>
-//         <div>
-//             <label for="copper">CP:</label>
-//             <input type="number" id="copper" value="${character.currency.copper || 0}" onchange="updateCurrency('copper', this.value)">
-//         </div>
-//         <div>
-//             <label for="silver">SP:</label>
-//             <input type="number" id="silver" value="${character.currency.silver || 0}" onchange="updateCurrency('silver', this.value)">
-//         </div>
-//         <div>
-//             <label for="electrum">EP:</label>
-//             <input type="number" id="electrum" value="${character.currency.electrum || 0}" onchange="updateCurrency('electrum', this.value)">
-//         </div>
-//         <div>
-//             <label for="gold">GP:</label>
-//             <input type="number" id="gold" value="${character.currency.gold || 0}" onchange="updateCurrency('gold', this.value)">
-//         </div>
-//         <div>
-//             <label for="platinum">PP:</label>
-//             <input type="number" id="platinum" value="${character.currency.platinum || 0}" onchange="updateCurrency('platinum', this.value)">
-//         </div>
-//         <div>
-//             <label for="gems">Gems:</label>
-//             <input type="text" id="gems" value="${character.currency.gems || ''}" onchange="updateCurrency('gems', this.value)">
-//         </div>
-//     </div>
-// `;
-// inventoryPage.innerHTML += currencyHtml;
 
 function updateCurrency(type, value) {
     character.currency[type] = type === 'gems' ? value : parseInt(value);
@@ -2474,9 +2434,7 @@ populateCharacterSheetItemDropdown();
 setupInventoryManager();
 populateCombatPage();
 //brad
-                // document.getElementById('add-item-btn').addEventListener('click', addItemToInventory);
-
-                // Populate spells page if character is a spellcaster
+               
                 // Populate spells page if character is a spellcaster
                 if (isSpellcaster(character.class)) {
         const spellSlots = calculateSpellSlots(character.class, character.level);
@@ -2900,15 +2858,32 @@ function isSpellcaster(characterClass) {
     return ['wizard', 'sorcerer', 'bard', 'cleric', 'druid', 'paladin', 'ranger', 'warlock', 'artificer'].includes(characterClass);
 }
 
+            // function populateSpellList() {
+            //     const spellSelect = document.getElementById('spell-select');
+            //     getSpellsForClass(character.class).forEach(spell => {
+            //         const option = document.createElement('option');
+            //         option.value = spell.name;
+            //         option.textContent = `${spell.name} (Level ${spell.level})`;
+            //         spellSelect.appendChild(option);
+            //     });
+            // }
+
             function populateSpellList() {
-                const spellSelect = document.getElementById('spell-select');
-                getSpellsForClass(character.class).forEach(spell => {
-                    const option = document.createElement('option');
-                    option.value = spell.name;
-                    option.textContent = `${spell.name} (Level ${spell.level})`;
-                    spellSelect.appendChild(option);
-                });
-            }
+    const spellSelect = document.getElementById('spell-select');
+    if (!spellSelect) {
+        console.error('Spell select element not found');
+        return;
+    }
+    spellSelect.innerHTML = '<option value="">Select a spell</option>';
+    spells.forEach(spell => {
+        if (spell.classes.includes(character.class)) {
+            const option = document.createElement('option');
+            option.value = spell.name;
+            option.textContent = `${spell.name} (Level ${spell.level})`;
+            spellSelect.appendChild(option);
+        }
+    });
+}
 
             function setupSpellManager() {
                 const addSpellBtn = document.getElementById('add-spell-btn');
@@ -3507,15 +3482,7 @@ function removeAllImproveButtons() {
     console.log('All +1 buttons removed');
 }
 
-// function improveAbility(ability, button) {
-//       console.log(`Improvement added for ${ability}`);
-//       character.abilityScores[ability]++; // Increment the ability score
 
-//       character.abilityScoreImpovementLeft--;
-//       console.log('After decrement, abilityScoreImpovementLeft:' + character.abilityScoreImpovementLeft)
-//       displayCharacterSheet();   // Refresh the character sheet
-//       console.log('Character sheet updated.');
-// }
 
 
 function calculateHPIncrease(characterClass, constitutionScore) {
@@ -3701,6 +3668,21 @@ function exportToPDF() {
     doc.save(`${character.name}_character_sheet.pdf`);
 }
 
+let spells = [];
+
+fetch('spells.json')
+    .then(response => response.json())
+    .then(data => {
+        spells = data;
+        console.log('Spells loaded:', spells.length);
+        
+        // Call functions that need spell data here
+        if (isSpellcaster(character.class)) {
+            populateSpellList();
+            updateSpellSlots();
+        }
+    })
+    .catch(error => console.error('Error loading spells:', error));
 
             // Initialize the application
             initializeUI();
