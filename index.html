@@ -2474,6 +2474,7 @@ populateCombatPage();
                 </div>
             </div>
         `;
+        console.log('Character class before populating spells:', character.class);
         populateSpellList();
         setupSpellManager();
     } else {
@@ -2860,7 +2861,8 @@ function getSpellcastingAbility(characterClass) {
 
 
 function isSpellcaster(characterClass) {
-    return ['wizard', 'sorcerer', 'bard', 'cleric', 'druid', 'paladin', 'ranger', 'warlock', 'artificer'].includes(characterClass);
+    const spellcasterClasses = ['wizard', 'sorcerer', 'bard', 'cleric', 'druid', 'paladin', 'ranger', 'warlock', 'artificer'];
+    return spellcasterClasses.includes(characterClass.toLowerCase());
 }
 
             // function populateSpellList() {
@@ -2883,7 +2885,8 @@ function isSpellcaster(characterClass) {
     spellSelect.innerHTML = '<option value="">Select a spell</option>';
     let spellCount = 0;
     spells.forEach(spell => {
-        if (spell.classes.includes(character.class)) {
+        console.log('Checking spell:', spell.name, 'Classes:', spell.classes);
+        if (spell.classes.some(c => c.toLowerCase() === character.class.toLowerCase())) {
             const option = document.createElement('option');
             option.value = spell.name;
             option.textContent = `${spell.name} (Level ${spell.level})`;
@@ -3692,6 +3695,7 @@ fetch('spells.json')
     })
     .catch(error => console.error('Error loading spells:', error));
 
+    console.log('All loaded spells:', spells);
             // Initialize the application
             initializeUI();
 
