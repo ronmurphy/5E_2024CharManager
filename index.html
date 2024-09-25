@@ -710,6 +710,25 @@
     font-size: 24px; /* Adjust size as needed */
     color: #4a4a4a; /* Adjust color as needed */
 }
+
+.spell-level-btn {
+    margin: 0 2px;
+    padding: 2px 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.spell-level-group {
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.spell-level-group h5 {
+    margin-bottom: 10px;
+}
     </style>
 </head>
 <body>
@@ -2461,10 +2480,10 @@ setupInventoryManager();
 populateCombatPage();
 //brad
                
-                // Populate spells page if character is a spellcaster
-                if (isSpellcaster(character.class)) {
+         // Populate spells page if character is a spellcaster
+    if (isSpellcaster(character.class)) {
         const spellSlots = calculateSpellSlots(character.class, character.level);
-        spellsPage.innerHTML = `
+        let spellsHtml = `
             <div class="spells-container">
                 <div class="spell-slots-section">
                     <h4>Spell Slots</h4>
@@ -2484,18 +2503,28 @@ populateCombatPage();
                     </div>
                 </div>
                 <div class="spell-list-section">
-                    <h4>Spells</h4>
+                    <h4>Spells 
+                        ${[0,1,2,3,4,5,6,7,8,9].map(level => 
+                            `<button class="spell-level-btn" onclick="scrollToSpellLevel(${level})">${level}</button>`
+                        ).join('')}
+                    </h4>
                     <div class="spell-controls">
                         <select id="spell-select">
                             <option value="">Select a spell</option>
                         </select>
                         <button id="add-spell-btn">Add Spell</button>
                     </div>
-                    <div id="spell-list" class="spell-list"></div>
+                    <div id="spell-list" class="spell-list">
+                        ${[0,1,2,3,4,5,6,7,8,9].map(level => `
+                            <div id="spell-level-${level}" class="spell-level-group">
+                                <h5>Level ${level} ${level === 0 ? '(Cantrips)' : ''}</h5>
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
             </div>
         `;
-        console.log('Character class before populating spells:', character.class);
+        spellsPage.innerHTML = spellsHtml;
         populateSpellList();
         setupSpellManager();
     } else {
@@ -2940,13 +2969,19 @@ function setupSpellManager() {
     });
 
     function updateSpellList() {
-        spellList.innerHTML = '';
+        for (let level = 0; level <= 9; level++) {
+            const levelGroup = document.getElementById(`spell-level-${level}`);
+            if (levelGroup) {
+                levelGroup.innerHTML = `<h5>Level ${level} ${level === 0 ? '(Cantrips)' : ''}</h5>`;
+            }
+        }
+
         character.spells.sort((a, b) => a.level - b.level).forEach(spell => {
             const spellItem = document.createElement('div');
             spellItem.classList.add('spell-item');
             spellItem.innerHTML = `
                 <div class="spell-header">
-                    <span>${spell.name} (Level ${spell.level})</span>
+                    <span>${spell.name}</span>
                     <i class="bi bi-chevron-down"></i>
                 </div>
                 <div class="spell-details hidden">
@@ -2954,7 +2989,11 @@ function setupSpellManager() {
                     <p>${spell.description}</p>
                 </div>
             `;
-            spellList.appendChild(spellItem);
+
+            const levelGroup = document.getElementById(`spell-level-${spell.level}`);
+            if (levelGroup) {
+                levelGroup.appendChild(spellItem);
+            }
 
             const header = spellItem.querySelector('.spell-header');
             const details = spellItem.querySelector('.spell-details');
@@ -3318,7 +3357,7 @@ function calculateCantrips(characterClass, level) {
         'ranger': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     };
 
-    return cantripProgression[characterClass][level - 1] || 0;
+    return cantripProgression[characterClass.toLowerCase()][level - 1] || 0;
 }
 
 function populateItemDropdown() {
@@ -3705,6 +3744,14 @@ function exportToPDF() {
     // Save the PDF
     doc.save(`${character.name}_character_sheet.pdf`);
 }
+
+function scrollToSpellLevel(level) {
+    const element = document.getElementById(`spell-level-${level}`);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
 
 let spells = [];
 
