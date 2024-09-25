@@ -2897,8 +2897,8 @@ function isSpellcaster(characterClass) {
     console.log(`Added ${spellCount} spells to the list`);
 }
 
-            function setupSpellManager() {
-                const addSpellBtn = document.getElementById('add-spell-btn');
+function setupSpellManager() {
+    const addSpellBtn = document.getElementById('add-spell-btn');
     const spellSelect = document.getElementById('spell-select');
     const spellList = document.getElementById('spell-list');
 
@@ -2907,43 +2907,48 @@ function isSpellcaster(characterClass) {
         return;
     }
 
-                addSpellBtn.addEventListener('click', () => {
-                    const selectedSpell = getSpellsForClass(character.class).find(spell => spell.name === spellSelect.value);
-                    if (selectedSpell && !character.spells.some(s => s.name === selectedSpell.name)) {
-                        character.spells.push(selectedSpell);
-                        updateSpellList();
-                    }
-                });
-
-                function updateSpellList() {
-                    spellList.innerHTML = '';
-                    character.spells.sort((a, b) => a.level - b.level).forEach(spell => {
-                        const spellItem = document.createElement('div');
-                        spellItem.classList.add('spell-item');
-                        spellItem.innerHTML = `
-                            <div class="spell-header">
-                                <span>${spell.name} (Level ${spell.level})</span>
-                                <i class="bi bi-chevron-down"></i>
-                            </div>
-                            <div class="spell-details hidden">
-                                <p><strong>Casting Time:</strong> ${spell.castingTime}</p>
-                                <p><strong>Range:</strong> ${spell.range}</p>
-                                <p><strong>Components:</strong> ${spell.components}</p>
-                                <p><strong>Duration:</strong> ${spell.duration}</p>
-                                <p>${spell.description}</p>
-                            </div>
-                        `;
-                        spellList.appendChild(spellItem);
-
-                        spellItem.querySelector('.spell-header').addEventListener('click', () => {
-                            spellItem.querySelector('.spell-details').classList.toggle('hidden');
-                            spellItem.querySelector('.bi-chevron-down').classList.toggle('bi-chevron-up');
-                        });
-                    });
-                }
-
+    addSpellBtn.addEventListener('click', () => {
+        const selectedSpellName = spellSelect.value;
+        if (selectedSpellName && !character.spells.some(s => s.name === selectedSpellName)) {
+            const selectedSpell = spells.find(spell => spell.name === selectedSpellName);
+            if (selectedSpell) {
+                character.spells.push(selectedSpell);
                 updateSpellList();
             }
+        }
+    });
+
+    function updateSpellList() {
+        spellList.innerHTML = '';
+        character.spells.sort((a, b) => a.level - b.level).forEach(spell => {
+            const spellItem = document.createElement('div');
+            spellItem.classList.add('spell-item');
+            spellItem.innerHTML = `
+                <div class="spell-header">
+                    <span>${spell.name} (Level ${spell.level})</span>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="spell-details hidden">
+                    <p><strong>Classes:</strong> ${spell.classes.join(', ')}</p>
+                    <p>${spell.description}</p>
+                </div>
+            `;
+            spellList.appendChild(spellItem);
+
+            const header = spellItem.querySelector('.spell-header');
+            const details = spellItem.querySelector('.spell-details');
+            const chevron = spellItem.querySelector('.bi-chevron-down');
+
+            header.addEventListener('click', () => {
+                details.classList.toggle('hidden');
+                chevron.classList.toggle('bi-chevron-up');
+                chevron.classList.toggle('bi-chevron-down');
+            });
+        });
+    }
+
+    updateSpellList();
+}
 
             function getSpellsForClass(characterClass) {
                 // This is a simplified list of spells. In a real application, you'd have a much more comprehensive list.
