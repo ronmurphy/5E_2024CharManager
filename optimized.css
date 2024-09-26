@@ -6,7 +6,6 @@ body {
     padding: 0;
     background-color: #f4f4f4;
     overscroll-behavior-y: none;
-    overflow: hidden;
 }
 
 .container {
