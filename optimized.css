@@ -535,9 +535,10 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .inventory-grid-section {
-    flex: 0 0 70%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 #currency-tracker div {
@@ -681,23 +682,32 @@ select, input[type="number"], input[type="text"], input[type="file"] {
         display: flex;
         justify-content: center;
         margin-bottom: 20px;
-        max-width: 320px; /* Match the canvas width */
+        width: 100%;
+        max-width: 320px; /* This matches GRID_SIZE * CELL_SIZE */
     }
 
     #inventory-canvas {
-        display: block; /* Changed from flex to block */
+        display: block;
         background-color: #fff;
         border: 1px solid #333;
         border-radius: 5px;
     }
 
     .inventory-controls {
-        flex-direction: column;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 320px; /* Match the width of the canvas */
+        margin-top: 10px;
     }
 
-    .inventory-controls select, .inventory-controls button {
-        width: 100%;
-        margin: 5px 0;
+    .inventory-controls select, 
+    .inventory-controls button {
+        flex: 1;
+    }
+    
+    .inventory-controls select {
+        margin-right: 10px;
     }
 }
 

@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="optimized.css">
+           <link rel="stylesheet" href="optimized.css">
 </head>
 <body>
     <div class="container">
@@ -116,7 +116,7 @@
                 <div id="inventory-page" class="category-page hidden">
                     <h3>Inventory</h3>
                     <div class="inventory-grid">
-                        <canvas id="inventory-canvas" width="320" height="320"></canvas>
+                        <canvas id="inventory-canvas" width="400" height="400"></canvas>
                     </div>
                     <div class="inventory-controls">
                         <select id="item-select">
@@ -1735,16 +1735,17 @@ inventoryPage.innerHTML = `
                 </div>
             </div>
         </div>
-        <div class="inventory-grid-section">
-            <div class="inventory-grid">
-                <canvas id="inventory-canvas" width="400" height="400"></canvas>
-            </div>
-            <div class="inventory-controls">
-                <select id="character-sheet-item-select"></select>
-                <button id="character-sheet-add-item-btn">Add Item</button>
-            </div>
-        </div>
+<div class="inventory-grid-section">
+    <div class="inventory-grid">
+        <canvas id="inventory-canvas"></canvas>
     </div>
+    <div class="inventory-controls">
+        <select id="character-sheet-item-select">
+            <option value="">Select an item</option>
+        </select>
+        <button id="character-sheet-add-item-btn">Add Item</button>
+    </div>
+</div>
     <div id="character-inventory"></div>
 `;
 
