@@ -426,6 +426,7 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     background-color: #fff;
     border: 1px solid #333;
     border-radius: 5px;
+    z-index: 289;
 }
 
 /* .inventory-controls {
