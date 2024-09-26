@@ -107,17 +107,31 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     border-radius: 5px;
 }
 
+/* working
 .inventory-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ddd;
+} */
+
+.inventory-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
 }
 
+/* working
 .inventory-item button {
     font-size: 14px;
     padding: 5px 10px;
+} */
+.inventory-item button {
+    padding: 2px 5px;
+    font-size: 12px;
 }
 
 #ability-scores {
@@ -359,16 +373,21 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     flex: 0 0 48%;
 }
 
-.inventory-grid {
+/* .inventory-grid {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
     position: relative;
     z-index: 1;
     align-items: center;
+} */
+
+.inventory-grid {
+    width: 100%;
+    margin-bottom: 10px;
 }
 
-#inventory-canvas {
+/* #inventory-canvas {
     display: flex;
     justify-content: center;
     background-color: #fff;
@@ -376,17 +395,36 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     border-radius: 5px;
     position: relative;
     z-index: 2;
+} */
+
+#inventory-canvas {
+    display: block;
+    background-color: #fff;
+    border: 1px solid #333;
+    border-radius: 5px;
 }
 
-.inventory-controls {
+/* .inventory-controls {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+} */
+
+.inventory-controls {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
-.inventory-controls select, .inventory-controls button {
+/* .inventory-controls select, .inventory-controls button {
     flex: 1;
     margin: 0 5px;
+} */
+
+.inventory-controls select, 
+.inventory-controls button {
+    width: 100%;
+    margin-top: 5px;
 }
 
 #combat-page table {
@@ -526,19 +564,25 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 .inventory-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
 }
 
 .currency-section {
-    flex: 0 0 30%;
-    padding-right: 20px;
+    flex: 0 0 20%;
+    padding-right: 10px;
 }
 
-.inventory-grid-section {
+/* working */
+/* .inventory-grid-section {
+    flex: 0 0 320px; 
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 100%;
+} */
+
+.inventory-grid-section {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
 }
 
 #currency-tracker div {
@@ -633,6 +677,25 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     text-align: center;
 }
 
+/* working
+#character-inventory {
+    flex: 1;
+    margin-left: 20px;
+    overflow-y: auto;
+    max-height: 320px; 
+    border: 1px solid #ccc;
+    padding: 10px;
+} */
+
+#character-inventory {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 320px; /* Match canvas height */
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-width: 200px; /* Ensure a minimum width */
+}
+
 .dice i {
     margin: auto;
     font-size: 24px;
@@ -678,12 +741,15 @@ select, input[type="number"], input[type="text"], input[type="file"] {
         font-size: 12px;
     }
 
+    /* working
     .inventory-grid {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
         width: 100%;
-        max-width: 320px; /* This matches GRID_SIZE * CELL_SIZE */
+        margin-bottom: 10px;
+    } */
+
+    .inventory-grid {
+        width: 320px; /* Match canvas width */
+        margin-bottom: 10px;
     }
 
     #inventory-canvas {
@@ -693,19 +759,31 @@ select, input[type="number"], input[type="text"], input[type="file"] {
         border-radius: 5px;
     }
 
+    /* working
     .inventory-controls {
         display: flex;
         justify-content: space-between;
         width: 100%;
-        max-width: 320px; /* Match the width of the canvas */
-        margin-top: 10px;
+    } */
+
+    .inventory-controls {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
     }
 
+    /* working
     .inventory-controls select, 
     .inventory-controls button {
         flex: 1;
-    }
-    
+    } */
+
+    .inventory-controls select, 
+.inventory-controls button {
+    width: 100%;
+    margin-top: 5px;
+}
+
     .inventory-controls select {
         margin-right: 10px;
     }

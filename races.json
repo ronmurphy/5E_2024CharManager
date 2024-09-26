@@ -1,0 +1,262 @@
+{
+    "Aarakocra": {
+      "description": "Bird-like humanoids with the ability to fly.",
+      "traits": {
+        "abilityScoreIncrease": {"dexterity": 2, "wisdom": 1},
+        "size": "Medium",
+        "speed": 25,
+        "flyingSpeed": 50,
+        "talons": true
+      }
+    },
+    "Genasi": {
+      "description": "Humanoids infused with elemental energy.",
+      "traits": {
+        "abilityScoreIncrease": {"constitution": 2},
+        "size": "Medium",
+        "speed": 30,
+        "elementalResistance": true
+      }
+    },
+    "AirGenasi": {
+      "description": "Genasi infused with the power of air.",
+      "traits": {
+        "abilityScoreIncrease": {"constitution": 2, "dexterity": 1},
+        "size": "Medium",
+        "speed": 30,
+        "unburdendByArmor": true,
+        "mingleWithTheWind": true
+      }
+    },
+    "EarthGenasi": {
+      "description": "Genasi infused with the power of earth.",
+      "traits": {
+        "abilityScoreIncrease": {"constitution": 2, "strength": 1},
+        "size": "Medium",
+        "speed": 30,
+        "earthWalk": true,
+        "mergeWithStone": true
+      }
+    },
+    "FireGenasi": {
+      "description": "Genasi infused with the power of fire.",
+      "traits": {
+        "abilityScoreIncrease": {"constitution": 2, "intelligence": 1},
+        "size": "Medium",
+        "speed": 30,
+        "darkvision": true,
+        "fireResistance": true,
+        "reachToTheBlaze": true
+      }
+    },
+    "WaterGenasi": {
+      "description": "Genasi infused with the power of water.",
+      "traits": {
+        "abilityScoreIncrease": {"constitution": 2, "wisdom": 1},
+        "size": "Medium",
+        "speed": 30,
+        "swimSpeed": 30,
+        "acidResistance": true,
+        "callToTheWave": true
+      }
+    },
+    "Goliath": {
+      "description": "Large, athletic humanoids with a penchant for competition and survival.",
+      "traits": {
+        "abilityScoreIncrease": {"strength": 2, "constitution": 1},
+        "size": "Medium",
+        "speed": 30,
+        "naturalAthlete": true,
+        "stonesEndurance": true,
+        "powerfulBuild": true
+      }
+    },
+    "Triton": {
+      "description": "Amphibious humanoids from the depths of the sea.",
+      "traits": {
+        "abilityScoreIncrease": {"strength": 1, "constitution": 1, "charisma": 1},
+        "size": "Medium",
+        "speed": 30,
+        "swimSpeed": 30,
+        "amphibious": true,
+        "controlAirAndWater": true,
+        "emissaryOfTheSea": true,
+        "guardianOfTheDepths": true
+      }
+    },
+    "Tabaxi": {
+      "description": "Feline humanoids with natural agility and curiosity.",
+      "traits": {
+        "abilityScoreIncrease": {"dexterity": 2, "charisma": 1},
+        "size": "Medium",
+        "speed": 30,
+        "darkvision": true,
+        "felineAgility": true,
+        "catClaws": true,
+        "catsTalents": true
+      }
+    },
+    "Kenku": {
+      "description": "Avian humanoids with a talent for mimicry but cursed to be flightless.",
+      "traits": {
+        "abilityScoreIncrease": {"dexterity": 2, "wisdom": 1},
+        "size": "Medium",
+        "speed": 30,
+        "expertForgery": true,
+        "mimicry": true,
+        "kenkuTraining": true
+      }
+    },
+    "YuanTiPureblood": {
+      "description": "Snake-like humanoids with innate magical abilities.",
+      "traits": {
+        "abilityScoreIncrease": {"charisma": 2, "intelligence": 1},
+        "size": "Medium",
+        "speed": 30,
+        "darkvision": true,
+        "innateSpellcasting": true,
+        "magicResistance": true,
+        "poisonImmunity": true
+      }
+    },
+    "Changeling": {
+      "description": "Shapeshifters with the ability to alter their appearance at will.",
+      "traits": {
+        "abilityScoreIncrease": {"charisma": 2, "choice": 1},
+        "size": "Medium",
+        "speed": 30,
+        "changelingInstincts": true,
+        "shapechangerTrait": true,
+        "changlingPersonas": true
+      }
+    },
+    "Kalashtar": {
+      "description": "Humans bound with quori spirits, possessing psychic abilities.",
+      "traits": {
+        "abilityScoreIncrease": {"wisdom": 2, "charisma": 1},
+        "size": "Medium",
+        "speed": 30,
+        "dualMind": true,
+        "mentalDiscipline": true,
+        "mindLink": true,
+        "severedFromDreams": true
+      }
+    },
+    "Shifter": {
+      "description": "Descendants of humans and lycanthropes with the ability to partially shift form.",
+      "traits": {
+        "abilityScoreIncrease": {"dexterity": 1},
+        "size": "Medium",
+        "speed": 30,
+        "darkvision": true,
+        "shiftingTrait": true
+      }
+    },
+    "BeasthideShifter": {
+      "description": "Shifters with enhanced toughness when shifting.",
+      "traits": {
+        "abilityScoreIncrease": {"dexterity": 1, "constitution": 2},
+        "size": "Medium",
+        "speed": 30,
+        "darkvision": true,
+        "shiftingTrait": true,
+        "beasthideShift": true
+      }
+    },
+    "LongtoothShifter": {
+      "description": "Shifters with enhanced biting capabilities when shifting.",
+      "traits": {
+        "abilityScoreIncrease": {"dexterity": 1, "strength": 2},
+        "size": "Medium",
+        "speed": 30,
+        "darkvision": true,
+        "shiftingTrait": true,
+        "longtoothShift": true
+      }
+    },
+    "SwiftstrideShifter": {
+      "description": "Shifters with enhanced speed and agility when shifting.",
+      "traits": {
+        "abilityScoreIncrease": {"dexterity": 2, "charisma": 1},
+        "size": "Medium",
+        "speed": 30,
+        "darkvision": true,
+        "shiftingTrait": true,
+        "swiftstrideShift": true
+      }
+    },
+    "Warforged": {
+      "description": "Constructed beings created for war, blending living and mechanical parts.",
+      "traits": {
+        "abilityScoreIncrease": {"constitution": 2, "choice": 1},
+        "size": "Medium",
+        "speed": 30,
+        "constructedResilience": true,
+        "sentryRest": true,
+        "integratedProtection": true,
+        "specializedDesign": true
+      }
+    },
+    "PallidElf": {
+      "description": "Subterranean elves with enhanced perception and stealth abilities.",
+      "traits": {
+        "abilityScoreIncrease": {"dexterity": 2, "wisdom": 1},
+        "size": "Medium",
+        "speed": 30,
+        "darkvision": true,
+        "feyAncestry": true,
+        "keenSenses": true,
+        "incisiveSense": true,
+        "blessedByTheMoonweaver": true
+      }
+    },
+    "SeaElf": {
+      "description": "Aquatic elves adapted to life beneath the waves.",
+      "traits": {
+        "abilityScoreIncrease": {"dexterity": 2, "constitution": 1},
+        "size": "Medium",
+        "speed": 30,
+        "swimSpeed": 30,
+        "darkvision": true,
+        "feyAncestry": true,
+        "keenSenses": true,
+        "seaElvesTraining": true,
+        "childOfTheSea": true,
+        "friendOfTheSea": true
+      }
+    },
+    "Fairy": {
+      "description": "Magical, diminutive creatures with the ability to fly.",
+      "traits": {
+        "abilityScoreIncrease": {"choice": 1},
+        "size": "Small",
+        "speed": 30,
+        "flyingSpeed": 30,
+        "fairyMagic": true,
+        "flightTrait": true
+      }
+    },
+    "Hobgoblin": {
+      "description": "Disciplined and militaristic goblinoids with a strong sense of duty.",
+      "traits": {
+        "abilityScoreIncrease": {"constitution": 2, "intelligence": 1},
+        "size": "Medium",
+        "speed": 30,
+        "darkvision": true,
+        "martialTraining": true,
+        "savingFace": true
+      }
+    },
+    "Owlin": {
+      "description": "Owl-like humanoids with natural flying abilities.",
+      "traits": {
+        "abilityScoreIncrease": {"choice": 2},
+        "size": "Medium",
+        "speed": 30,
+        "flyingSpeed": 30,
+        "darkvision": true,
+        "silentFeathers": true,
+        "keenHearing": true
+      }
+    }
+  }

@@ -361,11 +361,10 @@
             const fileInput = document.getElementById('file-input');
             const steps = ['step1', 'step2', 'step3', 'step4', 'step5', 'step6'];
             let currentStep = 0;
-
+            let rollResults = [];
             let deathSaveSuccesses = 0;
 let deathSaveFailures = 0;
-// Define a global variable to track the number of improvements left
-// let abilityScoreImprovementsLeft = 0;
+let races = {}; // This will store all race data
 
 const GRID_SIZE = 8;
 const CELL_SIZE = 40;
@@ -445,6 +444,7 @@ function initializeUI() {
     setupEventListeners();
     setupAbilityScores();
     populateItemDropdown();
+    loadRaces();
     document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
     
     // If spells are already loaded, display the character sheet
@@ -767,11 +767,31 @@ function displayLoadedCharacter() {
                 document.getElementById('character-name').value = names[Math.floor(Math.random() * names.length)];
             }
 
+            // function updateRaceInfo() {
+            //     const selectedRace = document.getElementById('race').value;
+            //     const raceInfoDiv = document.getElementById('race-info');
+            //     raceInfoDiv.textContent = raceInfo[selectedRace] || "Select a race to see information.";
+            // }
+
             function updateRaceInfo() {
-                const selectedRace = document.getElementById('race').value;
-                const raceInfoDiv = document.getElementById('race-info');
-                raceInfoDiv.textContent = raceInfo[selectedRace] || "Select a race to see information.";
-            }
+    const selectedRace = document.getElementById('race').value;
+    const raceInfoDiv = document.getElementById('race-info');
+    
+    if (races[selectedRace]) {
+        const raceData = races[selectedRace];
+        raceInfoDiv.innerHTML = `
+            <p>${raceData.description || 'No description available.'}</p>
+            ${raceData.traits ? `
+                <h4>Racial Traits:</h4>
+                <ul>
+                    ${Object.entries(raceData.traits).map(([trait, value]) => `<li>${trait}: ${JSON.stringify(value)}</li>`).join('')}
+                </ul>
+            ` : ''}
+        `;
+    } else {
+        raceInfoDiv.textContent = "Select a race to see information.";
+    }
+}
 
             function updateClassInfo() {
                 const selectedClass = document.getElementById('class').value;
@@ -1137,7 +1157,7 @@ wizard: [
     character.inventory.filter(item => item.type === 'weapon').forEach(weapon => {
         const row = weaponsTable.insertRow();
         row.innerHTML = `
-            <td>${weapon.name}</td>
+            <td>${weapon.name} (${weapon.damage})</td>
             <td><button onclick="rollToHit('${weapon.name}')">Roll To Hit</button></td>
             <td><button onclick="rollDamage('${weapon.name}')">Roll Damage</button></td>
         `;
@@ -1200,7 +1220,7 @@ function updateCombatPage() {
 function setupInventoryManager() {
     const inventoryCanvas = document.getElementById('inventory-canvas');
     const inventoryCtx = inventoryCanvas.getContext('2d');
-
+    
     inventoryCanvas.width = GRID_SIZE * CELL_SIZE;
     inventoryCanvas.height = GRID_SIZE * CELL_SIZE;
 
@@ -1643,6 +1663,7 @@ function updateCharacterInventory() {
                     <div>${ability.charAt(0).toUpperCase() + ability.slice(1)}</div>
                     <div id="${ability}-score" class="score">${score}</div>
                     <div class="modifier">${getModifierString(score)}</div>
+                    <button onclick="rollAbility('${ability}', ${score})">Roll</button>
                 </div>
             `).join('')}
         </div>
@@ -1735,18 +1756,21 @@ inventoryPage.innerHTML = `
                 </div>
             </div>
         </div>
-<div class="inventory-grid-section">
-    <div class="inventory-grid">
-        <canvas id="inventory-canvas"></canvas>
+<div class="inventory-container">
+    <div class="inventory-grid-section">
+        <div class="inventory-grid">
+            <canvas id="inventory-canvas" width="320" height="320"></canvas>
+        </div>
+        <div class="inventory-controls">
+            <select id="character-sheet-item-select"></select>
+            <button id="character-sheet-add-item-btn">Add Item</button>
+        </div>
     </div>
-    <div class="inventory-controls">
-        <select id="character-sheet-item-select">
-            <option value="">Select an item</option>
-        </select>
-        <button id="character-sheet-add-item-btn">Add Item</button>
+
+    <div id="character-inventory">
+        <!-- This is where your item list will be displayed -->
     </div>
-</div>
-    <div id="character-inventory"></div>
+    </div>
 `;
 
 
@@ -2061,17 +2085,32 @@ populateCombatPage();
     }, 3000);
 }
 
-            function rollAbility(ability, score) {
-                const roll = Math.floor(Math.random() * 20) + 1;
-                const modifier = Math.floor((score - 10) / 2);
-                const total = roll + modifier;
-                const result = `${ability.charAt(0).toUpperCase() + ability.slice(1)} check: ${roll} + ${modifier} = ${total}`;
-                showNotification(result);
-                addRollResult(result);
-            }
+
+function notifyAndLog(message) {
+    showNotification(message);
+    addRollResult(message);
+}
+
+function rollDice(diceCount, diceSides) {
+    let total = 0;
+    for (let i = 0; i < diceCount; i++) {
+        total += Math.floor(Math.random() * diceSides) + 1;
+    }
+    return total;
+}
+
+function rollAbility(ability, score) {
+    const roll = rollDice(1, 20);
+    const modifier = Math.floor((score - 10) / 2);
+    const total = roll + modifier;
+    const message = `${ability.charAt(0).toUpperCase() + ability.slice(1)} check: ${roll} + ${modifier} = ${total}`;
+    notifyAndLog(message);
+    if (roll === 20) playSound('assets/sounds/20.mp3');
+}
 
             function rollSkill(skill) {
                 const roll = Math.floor(Math.random() * 20) + 1;
+                if (roll === 20) playSound('assets/sounds/20.mp3');
                 const relevantAbility = getRelevantAbility(skill);
                 const abilityModifier = Math.floor((character.abilityScores[relevantAbility] - 10) / 2);
                 const proficiencyBonus = character.skills.includes(skill) ? character.proficiencyBonus : 0;
@@ -2080,6 +2119,18 @@ populateCombatPage();
                 showNotification(result);
                 addRollResult(result);
             }
+
+            function rollSavingThrow(ability) {
+    const roll = rollDice(1, 20);
+    const abilityScore = character.abilityScores[ability];
+    const modifier = Math.floor((abilityScore - 10) / 2);
+    const proficiencyBonus = character.savingThrows[ability].proficient ? character.proficiencyBonus : 0;
+    const total = roll + modifier + proficiencyBonus;
+
+    const message = `${ability.charAt(0).toUpperCase() + ability.slice(1)} saving throw: ${roll} + ${modifier} (ability) + ${proficiencyBonus} (proficiency) = ${total}`;
+    notifyAndLog(message);
+    if (roll === 20) playSound('assets/sounds/20.mp3');
+}
 
             function getRelevantAbility(skill) {
                 const skillAbilities = {
@@ -2118,7 +2169,7 @@ populateCombatPage();
 
     const roll = Math.floor(Math.random() * 20) + 1;
     const total = roll + abilityModifier + proficiencyBonus;
-
+    if (roll === 20) playSound('assets/sounds/20.mp3');
     const result = `${weaponName} to hit: ${roll} + ${abilityModifier} (${relevantAbility}) + ${proficiencyBonus} (prof) = ${total}`;
     showNotification(result);
     addRollResult(result);
@@ -2242,6 +2293,7 @@ function setupSpellManager() {
             if (selectedSpell) {
                 character.spells.push(selectedSpell);
                 updateSpellList();
+                updateCombatPage();
             }
         }
     });
@@ -2456,16 +2508,17 @@ function getClassStartingEquipment(characterClass) {
             }
 
             function addRollResult(result) {
-                const rollResults = document.getElementById('roll-results');
-                const rollItem = document.createElement('div');
-                rollItem.classList.add('roll-item');
-                rollItem.textContent = result;
-                rollResults.insertBefore(rollItem, rollResults.firstChild);
+    rollResults.unshift(result);
+    if (rollResults.length > 25) {
+        rollResults.pop();
+    }
+    updateRollResultsDisplay();
+}
 
-                while (rollResults.children.length > 10) {
-                    rollResults.removeChild(rollResults.lastChild);
-                }
-            }
+function updateRollResultsDisplay() {
+    const rollResultsDiv = document.getElementById('roll-results');
+    rollResultsDiv.innerHTML = rollResults.map(result => `<div class="roll-item">${result}</div>`).join('');
+}
 
             function longRest() {
     character.hp = character.maxHp;
@@ -2850,6 +2903,10 @@ function calculateHPIncrease(characterClass, constitutionScore) {
     return Math.floor(hitDice[characterClass] / 2) + 1 + conModifier;
 }
 
+function playSound(soundFile) {
+    const audio = new Audio(soundFile);
+    audio.play();
+}
 
 function updateSpellSlots() {
     const spellSlots = calculateSpellSlots(character.class, character.level);
@@ -3046,6 +3103,43 @@ fetch('spells.json')
     })
     .catch(error => console.error('Error loading spells:', error));
 
+
+
+    function loadRaces() {
+    // First, load the races from the HTML
+    const raceSelect = document.getElementById('race');
+    Array.from(raceSelect.options).forEach(option => {
+        if (option.value) {
+            races[option.value] = { name: option.value };
+        }
+    });
+
+    // Now, fetch and merge the races from races.json
+    fetch('races.json')
+        .then(response => response.json())
+        .then(data => {
+            // Merge the new data with existing races
+            races = { ...races, ...data };
+            console.log('Races loaded:', Object.keys(races).length);
+            
+            // Update the race dropdown with new options
+            updateRaceDropdown();
+        })
+        .catch(error => console.error('Error loading races:', error));
+}
+
+
+function updateRaceDropdown() {
+    const raceSelect = document.getElementById('race');
+    raceSelect.innerHTML = '<option value="">Select a race</option>';
+    
+    Object.keys(races).sort().forEach(raceName => {
+        const option = document.createElement('option');
+        option.value = raceName;
+        option.textContent = raceName;
+        raceSelect.appendChild(option);
+    });
+}
 
             // Initialize the application
             initializeUI();
