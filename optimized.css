@@ -6,6 +6,7 @@ body {
     padding: 0;
     background-color: #f4f4f4;
     overscroll-behavior-y: none;
+    overflow: hidden;
 }
 
 .container {
@@ -410,6 +411,9 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 .inventory-grid {
     width: 100%;
     margin-bottom: 10px;
+    overflow: hidden;
+    overscroll-behavior-y: none;
+    overflow: hidden;
 }
 
 /* #inventory-canvas {
@@ -428,6 +432,8 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     border: 1px solid #333;
     border-radius: 5px;
     z-index: 289;
+    overscroll-behavior-y: none;
+    overflow: hidden;
 }
 
 /* .inventory-controls {
