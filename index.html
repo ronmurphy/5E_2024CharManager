@@ -103,6 +103,7 @@
                         <strong>Prof. Bonus:</strong> <span id="character-proficiency"></span>
                     </div>
                     <button id="long-rest-btn">Long Rest</button>
+                    <button id="short-rest-btn">Short Rest</button>
                 </div>
             </div>
             <div class="character-sheet-content">
@@ -180,11 +181,14 @@
     abilityScoreImprovementsLeft:0
             };
 
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.improve-ability-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            increaseAttribute(event.target);        });
+        button.addEventListener('click', (event) => {
+            increaseAttribute(event.target);
+        });
     });
+    window.addEventListener('load', adjustInventoryLayout);
+    window.addEventListener('resize', adjustInventoryLayout);
 });
 
 
@@ -335,23 +339,69 @@
                 "Performance", "Persuasion", "Religion", "Sleight of Hand", "Stealth", "Survival"
             ];
 
+            // const feats = [
+            //     { name: "Alert", description: "+5 to initiative, can't be surprised while conscious, no advantage for hidden attackers" },
+            //     { name: "Athlete", description: "Increase Strength or Dexterity by 1, better at jumping and standing from prone" },
+            //     { name: "Actor", description: "Increase Charisma by 1, advantage on Deception and Performance checks for impersonation" },
+            //     { name: "Charger", description: "Dash and melee attack as a single action, +5 damage if you move 10 feet in a straight line" },
+            //     { name: "Crossbow Expert", description: "Ignore loading property of crossbows, no disadvantage on ranged attacks within 5 feet, bonus action hand crossbow attack" },
+            //     { name: "Defensive Duelist", description: "Use reaction to add Dexterity modifier to AC against one melee attack" },
+            //     { name: "Dual Wielder", description: "+1 AC when wielding separate melee weapons in each hand, can use two-weapon fighting with non-light weapons" },
+            //     { name: "Dungeon Delver", description: "Advantage on perception and investigation checks for secret doors, advantage on saving throws against traps" },
+            //     { name: "Durable", description: "Increase Constitution by 1, minimum HP gained on a Hit Die roll is twice your Constitution modifier" },
+            //     { name: "Elemental Adept", description: "Spells you cast ignore resistance to damage of the chosen type, treat 1s on damage dice as 2s" },
+            //     { name: "Grappler", description: "Advantage on attack rolls against grappled creatures, can pin a grappled creature" },
+            //     { name: "Great Weapon Master", description: "Can make an extra melee attack on a critical hit or reducing a creature to 0 HP, can take -5 penalty to attack roll for +10 damage" },
+            //     { name: "Healer", description: "Using a healer's kit to stabilize also restores 1 HP, can use action to restore 1d6+4+creature's number of Hit Dice HP" },
+            //     { name: "Heavily Armored", description: "Increase Strength by 1, gain proficiency with heavy armor" },
+            //     { name: "Heavy Armor Master", description: "Increase Strength by 1, reduce non-magical bludgeoning, piercing, and slashing damage by 3 while wearing heavy armor" }
+            // ];
+
             const feats = [
-                { name: "Alert", description: "+5 to initiative, can't be surprised while conscious, no advantage for hidden attackers" },
-                { name: "Athlete", description: "Increase Strength or Dexterity by 1, better at jumping and standing from prone" },
-                { name: "Actor", description: "Increase Charisma by 1, advantage on Deception and Performance checks for impersonation" },
-                { name: "Charger", description: "Dash and melee attack as a single action, +5 damage if you move 10 feet in a straight line" },
-                { name: "Crossbow Expert", description: "Ignore loading property of crossbows, no disadvantage on ranged attacks within 5 feet, bonus action hand crossbow attack" },
-                { name: "Defensive Duelist", description: "Use reaction to add Dexterity modifier to AC against one melee attack" },
-                { name: "Dual Wielder", description: "+1 AC when wielding separate melee weapons in each hand, can use two-weapon fighting with non-light weapons" },
-                { name: "Dungeon Delver", description: "Advantage on perception and investigation checks for secret doors, advantage on saving throws against traps" },
-                { name: "Durable", description: "Increase Constitution by 1, minimum HP gained on a Hit Die roll is twice your Constitution modifier" },
-                { name: "Elemental Adept", description: "Spells you cast ignore resistance to damage of the chosen type, treat 1s on damage dice as 2s" },
-                { name: "Grappler", description: "Advantage on attack rolls against grappled creatures, can pin a grappled creature" },
-                { name: "Great Weapon Master", description: "Can make an extra melee attack on a critical hit or reducing a creature to 0 HP, can take -5 penalty to attack roll for +10 damage" },
-                { name: "Healer", description: "Using a healer's kit to stabilize also restores 1 HP, can use action to restore 1d6+4+creature's number of Hit Dice HP" },
-                { name: "Heavily Armored", description: "Increase Strength by 1, gain proficiency with heavy armor" },
-                { name: "Heavy Armor Master", description: "Increase Strength by 1, reduce non-magical bludgeoning, piercing, and slashing damage by 3 while wearing heavy armor" }
-            ];
+  { name: "Alert", description: "+5 to initiative, can't be surprised while conscious, no advantage for hidden attackers", appliesTo: "All classes", level: "Any" },
+  { name: "Athlete", description: "Increase Strength or Dexterity by 1, standing up from prone uses only 5 feet of movement, climbing doesn't halve speed, running long jumps only require 5 feet", appliesTo: "All classes", level: "Any" },
+  { name: "Actor", description: "Increase Charisma by 1, advantage on Charisma (Deception) and Charisma (Performance) checks to pass yourself off as a different person, mimic the speech of another person or creature", appliesTo: "Bard, Rogue", level: "Any" },
+  { name: "Charger", description: "When you Dash, you can use a bonus action to make a melee attack or shove a creature, gain +5 bonus to the attack's damage roll or push target up to 10 feet", appliesTo: "All classes", level: "Any" },
+  { name: "Crossbow Expert", description: "Ignore the loading property of crossbows, no disadvantage on ranged attacks when within 5 feet of a hostile creature, make a ranged attack as a bonus action after attacking with a one-handed weapon", appliesTo: "Fighter, Ranger, Rogue", level: "Any" },
+  { name: "Defensive Duelist", description: "If you are wielding a finesse weapon, use your reaction to add your proficiency bonus to AC against a melee attack", appliesTo: "Fighter, Rogue", level: "Any" },
+  { name: "Dual Wielder", description: "+1 to AC while wielding a separate melee weapon in each hand, use two-weapon fighting with non-light melee weapons, draw or stow two one-handed weapons at once", appliesTo: "Fighter, Ranger", level: "Any" },
+  { name: "Dungeon Delver", description: "Advantage on Perception and Investigation checks to detect secret doors, advantage on saving throws to avoid or resist traps, resistance to damage dealt by traps", appliesTo: "Rogue, Ranger", level: "Any" },
+  { name: "Durable", description: "Increase Constitution by 1, regain at least twice your Constitution modifier when rolling Hit Dice to recover HP", appliesTo: "All classes", level: "Any" },
+  { name: "Elemental Adept", description: "Ignore resistance to a chosen elemental damage type (acid, cold, fire, lightning, or thunder), treat any 1 rolled on damage dice of that type as a 2", appliesTo: "Sorcerer, Wizard, Druid", level: "Any" },
+  { name: "Grappler", description: "Advantage on attack rolls against creatures you are grappling, use an action to try to pin a creature grappled by you", appliesTo: "Barbarian, Fighter", level: "Any" },
+  { name: "Great Weapon Master", description: "When you score a critical hit or reduce a creature to 0 hit points, make another melee weapon attack as a bonus action, take a -5 penalty to attack rolls for +10 damage", appliesTo: "Barbarian, Fighter", level: "Any" },
+  { name: "Healer", description: "Use a healer's kit to stabilize a dying creature, restore 1d6+4 hit points to a creature (plus additional hit points equal to the target's maximum number of Hit Dice)", appliesTo: "Cleric, Druid", level: "Any" },
+  { name: "Heavily Armored", description: "Increase Strength by 1, gain proficiency with heavy armor", appliesTo: "Cleric (if lacking proficiency), Warlock (if pact of the blade)", level: "Any" },
+  { name: "Heavy Armor Master", description: "Increase Strength by 1, while wearing heavy armor, reduce bludgeoning, piercing, and slashing damage by 3", appliesTo: "Fighter, Paladin", level: "Any" },
+  { name: "Inspiring Leader", description: "Spend 10 minutes inspiring up to 6 friendly creatures, grant temporary hit points equal to your level + Charisma modifier", appliesTo: "Bard, Paladin, Sorcerer", level: "Any" },
+  { name: "Keen Mind", description: "Increase Intelligence by 1, recall anything you've seen or heard in the past month, always know which way is north and the number of hours left before sunset", appliesTo: "Wizard, Druid", level: "Any" },
+  { name: "Lightly Armored", description: "Increase Strength or Dexterity by 1, gain proficiency with light armor", appliesTo: "Sorcerer, Wizard", level: "Any" },
+  { name: "Linguist", description: "Increase Intelligence by 1, learn three languages, create written ciphers that can be deciphered only by creatures trained in the language or magic", appliesTo: "Wizard, Rogue", level: "Any" },
+  { name: "Lucky", description: "Have 3 luck points that can be spent to reroll an attack roll, ability check, or saving throw, or force a reroll for an attack made against you", appliesTo: "All classes", level: "Any" },
+  { name: "Mage Slayer", description: "When a creature within 5 feet of you casts a spell, use your reaction to make a melee weapon attack against it, impose disadvantage on a creature's concentration saving throws", appliesTo: "Fighter, Barbarian", level: "Any" },
+  { name: "Magic Initiate", description: "Learn two cantrips and one 1st-level spell from the spell list of a class of your choice", appliesTo: "All classes", level: "Any" },
+  { name: "Martial Adept", description: "Learn two maneuvers from the Battle Master archetype, gain one superiority die", appliesTo: "Fighter, Rogue", level: "Any" },
+  { name: "Medium Armor Master", description: "Wear medium armor without imposing disadvantage on Dexterity (Stealth) checks, gain +3 Dexterity modifier bonus to AC instead of +2", appliesTo: "Fighter, Ranger", level: "Any" },
+  { name: "Mobile", description: "Increase your speed by 10 feet, Dash doesn't provoke opportunity attacks, melee attack against a creature doesn't require disengage to move away", appliesTo: "Monk, Rogue", level: "Any" },
+  { name: "Moderately Armored", description: "Increase Strength or Dexterity by 1, gain proficiency with medium armor and shields", appliesTo: "Sorcerer, Wizard", level: "Any" },
+  { name: "Mounted Combatant", description: "Advantage on melee attack rolls against unmounted creatures smaller than your mount, force attacks targeting your mount to target you instead, halve damage taken by your mount", appliesTo: "Paladin, Fighter", level: "Any" },
+  { name: "Observant", description: "Increase Intelligence or Wisdom by 1, lip-read, +5 bonus to passive Wisdom (Perception) and Intelligence (Investigation)", appliesTo: "Cleric, Druid, Wizard", level: "Any" },
+  { name: "Polearm Master", description: "Make an opportunity attack when a creature enters your reach, use a bonus action to make a melee attack with the opposite end of a polearm", appliesTo: "Fighter, Paladin", level: "Any" },
+  { name: "Resilient", description: "Increase an ability score of your choice by 1, gain proficiency in saving throws using that ability", appliesTo: "All classes", level: "Any" },
+  { name: "Ritual Caster", description: "Learn two rituals from a class's spell list, must have a spellcasting feature", appliesTo: "Wizard, Cleric, Druid", level: "Any" },
+  { name: "Savage Attacker", description: "Reroll the damage dice of a melee weapon attack and use the higher result once per turn", appliesTo: "Barbarian, Fighter", level: "Any" },
+  { name: "Sentinel", description: "When a creature within 5 feet of you attacks someone else, make a melee weapon attack against it, reduce the speed of a hit target to 0, provoke opportunity attacks when leaving reach", appliesTo: "Fighter, Paladin", level: "Any" },
+  { name: "Sharpshooter", description: "No disadvantage on ranged weapon attacks at long range, ignore half cover and three-quarters cover, take a -5 penalty to attack rolls for +10 damage", appliesTo: "Ranger, Fighter", level: "Any" },
+  { name: "Shield Master", description: "Add your shield's AC bonus to Dexterity saving throws, use a bonus action to shove a creature after attacking, use a reaction to avoid damage from a Dexterity saving throw", appliesTo: "Fighter, Paladin", level: "Any" },
+  { name: "Skilled", description: "Gain proficiency in any combination of three skills or tools", appliesTo: "All classes", level: "Any" },
+  { name: "Skulker", description: "Hide when lightly obscured, attacking doesn't reveal your position, no disadvantage on ranged attack rolls while hidden", appliesTo: "Rogue, Ranger", level: "Any" },
+  { name: "Spell Sniper", description: "Double the range of attack spells, ignore half and three-quarters cover when making spell attacks, learn one cantrip", appliesTo: "Sorcerer, Warlock, Wizard", level: "Any" },
+  { name: "Tavern Brawler", description: "Increase Strength or Constitution by 1, proficiency with improvised weapons and unarmed strikes, deal 1d4 damage with unarmed strikes, use a bonus action to grapple a creature after hitting it", appliesTo: "Barbarian, Fighter", level: "Any" },
+  { name: "Tough", description: "Increase your hit points by 2 per level", appliesTo: "All classes", level: "Any" },
+  { name: "War Caster", description: "Advantage on Constitution saving throws to maintain concentration on spells, perform somatic components while holding weapons, cast spells as opportunity attacks", appliesTo: "Cleric, Druid, Wizard", level: "Any" },
+  { name: "Weapon Master", description: "Increase Strength or Dexterity by 1, gain proficiency with four weapons of your choice", appliesTo: "All classes", level: "Any" }
+];
+
 
             const startMenu = document.getElementById('start-menu');
             const characterCreator = document.getElementById('character-creator');
@@ -446,7 +496,7 @@ function initializeUI() {
     populateItemDropdown();
     loadRaces();
     document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
-    
+    adjustInventoryLayout();
     // If spells are already loaded, display the character sheet
     if (spells.length > 0) {
         displayCharacterSheet();
@@ -1217,6 +1267,211 @@ function updateCombatPage() {
     populateCombatPage();
 }
 
+// function setupInventoryManager() {
+//     const inventoryCanvas = document.getElementById('inventory-canvas');
+//     const inventoryCtx = inventoryCanvas.getContext('2d');
+    
+//     inventoryCanvas.width = GRID_SIZE * CELL_SIZE;
+//     inventoryCanvas.height = GRID_SIZE * CELL_SIZE;
+
+//     let draggedItem = null;
+//     let dragOffset = { x: 0, y: 0 };
+
+//     function handleStart(e) {
+//         e.preventDefault();
+//         const rect = inventoryCanvas.getBoundingClientRect();
+//         const x = Math.floor(((e.clientX || e.touches[0].clientX) - rect.left) / CELL_SIZE);
+//         const y = Math.floor(((e.clientY || e.touches[0].clientY) - rect.top) / CELL_SIZE);
+
+//         draggedItem = character.inventory.find(item => x >= item.x && x < item.x + item.width && y >= item.y && y < item.y + item.height);
+
+//         if (draggedItem) {
+//             dragOffset.x = x - draggedItem.x;
+//             dragOffset.y = y - draggedItem.y;
+//         }
+//     }
+
+//     function handleMove(e) {
+//         if (!draggedItem) return;
+//         e.preventDefault();
+//         const rect = inventoryCanvas.getBoundingClientRect();
+//         const x = Math.floor(((e.clientX || e.touches[0].clientX) - rect.left) / CELL_SIZE);
+//         const y = Math.floor(((e.clientY || e.touches[0].clientY) - rect.top) / CELL_SIZE);
+
+//         draggedItem.x = Math.max(0, Math.min(x - dragOffset.x, GRID_SIZE - draggedItem.width));
+//         draggedItem.y = Math.max(0, Math.min(y - dragOffset.y, GRID_SIZE - draggedItem.height));
+
+//         drawGrid();
+
+//         if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
+//             inventoryCtx.globalAlpha = 0.5;
+//             inventoryCtx.fillStyle = 'red';
+//             inventoryCtx.fillRect(draggedItem.x * CELL_SIZE, draggedItem.y * CELL_SIZE, draggedItem.width * CELL_SIZE, draggedItem.height * CELL_SIZE);
+//             inventoryCtx.globalAlpha = 1;
+//         }
+//     }
+
+//        function handleEnd() {
+//         if (draggedItem) {
+//             if (checkOverlap(draggedItem)) {
+//                 const originalPosition = character.inventory.find(item => item === draggedItem);
+//                 draggedItem.x = originalPosition.x;
+//                 draggedItem.y = originalPosition.y;
+//             }
+//             draggedItem = null;
+//             drawGrid();
+//             updateCharacterInventory();
+//         }
+//     }
+
+//     inventoryCanvas.addEventListener('mousedown', handleStart);
+//     inventoryCanvas.addEventListener('touchstart', handleStart);
+//     inventoryCanvas.addEventListener('mousemove', handleMove);
+//     inventoryCanvas.addEventListener('touchmove', handleMove);
+//     inventoryCanvas.addEventListener('mouseup', handleEnd);
+//     inventoryCanvas.addEventListener('touchend', handleEnd);
+
+ 
+
+//     populateItemDropdown(); // Add this line at the beginning of the function
+
+//     const addItemBtn = document.getElementById('character-sheet-add-item-btn');
+//     console.log('Add item button element:', addItemBtn);
+
+//     if (addItemBtn && !addItemBtn.hasEventListener) {
+//     console.log('Add item button found, adding event listener...');
+//     addItemBtn.addEventListener('click', addItemToInventory);
+//     addItemBtn.hasEventListener = true;
+//     console.log('Event listener added to add item button.');
+// } else if (addItemBtn) {
+//     console.log('Add item button already has an event listener');
+// } else {
+//     console.error('Add item button not found');
+// }
+
+// inventoryCanvas.addEventListener('click', (e) => {
+//     console.log('Canvas clicked', e);
+//     const rect = e.target.getBoundingClientRect();
+//     const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
+//     const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
+//     console.log('Click coordinates (grid):', x, y);
+//     console.log('Click coordinates (pixels):', e.clientX - rect.left, e.clientY - rect.top);
+
+//     console.log('Current inventory:', character.inventory);
+
+//     const clickedItem = character.inventory.find(item => 
+//         x >= item.x && x < item.x + item.width && 
+//         y >= item.y && y < item.y + item.height
+//     );
+
+//     if (clickedItem) {
+//         console.log('Item clicked:', clickedItem);
+//         displayItemInfo(clickedItem);
+//     } else {
+//         console.log('No item found at click location');
+//         const itemInfoDiv = document.getElementById('item-info');
+//         if (itemInfoDiv) {
+//             itemInfoDiv.innerHTML = 'No item selected. Click coordinates: ' + x + ', ' + y;
+//         } else {
+//             console.error('item-info div not found');
+//         }
+//     }
+// });
+
+
+// inventoryCanvas.addEventListener('pointerdown', (e) => {
+//     console.log('Canvas pointerdown event', e);
+//     console.log('Canvas clicked', e);
+//     const rect = e.target.getBoundingClientRect();
+//     const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
+//     const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
+//     console.log('Click coordinates (grid):', x, y);
+//     console.log('Click coordinates (pixels):', e.clientX - rect.left, e.clientY - rect.top);
+
+//     console.log('Current inventory:', character.inventory);
+
+//     const clickedItem = character.inventory.find(item => 
+//         x >= item.x && x < item.x + item.width && 
+//         y >= item.y && y < item.y + item.height
+//     );
+
+//     if (clickedItem) {
+//         console.log('Item clicked:', clickedItem);
+//         displayItemInfo(clickedItem);
+//     } else {
+//         console.log('No item found at click location');
+//         document.getElementById('item-info').innerHTML = 'No item selected. Click coordinates: ' + x + ', ' + y;
+//     }});
+
+
+
+// inventoryCanvas.addEventListener('mousedown', (e) => {
+//     console.log('Canvas mousedown event', e);
+// });
+
+//     inventoryCanvas.addEventListener('mousedown', (e) => {
+//         const x = Math.floor(e.offsetX / CELL_SIZE);
+//         const y = Math.floor(e.offsetY / CELL_SIZE);
+
+//         draggedItem = character.inventory.find(item => x >= item.x && x < item.x + item.width && y >= item.y && y < item.y + item.height);
+
+//         if (draggedItem) {
+//             dragOffset.x = x - draggedItem.x;
+//             dragOffset.y = y - draggedItem.y;
+//         }
+//     });
+
+//     inventoryCanvas.addEventListener('mousemove', (e) => {
+//         if (!draggedItem) return;
+
+//         const x = Math.floor(e.offsetX / CELL_SIZE);
+//         const y = Math.floor(e.offsetY / CELL_SIZE);
+
+//         draggedItem.x = x - dragOffset.x;
+//         draggedItem.y = y - dragOffset.y;
+
+//         drawGrid();
+
+//         if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
+//             const inventoryCtx = inventoryCanvas.getContext('2d');
+//             inventoryCtx.globalAlpha = 0.5;
+//             inventoryCtx.fillStyle = 'red';
+//             inventoryCtx.fillRect(draggedItem.x * CELL_SIZE, draggedItem.y * CELL_SIZE, draggedItem.width * CELL_SIZE, draggedItem.height * CELL_SIZE);
+//             inventoryCtx.globalAlpha = 1;
+//         }
+//     });
+
+//     inventoryCanvas.addEventListener('mouseup', () => {
+//         if (draggedItem) {
+//             if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
+//                 const originalPosition = character.inventory.find(item => item === draggedItem);
+//                 draggedItem.x = originalPosition.x;
+//                 draggedItem.y = originalPosition.y;
+//             }
+//             draggedItem = null;
+//             drawGrid();
+//             updateCharacterInventory();
+//         }
+//     });
+
+//     drawGrid();
+
+//     character.inventory.forEach((item, index) => {
+//         if (item.x === undefined || item.y === undefined) {
+//             const position = findAvailablePosition(item);
+//             if (position) {
+//                 item.x = position.x;
+//                 item.y = position.y;
+//             } else {
+//                 console.warn(`Couldn't place item ${item.name} in the inventory grid.`);
+//             }
+//         }
+//     });
+//     drawGrid();
+//     updateCharacterInventory();
+
+// }
+
 function setupInventoryManager() {
     const inventoryCanvas = document.getElementById('inventory-canvas');
     const inventoryCtx = inventoryCanvas.getContext('2d');
@@ -1233,7 +1488,10 @@ function setupInventoryManager() {
         const x = Math.floor(((e.clientX || e.touches[0].clientX) - rect.left) / CELL_SIZE);
         const y = Math.floor(((e.clientY || e.touches[0].clientY) - rect.top) / CELL_SIZE);
 
-        draggedItem = character.inventory.find(item => x >= item.x && x < item.x + item.width && y >= item.y && y < item.y + item.height);
+        draggedItem = character.inventory.find(item => 
+            x >= item.x && x < item.x + item.width && 
+            y >= item.y && y < item.y + item.height
+        );
 
         if (draggedItem) {
             dragOffset.x = x - draggedItem.x;
@@ -1261,9 +1519,9 @@ function setupInventoryManager() {
         }
     }
 
-       function handleEnd() {
+    function handleEnd() {
         if (draggedItem) {
-            if (checkOverlap(draggedItem)) {
+            if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
                 const originalPosition = character.inventory.find(item => item === draggedItem);
                 draggedItem.x = originalPosition.x;
                 draggedItem.y = originalPosition.y;
@@ -1275,138 +1533,30 @@ function setupInventoryManager() {
     }
 
     inventoryCanvas.addEventListener('mousedown', handleStart);
-    inventoryCanvas.addEventListener('touchstart', handleStart);
+    inventoryCanvas.addEventListener('touchstart', handleStart, { passive: false });
     inventoryCanvas.addEventListener('mousemove', handleMove);
-    inventoryCanvas.addEventListener('touchmove', handleMove);
+    inventoryCanvas.addEventListener('touchmove', handleMove, { passive: false });
     inventoryCanvas.addEventListener('mouseup', handleEnd);
     inventoryCanvas.addEventListener('touchend', handleEnd);
 
- 
+    // Prevent scrolling when touching the canvas
+    inventoryCanvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+    }, { passive: false });
 
-    populateItemDropdown(); // Add this line at the beginning of the function
+    inventoryCanvas.addEventListener('click', handleItemClick);
+
+    populateItemDropdown();
 
     const addItemBtn = document.getElementById('character-sheet-add-item-btn');
-    console.log('Add item button element:', addItemBtn);
-
     if (addItemBtn && !addItemBtn.hasEventListener) {
-    console.log('Add item button found, adding event listener...');
-    addItemBtn.addEventListener('click', addItemToInventory);
-    addItemBtn.hasEventListener = true;
-    console.log('Event listener added to add item button.');
-} else if (addItemBtn) {
-    console.log('Add item button already has an event listener');
-} else {
-    console.error('Add item button not found');
-}
-
-inventoryCanvas.addEventListener('click', (e) => {
-    console.log('Canvas clicked', e);
-    const rect = e.target.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
-    const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
-    console.log('Click coordinates (grid):', x, y);
-    console.log('Click coordinates (pixels):', e.clientX - rect.left, e.clientY - rect.top);
-
-    console.log('Current inventory:', character.inventory);
-
-    const clickedItem = character.inventory.find(item => 
-        x >= item.x && x < item.x + item.width && 
-        y >= item.y && y < item.y + item.height
-    );
-
-    if (clickedItem) {
-        console.log('Item clicked:', clickedItem);
-        displayItemInfo(clickedItem);
-    } else {
-        console.log('No item found at click location');
-        const itemInfoDiv = document.getElementById('item-info');
-        if (itemInfoDiv) {
-            itemInfoDiv.innerHTML = 'No item selected. Click coordinates: ' + x + ', ' + y;
-        } else {
-            console.error('item-info div not found');
-        }
+        addItemBtn.addEventListener('click', addItemToInventory);
+        addItemBtn.hasEventListener = true;
     }
-});
-
-
-inventoryCanvas.addEventListener('pointerdown', (e) => {
-    console.log('Canvas pointerdown event', e);
-    console.log('Canvas clicked', e);
-    const rect = e.target.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
-    const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
-    console.log('Click coordinates (grid):', x, y);
-    console.log('Click coordinates (pixels):', e.clientX - rect.left, e.clientY - rect.top);
-
-    console.log('Current inventory:', character.inventory);
-
-    const clickedItem = character.inventory.find(item => 
-        x >= item.x && x < item.x + item.width && 
-        y >= item.y && y < item.y + item.height
-    );
-
-    if (clickedItem) {
-        console.log('Item clicked:', clickedItem);
-        displayItemInfo(clickedItem);
-    } else {
-        console.log('No item found at click location');
-        document.getElementById('item-info').innerHTML = 'No item selected. Click coordinates: ' + x + ', ' + y;
-    }});
-
-
-
-inventoryCanvas.addEventListener('mousedown', (e) => {
-    console.log('Canvas mousedown event', e);
-});
-
-    inventoryCanvas.addEventListener('mousedown', (e) => {
-        const x = Math.floor(e.offsetX / CELL_SIZE);
-        const y = Math.floor(e.offsetY / CELL_SIZE);
-
-        draggedItem = character.inventory.find(item => x >= item.x && x < item.x + item.width && y >= item.y && y < item.y + item.height);
-
-        if (draggedItem) {
-            dragOffset.x = x - draggedItem.x;
-            dragOffset.y = y - draggedItem.y;
-        }
-    });
-
-    inventoryCanvas.addEventListener('mousemove', (e) => {
-        if (!draggedItem) return;
-
-        const x = Math.floor(e.offsetX / CELL_SIZE);
-        const y = Math.floor(e.offsetY / CELL_SIZE);
-
-        draggedItem.x = x - dragOffset.x;
-        draggedItem.y = y - dragOffset.y;
-
-        drawGrid();
-
-        if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
-            const inventoryCtx = inventoryCanvas.getContext('2d');
-            inventoryCtx.globalAlpha = 0.5;
-            inventoryCtx.fillStyle = 'red';
-            inventoryCtx.fillRect(draggedItem.x * CELL_SIZE, draggedItem.y * CELL_SIZE, draggedItem.width * CELL_SIZE, draggedItem.height * CELL_SIZE);
-            inventoryCtx.globalAlpha = 1;
-        }
-    });
-
-    inventoryCanvas.addEventListener('mouseup', () => {
-        if (draggedItem) {
-            if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
-                const originalPosition = character.inventory.find(item => item === draggedItem);
-                draggedItem.x = originalPosition.x;
-                draggedItem.y = originalPosition.y;
-            }
-            draggedItem = null;
-            drawGrid();
-            updateCharacterInventory();
-        }
-    });
 
     drawGrid();
 
-    character.inventory.forEach((item, index) => {
+    character.inventory.forEach((item) => {
         if (item.x === undefined || item.y === undefined) {
             const position = findAvailablePosition(item);
             if (position) {
@@ -1417,9 +1567,29 @@ inventoryCanvas.addEventListener('mousedown', (e) => {
             }
         }
     });
+
     drawGrid();
     updateCharacterInventory();
+}
 
+function handleItemClick(e) {
+    const rect = e.target.getBoundingClientRect();
+    const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
+    const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
+
+    const clickedItem = character.inventory.find(item => 
+        x >= item.x && x < item.x + item.width && 
+        y >= item.y && y < item.y + item.height
+    );
+
+    if (clickedItem) {
+        displayItemInfo(clickedItem);
+    } else {
+        const itemInfoDiv = document.getElementById('item-info');
+        if (itemInfoDiv) {
+            itemInfoDiv.innerHTML = 'No item selected. Click coordinates: ' + x + ', ' + y;
+        }
+    }
 }
 
 function displayItemInfo(item) {
@@ -1670,20 +1840,29 @@ function updateCharacterInventory() {
     `;
 
 // Update saving throws section
+// Update saving throws section
 const savingThrowsHtml = `
-        <h3>Saving Throws</h3>
-        <div class="saving-throws-grid" style="width: 100%;">
-            ${Object.entries(character.savingThrows).map(([ability, modifier], index) => `
+    <h3>Saving Throws</h3>
+    <div class="saving-throws-grid" style="width: 100%;">
+        ${Object.entries(character.savingThrows).map(([ability, saveInfo], index) => {
+            const abilityScore = character.abilityScores[ability];
+            const modifier = getModifierString(abilityScore);
+            const proficiencyBonus = saveInfo.proficient ? character.proficiencyBonus : 0;
+            const totalModifier = modifier + proficiencyBonus;
+            const modifierString = totalModifier >= 0 ? `+${totalModifier}` : `${totalModifier}`;
+
+            return `
                 ${index % 2 === 0 ? '<div class="saving-throws-row">' : ''}
                 <div class="saving-throw-column">
-                    <button onclick="rollSavingThrow('${ability}')" class="${modifier.proficient ? 'saving-throw-proficient' : ''}">
-                        ${ability.charAt(0).toUpperCase() + ability.slice(1)}: ${getModifierString(modifier.value)}
+                    <button onclick="rollSavingThrow('${ability}')" class="${saveInfo.proficient ? 'saving-throw-proficient' : ''}">
+                        ${ability.charAt(0).toUpperCase() + ability.slice(1)}: ${modifierString}
                     </button>
                 </div>
                 ${index % 2 === 1 || index === Object.entries(character.savingThrows).length - 1 ? '</div>' : ''}
-            `).join('')}
-        </div>
-    `;
+            `;
+        }).join('')}
+    </div>
+`;
 
  // Replace the existing saving throws section in attributesPage
  const savingThrowsSection = attributesPage.querySelector('.saving-throws');
@@ -1702,27 +1881,27 @@ const savingThrowsHtml = `
     `;
 
 // Populate skills and feats page
-skillsFeatsPage.innerHTML = `
-    <h3>Skills</h3>
-    <div class="skills">
-        ${skills.map(skill => `
-            <div class="skill" onclick="rollSkill('${skill}')">
-                <span>${skill}</span>
-                <span class="${character.skills.includes(skill) ? 'proficiency-bonus' : ''}">${getSkillModifier(skill)}</span>
-            </div>
-        `).join('')}
-    </div>
-    <h3>Feats</h3>
-    <div class="feats">
-        ${character.feats.map(feat => `
-            <div class="feat-item">
-                <h4>${feat}</h4>
-                <p>${feats.find(f => f.name === feat).description}</p>
-            </div>
-        `).join('')}
-    </div>
-`;
-
+// skillsFeatsPage.innerHTML = `
+//     <h3>Skills</h3>
+//     <div class="skills">
+//         ${skills.map(skill => `
+//             <div class="skill" onclick="rollSkill('${skill}')">
+//                 <span>${skill}</span>
+//                 <span class="${character.skills.includes(skill) ? 'proficiency-bonus' : ''}">${getSkillModifier(skill)}</span>
+//             </div>
+//         `).join('')}
+//     </div>
+//     <h3>Feats</h3>
+//     <div class="feats">
+//         ${character.feats.map(feat => `
+//             <div class="feat-item">
+//                 <h4>${feat}</h4>
+//                 <p>${feats.find(f => f.name === feat).description}</p>
+//             </div>
+//         `).join('')}
+//     </div>
+// `;
+updateSkillsAndFeatsPage();
 
 
 inventoryPage.innerHTML = `
@@ -1766,11 +1945,10 @@ inventoryPage.innerHTML = `
             <button id="character-sheet-add-item-btn">Add Item</button>
         </div>
     </div>
-
     <div id="character-inventory">
         <!-- This is where your item list will be displayed -->
     </div>
-    </div>
+</div>
 `;
 
 
@@ -1783,20 +1961,21 @@ populateCombatPage();
 //brad
                
          // Populate spells page if character is a spellcaster
-    if (isSpellcaster(character.class)) {
+         if (isSpellcaster(character.class)) {
         const spellSlots = calculateSpellSlots(character.class, character.level);
-        let spellsHtml = `
+        const spellsPage = document.getElementById('spells-page');
+        spellsPage.innerHTML = `
             <div class="spells-container">
                 <div class="spell-slots-section">
                     <h4>Spell Slots</h4>
-                    <div class="cantrips-row">
-                        <span>Cantrips:</span>
-                        <input type="number" value="${calculateCantrips(character.class, character.level)}" readonly>
-                    </div>
                     <div class="spell-slots-grid">
+                        <div class="spell-slot-cell">
+                            <span>Cantrips:</span>
+                            <input type="number" value="${calculateCantrips(character.class, character.level)}" readonly>
+                        </div>
                         ${[1,2,3,4,5,6,7,8,9].map(level => `
                             <div class="spell-slot-cell">
-                                <span>${level}</span>
+                                <span>${level}:</span>
                                 <input type="number" value="${spellSlots[level] || 0}" min="0" max="${spellSlots[level] || 0}" 
                                        onchange="updateSpellSlots(${level}, this.value)" ${spellSlots[level] ? '' : 'disabled'}>
                                 <span>/${spellSlots[level] || 0}</span>
@@ -1805,36 +1984,24 @@ populateCombatPage();
                     </div>
                 </div>
                 <div class="spell-list-section">
-                    <h4>Spells 
-                        ${[0,1,2,3,4,5,6,7,8,9].map(level => 
-                            `<button class="spell-level-btn" onclick="scrollToSpellLevel(${level})">${level}</button>`
-                        ).join('')}
-                    </h4>
+                    <h4>Spells</h4>
                     <div class="spell-controls">
                         <select id="spell-select">
                             <option value="">Select a spell</option>
                         </select>
                         <button id="add-spell-btn">Add Spell</button>
                     </div>
-                    <div id="spell-list" class="spell-list">
-                        ${[0,1,2,3,4,5,6,7,8,9].map(level => `
-                            <div id="spell-level-${level}" class="spell-level-group">
-                                <h5>Level ${level} ${level === 0 ? '(Cantrips)' : ''}</h5>
-                            </div>
-                        `).join('')}
-                    </div>
+                    <div id="spell-list" class="spell-list"></div>
                 </div>
             </div>
         `;
-        spellsPage.innerHTML = spellsHtml;
         populateSpellList();
         setupSpellManager();
     } else {
-        spellsPage.innerHTML = `<p>This character does not have spellcasting abilities.</p>`;
+        document.getElementById('spells-page').innerHTML = `<p>This character does not have spellcasting abilities.</p>`;
     }
 
                 // Populate notes page
-                notesPage.querySelector('#character-notes').value = character.notes;
 
      // Remove existing level up button if it exists
      const existingLevelUpSection = notesPage.querySelector('#level-up-section');
@@ -1843,11 +2010,12 @@ populateCombatPage();
     }
 
     // Add Level Up button
-    const levelUpSection = document.createElement('div');
-    levelUpSection.id = 'level-up-section';
-    levelUpSection.innerHTML = `<button id="level-up-btn" onclick="levelUp()" class="small-button">Level Up</button>`;
-    notesPage.appendChild(levelUpSection);
+    // const levelUpSection = document.createElement('div');
+    // levelUpSection.id = 'level-up-section';
+    // levelUpSection.innerHTML = `<button id="level-up-btn" onclick="levelUp()" class="small-button">Level Up</button>`;
+    // notesPage.appendChild(levelUpSection);
 
+    document.getElementById('character-notes').value = character.notes;
 
 
                 // Populate roll results page
@@ -1871,12 +2039,20 @@ populateCombatPage();
                 });
 
                 function updateCategoryDisplay() {
-                    categoryPages.forEach(pageId => {
-                        document.getElementById(pageId).classList.add('hidden');
-                    });
-                    document.getElementById(categoryPages[currentCategoryIndex]).classList.remove('hidden');
-                    document.getElementById('category-name').textContent = categoryPages[currentCategoryIndex].split('-')[0].charAt(0).toUpperCase() + categoryPages[currentCategoryIndex].split('-')[0].slice(1);
-                }
+    categoryPages.forEach(pageId => {
+        const page = document.getElementById(pageId);
+        if (page) {
+            page.classList.add('hidden');
+            page.classList.remove('active');
+        }
+    });
+    const currentPage = document.getElementById(categoryPages[currentCategoryIndex]);
+    if (currentPage) {
+        currentPage.classList.remove('hidden');
+        currentPage.classList.add('active');
+    }
+    document.getElementById('category-name').textContent = categoryPages[currentCategoryIndex].split('-')[0].charAt(0).toUpperCase() + categoryPages[currentCategoryIndex].split('-')[0].slice(1);
+}
 
                 updateCategoryDisplay();
                 const levelForASI = [4, 8, 12, 16, 19];
@@ -1893,14 +2069,65 @@ populateCombatPage();
     console.log("Current level:", character.level);
     console.log("Ability score improvements left:", character.abilityScoreImprovementsLeft);
 }
+function handleAbilityScoreImprovements() {
+    const levelForASI = [4, 8, 12, 16, 19];
+    if (levelForASI.includes(character.level)) {
+        if (character.abilityScoreImprovementsLeft === undefined) {
+            character.abilityScoreImprovementsLeft = 2;
+            console.log("Initialized abilityScoreImprovementsLeft to 2");
+        }
+        updateAbilityScoreImprovementButtons();
+    } else {
+        removeAllImproveButtons();
+    }
+    console.log("Current level:", character.level);
+    console.log("Ability score improvements left:", character.abilityScoreImprovementsLeft);
+}
 
 
 
-
-            function getModifierString(score) {
-                const modifier = Math.floor((score - 10) / 2);
-                return modifier >= 0 ? `+${modifier}` : `${modifier}`;
-            }
+function getModifierString(score) {
+    // Lookup table for ability score modifiers
+    console.log("Score:", score);
+    const modifierTable = {
+        1: -5,
+        2: -4,
+        3: -4,
+        4: -3,
+        5: -3,
+        6: -2,
+        7: -2,
+        8: -1,
+        9: -1,
+        10: 0,
+        11: 0,
+        12: 1,
+        13: 1,
+        14: 2,
+        15: 2,
+        16: 3,
+        17: 3,
+        18: 4,
+        19: 4,
+        20: 5,
+        21: 5,
+        22: 6,
+        23: 6,
+        24: 7,
+        25: 7,
+        26: 8,
+        27: 8,
+        28: 9,
+        29: 9,
+        30: 10
+    };
+    // Ensure the score is within valid range
+    // if (score < 1 || score > 30) {
+    //     throw new Error("Ability score must be between 1 and 30.");
+    // }
+    // Return the corresponding modifier
+    return modifierTable[score];
+}
 
             function calculateHP(characterClass, level, constitutionScore) {
                 const hitDice = {
@@ -2120,17 +2347,19 @@ function rollAbility(ability, score) {
                 addRollResult(result);
             }
 
-            function rollSavingThrow(ability) {
-    const roll = rollDice(1, 20);
-    const abilityScore = character.abilityScores[ability];
-    const modifier = Math.floor((abilityScore - 10) / 2);
-    const proficiencyBonus = character.savingThrows[ability].proficient ? character.proficiencyBonus : 0;
-    const total = roll + modifier + proficiencyBonus;
+//             function rollSavingThrow(ability) {
+//     const roll = rollDice(1, 20);
+//     const abilityScore = character.abilityScores[ability];
+//     const modifier = getModifierString(abilityScore);
+//     const proficiencyBonus = character.savingThrows[ability].proficient ? character.proficiencyBonus : 0;
+//     const totalModifier = modifier + proficiencyBonus;
+//     const total = roll + totalModifier;
 
-    const message = `${ability.charAt(0).toUpperCase() + ability.slice(1)} saving throw: ${roll} + ${modifier} (ability) + ${proficiencyBonus} (proficiency) = ${total}`;
-    notifyAndLog(message);
-    if (roll === 20) playSound('assets/sounds/20.mp3');
-}
+//     const modifierString = totalModifier >= 0 ? `+${totalModifier}` : `${totalModifier}`;
+//     const message = `${ability.charAt(0).toUpperCase() + ability.slice(1)} saving throw: ${roll} ${modifierString} = ${total}`;
+//     notifyAndLog(message);
+//     if (roll === 20) playSound('assets/sounds/20.mp3');
+// }
 
             function getRelevantAbility(skill) {
                 const skillAbilities = {
@@ -2427,6 +2656,36 @@ function downloadCharacterJSON(jsonString) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+function updateSkillsAndFeatsPage() {
+    const skillsFeatsPage = document.getElementById('skills-feats-page');
+    
+    skillsFeatsPage.innerHTML = `
+        <h3>Skills</h3>
+        <div class="skills">
+            ${skills.map(skill => `
+                <div class="skill" onclick="rollSkill('${skill}')">
+                    <span>${skill}</span>
+                    <span class="${character.skills.includes(skill) ? 'proficiency-bonus' : ''}">${getSkillModifier(skill)}</span>
+                </div>
+            `).join('')}
+        </div>
+        <h3>Feats</h3>
+        <div class="feats">
+            ${character.feats.map(featName => {
+                const feat = feats.find(f => f.name === featName);
+                return feat ? `
+                    <div class="feat-item">
+                        <h4>${feat.name}</h4>
+                        <p>${feat.description}</p>
+                        <p><small>Applies to: ${feat.appliesTo}</small></p>
+                    </div>
+                ` : '';
+            }).join('')}
+        </div>
+    `;
+}
+
 
             function saveCharacterToCookie(character) {
                 const cookieName = `character_${encodeURIComponent(character.name)}`;
@@ -2814,13 +3073,70 @@ window.levelUp = function() {
         character.abilityScoreImprovementsLeft = 2;
         console.log("Level up to ASI level. Reset abilityScoreImprovementsLeft to 2");
     }
+
+    const featLevels = [4, 8, 12, 16, 19]; // Levels where feats are typically available
+    if (featLevels.includes(character.level)) {
+        showFeatChooser();
+    }
     
     displayCharacterSheet();
     updateSpellSlots();
+    handleAbilityScoreImprovements();
     showNotification(`Congratulations! You are now level ${character.level}!`);
 };
 
+function showFeatChooser() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <h2>Choose a Feat</h2>
+            <select id="feat-select">
+                <option value="">Select a feat</option>
+            </select>
+            <div id="feat-description"></div>
+            <button id="confirm-feat">Confirm Feat</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
 
+    const featSelect = document.getElementById('feat-select');
+    const featDescription = document.getElementById('feat-description');
+    const confirmButton = document.getElementById('confirm-feat');
+
+    // Populate feat options
+    feats.forEach(feat => {
+        if (feat.appliesTo === 'All classes' || feat.appliesTo.includes(character.class)) {
+            const option = document.createElement('option');
+            option.value = feat.name;
+            option.textContent = feat.name;
+            featSelect.appendChild(option);
+        }
+    });
+
+    // Update description when a feat is selected
+    featSelect.addEventListener('change', () => {
+        const selectedFeat = feats.find(f => f.name === featSelect.value);
+        if (selectedFeat) {
+            featDescription.textContent = selectedFeat.description;
+        } else {
+            featDescription.textContent = '';
+        }
+    });
+
+    // Confirm feat selection
+    confirmButton.addEventListener('click', () => {
+        const selectedFeat = featSelect.value;
+        if (selectedFeat) {
+            character.feats.push(selectedFeat);
+            modal.remove();
+            showNotification(`You've gained the ${selectedFeat} feat!`);
+            displayCharacterSheet(); // Update character sheet to reflect new feat
+        } else {
+            showNotification('Please select a feat before confirming.');
+        }
+    });
+}
 
 
 function updateAbilityScoreImprovementButtons() {
@@ -3128,6 +3444,33 @@ fetch('spells.json')
         .catch(error => console.error('Error loading races:', error));
 }
 
+function shortRest() {
+    const maxHitDice = character.level;
+    const currentHitDice = character.hitDice || maxHitDice; // Assuming full hit dice if not tracked
+
+    const hitDiceToSpend = prompt(`You have ${currentHitDice} hit dice remaining. How many do you want to spend? (0-${currentHitDice})`);
+    
+    if (hitDiceToSpend === null) return; // User cancelled
+
+    const diceCount = Math.min(parseInt(hitDiceToSpend) || 0, currentHitDice);
+    if (diceCount <= 0) return;
+
+    const conModifier = Math.floor((character.abilityScores.constitution - 10) / 2);
+    let healing = 0;
+
+    for (let i = 0; i < diceCount; i++) {
+        const roll = rollDice(1, 6); // Assuming d6 for hit dice, adjust if needed
+        healing += roll + conModifier;
+    }
+
+    character.hp = Math.min(character.hp + healing, character.maxHp);
+    character.hitDice = currentHitDice - diceCount;
+
+    updateHPDisplay();
+    showNotification(`You regained ${healing} HP. Current HP: ${character.hp}/${character.maxHp}`);
+}
+
+document.getElementById('short-rest-btn').addEventListener('click', shortRest);
 
 function updateRaceDropdown() {
     const raceSelect = document.getElementById('race');
@@ -3140,6 +3483,46 @@ function updateRaceDropdown() {
         raceSelect.appendChild(option);
     });
 }
+
+
+function isMobileDevice() {
+    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+}
+
+function adjustInventoryLayout() {
+    const inventoryContainer = document.querySelector('.inventory-container');
+    const characterInventory = document.getElementById('character-inventory');
+    const inventoryControls = document.querySelector('.inventory-controls');
+
+    if (isMobileDevice() || window.innerWidth < 768) {
+        // Mobile layout
+        inventoryContainer.style.flexDirection = 'column';
+        characterInventory.style.maxHeight = '200px';
+        characterInventory.style.marginTop = '10px';
+        inventoryControls.insertAdjacentElement('afterend', characterInventory);
+    } else {
+        // Desktop layout
+        inventoryContainer.style.flexDirection = 'row';
+        characterInventory.style.maxHeight = 'none';
+        characterInventory.style.marginTop = '0';
+        inventoryContainer.appendChild(characterInventory);
+    }
+}
+
+(function() {
+    window.rollSavingThrow = function(ability) {
+        const roll = rollDice(1, 20);
+        const abilityScore = character.abilityScores[ability];
+        const modifier = getModifierString(abilityScore);
+        const proficiencyBonus = character.savingThrows[ability].proficient ? character.proficiencyBonus : 0;
+        const totalModifier = modifier + proficiencyBonus;
+        const total = roll + totalModifier;
+        const modifierString = totalModifier >= 0 ? `+${totalModifier}` : `${totalModifier}`;
+        const message = `${ability.charAt(0).toUpperCase() + ability.slice(1)} saving throw: ${roll} ${modifierString} = ${total}`;
+        notifyAndLog(message);
+        if (roll === 20) playSound('assets/sounds/20.mp3');
+    };
+})();
 
             // Initialize the application
             initializeUI();

@@ -56,8 +56,7 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .hidden {
-    display: none;
-}
+    display: none !important;}
 
 .dice {
     width: 50px;
@@ -148,12 +147,16 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .character-sheet {
-    background-color: #fff;
+        background-color: #fff;
     border: 1px solid #ccc;
     padding: 20px;
     margin-top: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Prevent scrolling on the main container */
 }
 
 .character-sheet h2 {
@@ -229,6 +232,25 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     display: none;
 }
 
+#attributes-page,
+#skills-feats-page,
+#inventory-page,
+#spells-page,
+#combat-page,
+#notes-page {
+    height: auto;
+}
+
+.category-page {
+    flex-grow: 1; /* Allow page to grow and fill available space */
+    overflow-y: auto; /* Enable scrolling within each page if needed */
+    padding: 20px;
+}
+
+.category-page.active {
+    display: block;
+}
+
 .character-sheet-header .row {
     display: flex;
     justify-content: space-between;
@@ -245,8 +267,10 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .character-sheet-content {
-    height: 75vh;
-    overflow-y: auto;
+    flex-grow: 1; /* Allow content to grow and fill available space */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Hide overflow */
 }
 
 .character-sheet-nav {
@@ -480,13 +504,7 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .character-sheet-header {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #f8f8f8;
-    border-radius: 5px;
+    flex-shrink: 0;
 }
 
 .character-info {
@@ -561,9 +579,15 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     cursor: pointer;
 }
 
-.inventory-container {
+/* .inventory-container {
     display: flex;
     justify-content: space-between;
+} */
+
+.inventory-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .currency-section {
@@ -571,18 +595,16 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     padding-right: 10px;
 }
 
-/* working */
 /* .inventory-grid-section {
-    flex: 0 0 320px; 
-    display: flex;
-    flex-direction: column;
-} */
-
-.inventory-grid-section {
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     margin-right: 20px;
+} */
+
+.inventory-grid-section {
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 #currency-tracker div {
@@ -600,15 +622,15 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 
 .spells-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
 }
 
 .spell-slots-section {
-    flex: 0 0 45%;
+    margin-bottom: 20px;
 }
 
 .spell-list-section {
-    flex: 0 0 50%;
+    flex: 1;
 }
 
 .cantrips-row {
@@ -626,15 +648,19 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .spell-slots-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px;
+}
+
+.spell-slot-cell span {
+    margin-right: 5px;
 }
 
 .spell-slot-cell {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    margin-right: 10px;
 }
 
 .spell-slot-cell input {
@@ -677,23 +703,23 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     text-align: center;
 }
 
-/* working
-#character-inventory {
+
+
+/* #character-inventory {
     flex: 1;
-    margin-left: 20px;
     overflow-y: auto;
-    max-height: 320px; 
+    max-height: 320px;
     border: 1px solid #ccc;
     padding: 10px;
+    min-width: 200px;
 } */
 
 #character-inventory {
-    flex: 1;
+    width: 100%;
+    max-height: 200px;
     overflow-y: auto;
-    max-height: 320px; /* Match canvas height */
     border: 1px solid #ccc;
     padding: 10px;
-    min-width: 200px; /* Ensure a minimum width */
 }
 
 .dice i {
@@ -741,28 +767,35 @@ select, input[type="number"], input[type="text"], input[type="file"] {
         font-size: 12px;
     }
 
-    /* working
-    .inventory-grid {
-        width: 100%;
+
+    /* .inventory-grid {
+        width: 320px; 
         margin-bottom: 10px;
     } */
 
     .inventory-grid {
-        width: 320px; /* Match canvas width */
-        margin-bottom: 10px;
+        width: 100%;
+        max-width: 320px; /* This matches the canvas width */
+        margin: 0 auto;
     }
 
-    #inventory-canvas {
+    /* #inventory-canvas {
         display: block;
         background-color: #fff;
         border: 1px solid #333;
         border-radius: 5px;
+    } */
+
+    #inventory-canvas {
+        width: 100%;
+        height: auto;
+        max-width: 320px;
+        max-height: 320px;
     }
 
-    /* working
-    .inventory-controls {
+    /* .inventory-controls {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         width: 100%;
     } */
 
@@ -770,15 +803,16 @@ select, input[type="number"], input[type="text"], input[type="file"] {
         display: flex;
         flex-direction: column;
         width: 100%;
+        margin-top: 10px;
     }
 
-    /* working
-    .inventory-controls select, 
-    .inventory-controls button {
-        flex: 1;
-    } */
+    /* .inventory-controls select, 
+.inventory-controls button {
+    width: 100%;
+    margin-top: 5px;
+} */
 
-    .inventory-controls select, 
+.inventory-controls select, 
 .inventory-controls button {
     width: 100%;
     margin-top: 5px;
@@ -786,6 +820,23 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 
     .inventory-controls select {
         margin-right: 10px;
+    }
+}
+
+/* for the updated char-inventory */
+@media (min-width: 768px) {
+    .inventory-container {
+        flex-direction: row;
+    }
+
+    .inventory-grid-section {
+        flex: 0 0 320px;
+        margin-right: 20px;
+    }
+
+    #character-inventory {
+        flex: 1;
+        max-height: none;
     }
 }
 
@@ -819,4 +870,80 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     .character-stats-grid {
         grid-template-columns: 1fr;
     }
+}
+
+#notes-page {
+    display: flex;
+    flex-direction: column;
+}
+
+#character-notes {
+    flex-grow: 1;
+    min-height: 200px; /* Minimum height for the textarea */
+    resize: vertical;
+}
+
+.notes-buttons {
+    margin-top: 10px;
+}
+
+.notes-buttons button {
+    flex: 1;
+    margin: 0 5px;
+}
+
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+}
+
+#feat-select, #confirm-feat {
+    width: 100%;
+    margin: 10px 0;
+    padding: 5px;
+}
+
+#feat-description {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+.feat-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.feat-item h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.feat-item p {
+    margin: 5px 0;
+}
+
+.feat-item small {
+    color: #666;
+    font-style: italic;
 }
