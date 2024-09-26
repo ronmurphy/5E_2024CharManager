@@ -536,6 +536,8 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 
 .inventory-grid-section {
     flex: 0 0 70%;
+    display: flex;
+    justify-content: center;
 }
 
 #currency-tracker div {
@@ -676,12 +678,17 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     }
 
     .inventory-grid {
-        max-width: 100%;
-        overflow-x: auto;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+        max-width: 320px; /* Match the canvas width */
     }
 
     #inventory-canvas {
-        max-width: 100%;
+        display: block; /* Changed from flex to block */
+        background-color: #fff;
+        border: 1px solid #333;
+        border-radius: 5px;
     }
 
     .inventory-controls {
