@@ -954,19 +954,65 @@
     function setupInventoryManager() {
         console.log('Setting up inventory manager...');
         const inventoryCanvas = document.getElementById('inventory-canvas');
+        if (!inventoryCanvas) {
+            console.error('Inventory canvas not found');
+            return;
+        }
         const inventoryCtx = inventoryCanvas.getContext('2d');
     
-        inventoryCanvas.width = GRID_SIZE * CELL_SIZE;
-        inventoryCanvas.height = GRID_SIZE * CELL_SIZE;
+        // Set up canvas for high DPI displays
+        const dpr = window.devicePixelRatio || 1;
+        const originalWidth = inventoryCanvas.width;
+        const originalHeight = inventoryCanvas.height;
+        inventoryCanvas.width = originalWidth * dpr;
+        inventoryCanvas.height = originalHeight * dpr;
+        inventoryCanvas.style.width = originalWidth + 'px';
+        inventoryCanvas.style.height = originalHeight + 'px';
+        inventoryCtx.scale(dpr, dpr);
     
         let draggedItem = null;
         let dragOffset = { x: 0, y: 0 };
     
+        function findAvailablePosition(item) {
+            for (let y = 0; y <= GRID_SIZE - item.height; y++) {
+                for (let x = 0; x <= GRID_SIZE - item.width; x++) {
+                    if (canPlaceItem(item, x, y)) {
+                        return { x, y };
+                    }
+                }
+            }
+            return null;
+        }
+    
+        function canPlaceItem(item, x, y) {
+            for (let i = 0; i < item.height; i++) {
+                for (let j = 0; j < item.width; j++) {
+                    if (isOccupied(x + j, y + i)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+    
+        function isOccupied(x, y) {
+            return character.inventory.some(item =>
+                x >= item.x && x < item.x + item.width &&
+                y >= item.y && y < item.y + item.height
+            );
+        }
+    
         function handleStart(e) {
+            // e.preventDefault();
+            // const rect = inventoryCanvas.getBoundingClientRect();
+            // const x = Math.floor(((e.clientX || e.touches[0].clientX) - rect.left) / CELL_SIZE);
+            // const y = Math.floor(((e.clientY || e.touches[0].clientY) - rect.top) / CELL_SIZE);
             e.preventDefault();
             const rect = inventoryCanvas.getBoundingClientRect();
-            const x = Math.floor(((e.clientX || e.touches[0].clientX) - rect.left) / CELL_SIZE);
-            const y = Math.floor(((e.clientY || e.touches[0].clientY) - rect.top) / CELL_SIZE);
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            const x = Math.floor((clientX - rect.left) / CELL_SIZE);
+            const y = Math.floor((clientY - rect.top) / CELL_SIZE);
     
             draggedItem = character.inventory.find(item =>
                 x >= item.x && x < item.x + item.width &&
@@ -980,11 +1026,18 @@
         }
     
         function handleMove(e) {
+            // if (!draggedItem) return;
+            // e.preventDefault();
+            // const rect = inventoryCanvas.getBoundingClientRect();
+            // const x = Math.floor(((e.clientX || e.touches[0].clientX) - rect.left) / CELL_SIZE);
+            // const y = Math.floor(((e.clientY || e.touches[0].clientY) - rect.top) / CELL_SIZE);
             if (!draggedItem) return;
             e.preventDefault();
             const rect = inventoryCanvas.getBoundingClientRect();
-            const x = Math.floor(((e.clientX || e.touches[0].clientX) - rect.left) / CELL_SIZE);
-            const y = Math.floor(((e.clientY || e.touches[0].clientY) - rect.top) / CELL_SIZE);
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            const x = Math.floor((clientX - rect.left) / CELL_SIZE);
+            const y = Math.floor((clientY - rect.top) / CELL_SIZE);
     
             draggedItem.x = Math.max(0, Math.min(x - dragOffset.x, GRID_SIZE - draggedItem.width));
             draggedItem.y = Math.max(0, Math.min(y - dragOffset.y, GRID_SIZE - draggedItem.height));
@@ -1013,6 +1066,18 @@
             }
         }
     
+        function checkOverlap(item) {
+            return character.inventory.some(other => {
+                if (other === item) return false;
+                return !(item.x + item.width <= other.x || item.x >= other.x + other.width ||
+                         item.y + item.height <= other.y || item.y >= other.y + other.height);
+            });
+        }
+    
+        function isWithinGrid(item) {
+            return item.x >= 0 && item.y >= 0 && item.x + item.width <= GRID_SIZE && item.y + item.height <= GRID_SIZE;
+        }
+    
         inventoryCanvas.addEventListener('mousedown', handleStart);
         inventoryCanvas.addEventListener('touchstart', handleStart, { passive: false });
         inventoryCanvas.addEventListener('mousemove', handleMove);
@@ -1025,6 +1090,19 @@
         }, { passive: false });
     
         inventoryCanvas.addEventListener('click', handleItemClick);
+    
+        // Debug logging for touch events
+        inventoryCanvas.addEventListener('touchstart', function(e) {
+            console.log('Touch start', e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: false });
+        
+        inventoryCanvas.addEventListener('touchmove', function(e) {
+            console.log('Touch move', e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: false });
+        
+        inventoryCanvas.addEventListener('touchend', function(e) {
+            console.log('Touch end');
+        }, { passive: false });
     
         populateItemDropdown();
     
@@ -1056,8 +1134,9 @@
         character.inventory.forEach((item, index) => {
             if (item.x === undefined || item.y === undefined || item.width === undefined || item.height === undefined) {
                 console.warn(`Item ${item.name} is missing position or size information:`, item);
-                item.x = item.x || Math.floor(index / GRID_SIZE);
-                item.y = item.y || index % GRID_SIZE;
+                const position = findAvailablePosition(item) || { x: Math.floor(index / GRID_SIZE), y: index % GRID_SIZE };
+                item.x = position.x;
+                item.y = position.y;
                 item.width = item.width || 1;
                 item.height = item.height || 1;
             }
@@ -2571,143 +2650,7 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         displayCharacterSheet();
     }
 
-    function setupInventoryManager() {
-        console.log('Setting up inventory manager...');
-        const inventoryCanvas = document.getElementById('inventory-canvas');
-        const inventoryCtx = inventoryCanvas.getContext('2d');
 
-        let draggedItem = null;
-        let dragOffset = { x: 0, y: 0 };
-
-        function findAvailablePosition(item) {
-            for (let y = 0; y <= GRID_SIZE - item.height; y++) {
-                for (let x = 0; x <= GRID_SIZE - item.width; x++) {
-                    if (canPlaceItem(item, x, y)) {
-                        return { x, y };
-                    }
-                }
-            }
-            return null;
-        }
-
-        function canPlaceItem(item, x, y) {
-            for (let i = 0; i < item.height; i++) {
-                for (let j = 0; j < item.width; j++) {
-                    if (isOccupied(x + j, y + i)) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        function isOccupied(x, y) {
-            return character.inventory.some(item =>
-                x >= item.x && x < item.x + item.width &&
-                y >= item.y && y < item.y + item.height
-            );
-        }
-
-        const addItemBtn = document.getElementById('character-sheet-add-item-btn');
-        console.log('Add item button element:', addItemBtn);
-        if (addItemBtn && !addItemBtn.hasEventListener) {
-            console.log('Add item button found, adding event listener...');
-            addItemBtn.addEventListener('click', function(event) {
-                event.preventDefault();
-                addItemToInventory();
-            });
-            addItemBtn.hasEventListener = true;
-            console.log('Event listener added to add item button.');
-        } else if (addItemBtn) {
-            console.log('Add item button already has an event listener');
-        } else {
-            console.error('Add item button not found');
-        }
-
-        const itemSelect = document.getElementById('character-sheet-item-select');
-        if (itemSelect) {
-            itemSelect.addEventListener('change', function(event) {
-                console.log('Selected item:', event.target.value);
-            });
-        }
-
-        inventoryCanvas.addEventListener('mousedown', (e) => {
-            const x = Math.floor(e.offsetX / CELL_SIZE);
-            const y = Math.floor(e.offsetY / CELL_SIZE);
-
-            draggedItem = character.inventory.find(item => x >= item.x && x < item.x + item.width && y >= item.y && y < item.y + item.height);
-
-            if (draggedItem) {
-                dragOffset.x = x - draggedItem.x;
-                dragOffset.y = y - draggedItem.y;
-            }
-        });
-
-        inventoryCanvas.addEventListener('mousemove', (e) => {
-            if (!draggedItem) return;
-
-            const x = Math.floor(e.offsetX / CELL_SIZE);
-            const y = Math.floor(e.offsetY / CELL_SIZE);
-
-            draggedItem.x = x - dragOffset.x;
-            draggedItem.y = y - dragOffset.y;
-
-            drawGrid();
-
-            if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
-                inventoryCtx.globalAlpha = 0.5;
-                inventoryCtx.fillStyle = 'red';
-                inventoryCtx.fillRect(draggedItem.x * CELL_SIZE, draggedItem.y * CELL_SIZE, draggedItem.width * CELL_SIZE, draggedItem.height * CELL_SIZE);
-                inventoryCtx.globalAlpha = 1;
-            }
-        });
-
-        inventoryCanvas.addEventListener('mouseup', () => {
-            if (draggedItem) {
-                if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
-                    const originalPosition = character.inventory.find(item => item === draggedItem);
-                    draggedItem.x = originalPosition.x;
-                    draggedItem.y = originalPosition.y;
-                }
-                draggedItem = null;
-                drawGrid();
-                updateCharacterInventory();
-                updateCombatPage();
-            }
-        });
-
-        function checkOverlap(item) {
-            return character.inventory.some(other => {
-                if (other === item) return false;
-                return !(item.x + item.width <= other.x || item.x >= other.x + other.width ||
-                         item.y + item.height <= other.y || item.y >= other.y + other.height);
-            });
-        }
-
-        function isWithinGrid(item) {
-            return item.x >= 0 && item.y >= 0 && item.x + item.width <= GRID_SIZE && item.y + item.height <= GRID_SIZE;
-        }
-
-        drawGrid();
-
-        character.inventory.forEach((item, index) => {
-            if (item.x === undefined || item.y === undefined || item.width === undefined || item.height === undefined) {
-                console.warn(`Item ${item.name} is missing position or size information:`, item);
-                item.x = item.x || Math.floor(index / GRID_SIZE);
-                item.y = item.y || index % GRID_SIZE;
-                item.width = item.width || 1;
-                item.height = item.height || 1;
-            }
-        });
-        console.log('Inventory after placement:', character.inventory);
-        drawGrid();
-        updateCharacterInventory();
-        updateCombatPage();
-
-        console.log('Canvas dimensions:', inventoryCanvas.width, 'x', inventoryCanvas.height);
-        console.log('Grid size:', GRID_SIZE, 'x', GRID_SIZE, 'cells');
-        console.log('Cell size:', CELL_SIZE, 'pixels');
-    }
 
     function populateItemDropdown() {
         const itemSelect = document.getElementById('item-select');

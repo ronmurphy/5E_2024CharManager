@@ -1,11 +1,52 @@
+:root {
+    /* Default theme (Blue) */
+    --primary-color: #3498db;
+    --primary-color-dark: #2980b9;
+    --secondary-color: #e74c3c;
+    --secondary-color-dark: #c0392b;
+    
+    /* Light mode colors */
+    --background-color: #f4f4f4;
+    --text-color: #333;
+    --card-background: #fff;
+}
+
+/* Dark mode colors */
+.dark-mode {
+    --background-color: #333;
+    --text-color: #f4f4f4;
+    --card-background: #444;
+}
+
+/* Color themes */
+.theme-red {
+    --primary-color: #e74c3c;
+    --primary-color-dark: #c0392b;
+    --secondary-color: #3498db;
+    --secondary-color-dark: #2980b9;
+}
+
+.theme-green {
+    --primary-color: #2ecc71;
+    --primary-color-dark: #27ae60;
+    --secondary-color: #e67e22;
+    --secondary-color-dark: #d35400;
+}
+
+.theme-blue {
+    /* This is already our default, but including for completeness */
+    --primary-color: #3498db;
+    --primary-color-dark: #2980b9;
+    --secondary-color: #e74c3c;
+    --secondary-color-dark: #c0392b;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
-    color: #333;
-    margin: 0;
+    color: var(--text-color);    margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-}
+    background-color: var(--background-color);}
 
 .container {
     max-width: 100%;
@@ -18,7 +59,7 @@ h1, h2, h3 {
 }
 
 .card {
-    background-color: #fff;
+    background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     margin-bottom: 20px;
@@ -26,7 +67,7 @@ h1, h2, h3 {
 }
 
 button, .small-button, .action-button {
-    background-color: #3498db;
+    background-color: var(--primary-color);
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -38,7 +79,7 @@ button, .small-button, .action-button {
 }
 
 button:hover, .action-button:hover {
-    background-color: #2980b9;
+    background-color: var(--primary-color-dark);
 }
 
 .small-button {
@@ -56,7 +97,8 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .hidden {
-    display: none !important;}
+    display: none !important;
+}
 
 .dice {
     width: 50px;
@@ -106,15 +148,6 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     border-radius: 5px;
 }
 
-/* working
-.inventory-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-} */
-
 .inventory-item {
     display: flex;
     justify-content: space-between;
@@ -123,11 +156,6 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     border-bottom: 1px solid #eee;
 }
 
-/* working
-.inventory-item button {
-    font-size: 14px;
-    padding: 5px 10px;
-} */
 .inventory-item button {
     padding: 2px 5px;
     font-size: 12px;
@@ -147,7 +175,7 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .character-sheet {
-        background-color: #fff;
+    background-color: #fff;
     border: 1px solid #ccc;
     padding: 20px;
     margin-top: 20px;
@@ -155,8 +183,8 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Full viewport height */
-    overflow: hidden; /* Prevent scrolling on the main container */
+    height: 100vh;
+    overflow: hidden;
 }
 
 .character-sheet h2 {
@@ -242,8 +270,8 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .category-page {
-    flex-grow: 1; /* Allow page to grow and fill available space */
-    overflow-y: auto; /* Enable scrolling within each page if needed */
+    flex-grow: 1;
+    overflow-y: auto;
     padding: 20px;
 }
 
@@ -267,10 +295,10 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .character-sheet-content {
-    flex-grow: 1; /* Allow content to grow and fill available space */
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Hide overflow */
+    overflow: hidden;
 }
 
 .character-sheet-nav {
@@ -383,67 +411,58 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     border-bottom: none;
 }
 
-.inventory-item-name {
-    flex: 0 0 60%;
+.inventory-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
-.inventory-item-actions {
-    flex: 0 0 40%;
+.currency-row {
     display: flex;
     justify-content: space-between;
-}
-
-.inventory-item-actions button {
-    flex: 0 0 48%;
-}
-
-/* .inventory-grid {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 1;
     align-items: center;
-} */
-
-.inventory-grid {
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    padding: 0 5%;
 }
 
-/* #inventory-canvas {
+#currency-display {
+    flex-grow: 1;
+}
+
+.inventory-content {
     display: flex;
-    justify-content: center;
-    background-color: #fff;
-    border: 1px solid #333;
-    border-radius: 5px;
-    position: relative;
-    z-index: 2;
-} */
+    justify-content: space-between;
+    padding: 0 5%;
+}
+
+.inventory-grid-section {
+    width: 45%;
+}
+
+.inventory-controls-section {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+}
 
 #inventory-canvas {
+    width: 100%;
+    height: auto;
+    max-width: 320px;
+    max-height: 320px;
     display: block;
     background-color: #fff;
     border: 1px solid #333;
     border-radius: 5px;
 }
 
-/* .inventory-controls {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-} */
-
 .inventory-controls {
     display: flex;
     flex-direction: column;
     width: 100%;
+    margin-bottom: 15px;
 }
-
-/* .inventory-controls select, .inventory-controls button {
-    flex: 1;
-    margin: 0 5px;
-} */
 
 .inventory-controls select, 
 .inventory-controls button {
@@ -451,25 +470,12 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     margin-top: 5px;
 }
 
-#combat-page table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-#combat-page th, #combat-page td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-#combat-page th {
-    background-color: #f2f2f2;
-}
-
-#combat-page button {
-    width: 100%;
-    padding: 5px;
+#character-inventory {
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 200px;
+    border: 1px solid #ccc;
+    padding: 10px;
 }
 
 .saving-throws-grid {
@@ -579,47 +585,6 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     cursor: pointer;
 }
 
-/* .inventory-container {
-    display: flex;
-    justify-content: space-between;
-} */
-
-.inventory-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.currency-section {
-    flex: 0 0 20%;
-    padding-right: 10px;
-}
-
-/* .inventory-grid-section {
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    margin-right: 20px;
-} */
-
-.inventory-grid-section {
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-#currency-tracker div {
-    margin-bottom: 10px;
-}
-
-#currency-tracker label {
-    display: inline-block;
-    width: 50px;
-}
-
-#currency-tracker input {
-    width: 80px;
-}
-
 .spells-container {
     display: flex;
     flex-direction: column;
@@ -643,24 +608,20 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     margin-right: 10px;
 }
 
-.cantrips-row input {
-    width: 50px;
-}
-
 .spell-slots-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
 
-.spell-slot-cell span {
-    margin-right: 5px;
-}
-
 .spell-slot-cell {
     display: flex;
     align-items: center;
     margin-right: 10px;
+}
+
+.spell-slot-cell span {
+    margin-right: 5px;
 }
 
 .spell-slot-cell input {
@@ -703,25 +664,6 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     text-align: center;
 }
 
-
-
-/* #character-inventory {
-    flex: 1;
-    overflow-y: auto;
-    max-height: 320px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    min-width: 200px;
-} */
-
-#character-inventory {
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-}
-
 .dice i {
     margin: auto;
     font-size: 24px;
@@ -747,131 +689,6 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     margin-bottom: 10px;
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-
-    button, .small-button {
-        padding: 8px 12px;
-        font-size: 14px;
-        margin: 2px;
-    }
-
-    .character-stats-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .spell-level-btn {
-        padding: 4px 6px;
-        font-size: 12px;
-    }
-
-
-    /* .inventory-grid {
-        width: 320px; 
-        margin-bottom: 10px;
-    } */
-
-    .inventory-grid {
-        width: 100%;
-        max-width: 320px; /* This matches the canvas width */
-        margin: 0 auto;
-    }
-
-    /* #inventory-canvas {
-        display: block;
-        background-color: #fff;
-        border: 1px solid #333;
-        border-radius: 5px;
-    } */
-
-    #inventory-canvas {
-        width: 100%;
-        height: auto;
-        max-width: 320px;
-        max-height: 320px;
-    }
-
-    /* .inventory-controls {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    } */
-
-    .inventory-controls {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    /* .inventory-controls select, 
-.inventory-controls button {
-    width: 100%;
-    margin-top: 5px;
-} */
-
-.inventory-controls select, 
-.inventory-controls button {
-    width: 100%;
-    margin-top: 5px;
-}
-
-    .inventory-controls select {
-        margin-right: 10px;
-    }
-}
-
-/* for the updated char-inventory */
-@media (min-width: 768px) {
-    .inventory-container {
-        flex-direction: row;
-    }
-
-    .inventory-grid-section {
-        flex: 0 0 320px;
-        margin-right: 20px;
-    }
-
-    #character-inventory {
-        flex: 1;
-        max-height: none;
-    }
-}
-
-@media (min-width: 768px) {
-    .container {
-        max-width: 750px;
-    }
-    #ability-scores {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .character-sheet .grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .character-sheet .skills {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 600px) {
-    .saving-throws-row {
-        flex-direction: column;
-    }
-
-    .saving-throw-column {
-        flex: 0 0 50%;
-        margin-bottom: 5px;
-    }
-}
-
-@media (max-width: 480px) {
-    .character-stats-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
 #notes-page {
     display: flex;
     flex-direction: column;
@@ -879,7 +696,7 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 
 #character-notes {
     flex-grow: 1;
-    min-height: 200px; /* Minimum height for the textarea */
+    min-height: 200px;
     resize: vertical;
 }
 
@@ -925,6 +742,7 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     background-color: #f0f0f0;
     border-radius: 5px;
 }
+
 .feat-item {
     margin-bottom: 15px;
     padding: 10px;
@@ -946,18 +764,6 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 .feat-item small {
     color: #666;
     font-style: italic;
-}
-
-.currency-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
-}
-
-#currency-display {
-    flex-grow: 1;
-    margin-right: 10px;
 }
 
 #edit-currency-btn {
@@ -1049,4 +855,107 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 
 #cancel-currency:hover {
     background-color: #c0392b;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    button, .small-button {
+        padding: 8px 12px;
+        font-size: 14px;
+        margin: 2px;
+    }
+
+    .character-stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .spell-level-btn {
+        padding: 4px 6px;
+        font-size: 12px;
+    }
+
+    .inventory-content {
+        flex-direction: column;
+    }
+
+    .inventory-grid-section,
+    .inventory-controls-section {
+        width: 100%;
+    }
+
+    .inventory-grid-section {
+        margin-bottom: 15px;
+    }
+
+    #inventory-canvas {
+        max-width: 100%;
+    }
+
+    .inventory-controls {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .inventory-controls select, 
+    .inventory-controls button {
+        width: 100%;
+        margin-top: 5px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 750px;
+    }
+    #ability-scores {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .character-sheet .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .character-sheet .skills {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .saving-throws-row {
+        flex-direction: column;
+    }
+
+    .saving-throw-column {
+        flex: 0 0 50%;
+        margin-bottom: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .character-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.combat-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.combat-table th, .combat-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.combat-table th {
+    background-color: #f2f2f2;
+}
+
+.combat-table button {
+    width: 100%;
 }
