@@ -135,7 +135,7 @@
         { name: "Whip", type: "weapon", damage: "1d4", damageType: "slashing", properties: ["Finesse", "Reach"], cost: "2 gp", weight: "3 lb.", width: 1, height: 2 },
         { name: "Blowgun", type: "weapon", damage: "1", damageType: "piercing", properties: ["Ammunition (range 25/100)", "Loading"], cost: "10 gp", weight: "1 lb.", width: 1, height: 2 },
         { name: "Crossbow hand", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Ammunition (range 30/120)", "Light", "Loading"], cost: "75 gp", weight: "3 lb.", width: 3, height: 1 },
-        { name: "Crossbow heavy", type: "weapon", damage: "1d10", damageType: "piercing", properties: ["Ammunition (range 100/400)", "Heavy", "Loading", "Two-handed"], cost: "50 gp", weight: "18 lb.", width: 3, height: 2 },
+        { name: "Crossbow heavy", type: "weapon", damage: "1d10", damageType: "piercing", properties: ["Ammunition (range 100/400)", "Heavy", "Loading", "Two-handed"], cost: "50 gp", weight: "18 lb.", width: 4, height: 1 },
         { name: "Longbow", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 150/600)", "Heavy", "Two-handed"], cost: "50 gp", weight: "2 lb." , width: 2, height: 3},
         { name: "Net", type: "weapon", damage: "0", damageType: "0", properties: ["Special", "Thrown (range 5/15)"], cost: "1 gp", weight: "3 lb." , width: 1, height: 2},
         // Armor
@@ -169,13 +169,13 @@
         { name: "Disguise kit", type: "gear", cost: "25 gp", weight: "3 lb.", width: 1, height: 1  },
         { name: "Forgery kit", type: "gear", cost: "15 gp", weight: "5 lb.", width: 1, height: 1  },
         { name: "Alchemist's supplies", type: "gear", cost: "50 gp", weight: "8 lb.", width: 1, height: 1  },
-        { name: "Brewer's supplies", type: "gear", cost: "20 gp", weight: "9 lb.", width: 1, height: 1  },
+        { name: "Brewer's supplies", type: "gear", cost: "20 gp", weight: "9 lb.", width: 2, height: 2  },
         { name: "Calligrapher's supplies", type: "gear", cost: "10 gp", weight: "5 lb." , width: 1, height: 1 },
         { name: "Carpenter's tools", type: "gear", cost: "8 gp", weight: "6 lb.", width: 1, height: 1  },
         { name: "Cartographer's tools", type: "gear", cost: "15 gp", weight: "6 lb." , width: 1, height: 1 },
         { name: "Cobbler's tools", type: "gear", cost: "5 gp", weight: "5 lb.", width: 1, height: 1  },
-        { name: "Cook's utensils", type: "gear", cost: "1 gp", weight: "8 lb.", width: 1, height: 1  },
-        { name: "Glassblower's tools", type: "gear", cost: "30 gp", weight: "5 lb." , width: 1, height: 1 },
+        { name: "Cook's utensils", type: "gear", cost: "1 gp", weight: "8 lb.", width: 2, height: 2  },
+        { name: "Glassblower's tools", type: "gear", cost: "30 gp", weight: "5 lb." , width: 3, height: 1 },
         { name: "Jeweler's tools", type: "gear", cost: "25 gp", weight: "2 lb.", width: 1, height: 1  },
         { name: "Leatherworker's tools", type: "gear", cost: "5 gp", weight: "5 lb.", width: 1, height: 1  },
         { name: "Mason's tools", type: "gear", cost: "10 gp", weight: "8 lb." , width: 1, height: 1 },
@@ -2896,6 +2896,20 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
             window.addEventListener('resize', adjustInventoryLayout);
         });
 
+    // window.myApp = {
+    //     rollAbility: rollAbility,
+    //     rollSkill: rollSkill,
+    //     rollToHit: rollToHit,
+    //     rollDamage: rollDamage,
+    //     rollInitiative: rollInitiative,
+    //     changeHP: changeHP,
+    //     editCharacterName: editCharacterName,
+    //     generateRandomName: generateRandomName,
+    //     longRest: longRest,
+    //     scrollToSpellLevel: scrollToSpellLevel,
+    //     rollSavingThrow: rollSavingThrow
+    // };
+
     window.myApp = {
         rollAbility: rollAbility,
         rollSkill: rollSkill,
@@ -2907,7 +2921,22 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         generateRandomName: generateRandomName,
         longRest: longRest,
         scrollToSpellLevel: scrollToSpellLevel,
-        rollSavingThrow: rollSavingThrow
+        rollSavingThrow: rollSavingThrow,
+        updateSpellSlots: updateSpellSlots,
+        addItemToInventory: addItemToInventory,
+        updateCharacterInventory: updateCharacterInventory,
+        updateCombatPage: updateCombatPage,
+        handleItemClick: handleItemClick,
+        drawGrid: drawGrid,
+        setupInventoryManager: setupInventoryManager,
+        initializeUI: initializeUI,
+        displayCharacterSheet: displayCharacterSheet,
+        updateCurrency: updateCurrency,
+        saveCharacter: saveCharacter,
+        loadCharacter: loadCharacter,
+        exportToPDF: exportToPDF,
+        shortRest: shortRest,
+        levelUp: levelUp
     };
 
     window.onerror = function(message, source, lineno, colno, error) {
