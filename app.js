@@ -43,7 +43,7 @@ try {
 // Constants
 const GRID_SIZE = 8;
 const CELL_SIZE = 40;
-
+const MIN_CANVAS_SIZE = 320; // Minimum canvas size in pixels
 let dpiInfo = {
     dpr: 1,
     gridSize: GRID_SIZE,
@@ -982,9 +982,10 @@ let dpiInfo = {
             return;
         }
         const inventoryCtx = inventoryCanvas.getContext('2d');
-
+    
         updateDPIInfo();
-
+    
+        // Set up canvas dimensions
         inventoryCanvas.width = dpiInfo.canvasSize * dpiInfo.dpr;
         inventoryCanvas.height = dpiInfo.canvasSize * dpiInfo.dpr;
         inventoryCanvas.style.width = `${dpiInfo.canvasSize}px`;
@@ -1048,8 +1049,8 @@ let dpiInfo = {
             const rect = inventoryCanvas.getBoundingClientRect();
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            const x = Math.floor((clientX - rect.left) / dpiInfo.gridSize);
-            const y = Math.floor((clientY - rect.top) / dpiInfo.gridSize);
+            const x = Math.floor((clientX - rect.left) / dpiInfo.cellSize);
+            const y = Math.floor((clientY - rect.top) / dpiInfo.cellSize);
     
             draggedItem.x = Math.max(0, Math.min(x - dragOffset.x, GRID_SIZE - draggedItem.width));
             draggedItem.y = Math.max(0, Math.min(y - dragOffset.y, GRID_SIZE - draggedItem.height));
@@ -1059,7 +1060,7 @@ let dpiInfo = {
             if (checkOverlap(draggedItem) || !isWithinGrid(draggedItem)) {
                 inventoryCtx.globalAlpha = 0.5;
                 inventoryCtx.fillStyle = 'red';
-                inventoryCtx.fillRect(draggedItem.x * CELL_SIZE, draggedItem.y * CELL_SIZE, draggedItem.width * CELL_SIZE, draggedItem.height * CELL_SIZE);
+                inventoryCtx.fillRect(draggedItem.x * dpiInfo.cellSize, draggedItem.y * dpiInfo.cellSize, draggedItem.width * dpiInfo.cellSize, draggedItem.height * dpiInfo.cellSize);
                 inventoryCtx.globalAlpha = 1;
             }
         }
@@ -1090,18 +1091,19 @@ let dpiInfo = {
             return item.x >= 0 && item.y >= 0 && item.x + item.width <= GRID_SIZE && item.y + item.height <= GRID_SIZE;
         }
     
+        // Set up event listeners
         inventoryCanvas.addEventListener('mousedown', handleStart);
         inventoryCanvas.addEventListener('touchstart', handleStart, { passive: false });
         inventoryCanvas.addEventListener('mousemove', handleMove);
         inventoryCanvas.addEventListener('touchmove', handleMove, { passive: false });
         inventoryCanvas.addEventListener('mouseup', handleEnd);
         inventoryCanvas.addEventListener('touchend', handleEnd);
+        inventoryCanvas.addEventListener('click', handleItemClick);
     
+        // Prevent default touch behavior
         inventoryCanvas.addEventListener('touchmove', function(e) {
             e.preventDefault();
         }, { passive: false });
-    
-        inventoryCanvas.addEventListener('click', handleItemClick);
     
         // Debug logging for touch events
         inventoryCanvas.addEventListener('touchstart', function(e) {
@@ -1161,7 +1163,7 @@ let dpiInfo = {
     
         console.log('Canvas dimensions:', inventoryCanvas.width, 'x', inventoryCanvas.height);
         console.log('Grid size:', GRID_SIZE, 'x', GRID_SIZE, 'cells');
-        console.log('Cell size:', CELL_SIZE, 'pixels');
+        console.log('Cell size:', dpiInfo.cellSize, 'pixels');
     }
 
     function handleItemClick(e) {
@@ -2798,7 +2800,7 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
     
         const dpr = window.devicePixelRatio || 1;
         const rect = inventoryCanvas.getBoundingClientRect();
-        const smallestDimension = Math.min(rect.width, rect.height);
+        const smallestDimension = Math.max(Math.min(rect.width, rect.height), MIN_CANVAS_SIZE);
     
         dpiInfo = {
             dpr: dpr,
@@ -2808,6 +2810,15 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         };
     
         console.log('Updated DPI Info:', dpiInfo);
+    
+        // Ensure the canvas size is updated
+        inventoryCanvas.style.width = `${dpiInfo.canvasSize}px`;
+        inventoryCanvas.style.height = `${dpiInfo.canvasSize}px`;
+        inventoryCanvas.width = dpiInfo.canvasSize * dpr;
+        inventoryCanvas.height = dpiInfo.canvasSize * dpr;
+    
+        // Redraw the grid
+        drawGrid();
     }
 
     function isMobileDevice() {
@@ -2832,7 +2843,7 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
             inventoryControls.insertAdjacentElement('afterend', characterInventory);
             
             // Adjust canvas size for mobile
-            const containerWidth = inventoryContainer.clientWidth;
+            const containerWidth = Math.max(inventoryContainer.clientWidth, MIN_CANVAS_SIZE);
             inventoryCanvas.style.width = `${containerWidth}px`;
             inventoryCanvas.style.height = `${containerWidth}px`;
         } else {
@@ -2842,13 +2853,14 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
             inventoryContainer.appendChild(characterInventory);
             
             // Reset canvas size for desktop
-            inventoryCanvas.style.width = '320px';
-            inventoryCanvas.style.height = '320px';
+            inventoryCanvas.style.width = `${MIN_CANVAS_SIZE}px`;
+            inventoryCanvas.style.height = `${MIN_CANVAS_SIZE}px`;
         }
     
-        // Update DPI info and redraw the grid after adjusting layout
+        // Update DPI info, setup inventory manager, and redraw the grid
         updateDPIInfo();
         setupInventoryManager();
+        drawGrid();
     }
 
 
