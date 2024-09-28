@@ -979,12 +979,11 @@ try {
     
         // Set up canvas for high DPI displays
         const dpr = window.devicePixelRatio || 1;
-        const originalWidth = inventoryCanvas.width;
-        const originalHeight = inventoryCanvas.height;
-        inventoryCanvas.width = originalWidth * dpr;
-        inventoryCanvas.height = originalHeight * dpr;
-        inventoryCanvas.style.width = originalWidth + 'px';
-        inventoryCanvas.style.height = originalHeight + 'px';
+        const rect = inventoryCanvas.getBoundingClientRect();
+        inventoryCanvas.width = rect.width * dpr;
+        inventoryCanvas.height = rect.height * dpr;
+        inventoryCanvas.style.width = `${rect.width}px`;
+        inventoryCanvas.style.height = `${rect.height}px`;
         inventoryCtx.scale(dpr, dpr);
     
         let draggedItem = null;
@@ -1020,13 +1019,14 @@ try {
         }
     
         function handleStart(e) {
-            
             e.preventDefault();
             const rect = inventoryCanvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            const gridSize = Math.min(rect.width, rect.height) / GRID_SIZE;
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            const x = Math.floor((clientX - rect.left) / CELL_SIZE);
-            const y = Math.floor((clientY - rect.top) / CELL_SIZE);
+            const x = Math.floor((clientX - rect.left) / gridSize);
+            const y = Math.floor((clientY - rect.top) / gridSize);
     
             draggedItem = character.inventory.find(item =>
                 x >= item.x && x < item.x + item.width &&
@@ -1040,14 +1040,15 @@ try {
         }
     
         function handleMove(e) {
-
             if (!draggedItem) return;
             e.preventDefault();
             const rect = inventoryCanvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            const gridSize = Math.min(rect.width, rect.height) / GRID_SIZE;
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            const x = Math.floor((clientX - rect.left) / CELL_SIZE);
-            const y = Math.floor((clientY - rect.top) / CELL_SIZE);
+            const x = Math.floor((clientX - rect.left) / gridSize);
+            const y = Math.floor((clientY - rect.top) / gridSize);
     
             draggedItem.x = Math.max(0, Math.min(x - dragOffset.x, GRID_SIZE - draggedItem.width));
             draggedItem.y = Math.max(0, Math.min(y - dragOffset.y, GRID_SIZE - draggedItem.height));
@@ -1185,17 +1186,23 @@ try {
     function drawGrid() {
         const inventoryCanvas = document.getElementById('inventory-canvas');
         const inventoryCtx = inventoryCanvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const rect = inventoryCanvas.getBoundingClientRect();
+        const gridSize = Math.min(rect.width, rect.height) / GRID_SIZE;
+    
         inventoryCtx.clearRect(0, 0, inventoryCanvas.width, inventoryCanvas.height);
+        
         for (let i = 0; i < GRID_SIZE; i++) {
             for (let j = 0; j < GRID_SIZE; j++) {
                 inventoryCtx.strokeStyle = '#ddd';
-                inventoryCtx.strokeRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                inventoryCtx.strokeRect(i * gridSize, j * gridSize, gridSize, gridSize);
             }
         }
-        character.inventory.forEach(drawItem);
+        
+        character.inventory.forEach(item => drawItem(item, gridSize));
     }
     
-    function drawItem(item) {
+    function drawItem(item, gridSize) {
         const inventoryCanvas = document.getElementById('inventory-canvas');
         const inventoryCtx = inventoryCanvas.getContext('2d');
     
@@ -1204,14 +1211,14 @@ try {
     
         const img = new Image();
         img.onload = () => {
-            inventoryCtx.drawImage(img, item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
+            inventoryCtx.drawImage(img, item.x * gridSize, item.y * gridSize, item.width * gridSize, item.height * gridSize);
         };
         img.onerror = () => {
             inventoryCtx.fillStyle = '#999';
-            inventoryCtx.fillRect(item.x * CELL_SIZE, item.y * CELL_SIZE, item.width * CELL_SIZE, item.height * CELL_SIZE);
+            inventoryCtx.fillRect(item.x * gridSize, item.y * gridSize, item.width * gridSize, item.height * gridSize);
             inventoryCtx.fillStyle = 'black';
             inventoryCtx.font = '12px Arial';
-            inventoryCtx.fillText(item.name, item.x * CELL_SIZE + 5, item.y * CELL_SIZE + 15);
+            inventoryCtx.fillText(item.name, item.x * gridSize + 5, item.y * gridSize + 15);
         };
         img.src = imagePath;
     }
@@ -2776,8 +2783,9 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         const inventoryContainer = document.querySelector('.inventory-container');
         const characterInventory = document.getElementById('character-inventory');
         const inventoryControls = document.querySelector('.inventory-controls');
+        const inventoryCanvas = document.getElementById('inventory-canvas');
     
-        if (!inventoryContainer || !characterInventory || !inventoryControls) {
+        if (!inventoryContainer || !characterInventory || !inventoryControls || !inventoryCanvas) {
             console.log('Inventory elements not found. Skipping layout adjustment.');
             return;
         }
@@ -2787,12 +2795,24 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
             characterInventory.style.maxHeight = '200px';
             characterInventory.style.marginTop = '10px';
             inventoryControls.insertAdjacentElement('afterend', characterInventory);
+            
+            // Adjust canvas size for mobile
+            const containerWidth = inventoryContainer.clientWidth;
+            inventoryCanvas.style.width = `${containerWidth}px`;
+            inventoryCanvas.style.height = `${containerWidth}px`;
         } else {
             inventoryContainer.style.flexDirection = 'row';
             characterInventory.style.maxHeight = 'none';
             characterInventory.style.marginTop = '0';
             inventoryContainer.appendChild(characterInventory);
+            
+            // Reset canvas size for desktop
+            inventoryCanvas.style.width = '320px';
+            inventoryCanvas.style.height = '320px';
         }
+    
+        // Redraw the grid after adjusting layout
+        setupInventoryManager();
     }
 
     function exportToPDF() {
