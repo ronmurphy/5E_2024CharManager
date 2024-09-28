@@ -335,7 +335,7 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     justify-content: space-between;
     align-items: center;
     padding: 5px;
-    background-color: #f0f0f0;
+    background-color: var(--background-color);
     cursor: pointer;
 }
 
@@ -348,7 +348,7 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 
 .spell-details {
     padding: 10px;
-    background-color: #f9f9f9;
+    background-color: var(--background-color);
 }
 
 .feat-item {
@@ -702,7 +702,7 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 
 .spell-level-btn {
     padding: 5px 10px;
-    background-color: #f0f0f0;
+    background-color: var(--background-color);
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
@@ -987,4 +987,28 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 
 .combat-table button {
     width: 100%;
+}
+
+#combat-page table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#combat-page th, #combat-page td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#combat-page th {
+    background-color: #f2f2f2;
+}
+
+#combat-page button {
+    padding: 5px 10px;
+    background-color: var(--background-color);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
 }

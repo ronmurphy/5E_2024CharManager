@@ -970,8 +970,84 @@ let dpiInfo = {
         }
     }
 
+    // function updateCombatPage() {
+    //     populateCombatPage();
+    // }
+
     function updateCombatPage() {
-        populateCombatPage();
+        const combatPage = document.getElementById('combat-page');
+        if (!combatPage) {
+            console.error('Combat page not found');
+            return;
+        }
+    
+        combatPage.innerHTML = '<h3>Combat</h3>';
+    
+        // Weapons section
+        const weaponsTable = document.createElement('table');
+        weaponsTable.innerHTML = `
+            <tr>
+                <th>Weapon</th>
+                <th>To Hit</th>
+                <th>Damage</th>
+            </tr>
+        `;
+    
+        character.inventory.filter(item => item.type === 'weapon').forEach(weapon => {
+            const row = weaponsTable.insertRow();
+            row.innerHTML = `
+                <td>${weapon.name} (${weapon.damage})</td>
+                <td><button onclick="myApp.rollToHit('${weapon.name}')">Roll To Hit</button></td>
+                <td><button onclick="myApp.rollDamage('${weapon.name}')">Roll Damage</button></td>
+            `;
+        });
+    
+        combatPage.appendChild(weaponsTable);
+    
+        // Armor section
+        const armorTable = document.createElement('table');
+        armorTable.innerHTML = `
+            <tr>
+                <th>Armor</th>
+                <th>AC</th>
+            </tr>
+        `;
+    
+        character.inventory.filter(item => item.type === 'armor').forEach(armor => {
+            const row = armorTable.insertRow();
+            row.innerHTML = `
+                <td>${armor.name}</td>
+                <td>${armor.ac}</td>
+            `;
+        });
+    
+        combatPage.appendChild(armorTable);
+    
+        // Spells section
+        if (isSpellcaster(character.class) && character.spells.length > 0) {
+            const spellsTable = document.createElement('table');
+            spellsTable.innerHTML = `
+                <tr>
+                    <th colspan="3">Spells</th>
+                </tr>
+                <tr>
+                    <th>Spell</th>
+                    <th>Level</th>
+                    <th>Action</th>
+                </tr>
+            `;
+    
+            character.spells.forEach(spell => {
+                const row = spellsTable.insertRow();
+                row.innerHTML = `
+                    <td>${spell.name}</td>
+                    <td>${spell.level}</td>
+                    <td><button onclick="myApp.castSpell('${spell.name}')">Cast</button></td>
+                `;
+            });
+    
+            combatPage.appendChild(spellsTable);
+        }
     }
 
     function setupInventoryManager() {
@@ -2109,18 +2185,26 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
             return;
         }
         spellSelect.innerHTML = '<option value="">Select a spell</option>';
-        let spellCount = 0;
-        spells.forEach(spell => {
-            console.log('Checking spell:', spell.name, 'Classes:', spell.classes);
-            if (spell.classes.some(c => c.toLowerCase() === character.class.toLowerCase())) {
-                const option = document.createElement('option');
-                option.value = spell.name;
-                option.textContent = `${spell.name} (Level ${spell.level})`;
-                spellSelect.appendChild(option);
-                spellCount++;
+    
+        const characterSpells = spells.filter(spell => 
+            spell.classes.some(c => c.toLowerCase() === character.class.toLowerCase())
+        );
+    
+        characterSpells.sort((a, b) => {
+            if (a.level !== b.level) {
+                return a.level - b.level;
             }
+            return a.name.localeCompare(b.name);
         });
-        console.log(`Added ${spellCount} spells to the list`);
+    
+        characterSpells.forEach(spell => {
+            const option = document.createElement('option');
+            option.value = spell.name;
+            option.textContent = `${spell.name} (Level ${spell.level})`;
+            spellSelect.appendChild(option);
+        });
+    
+        console.log(`Added ${characterSpells.length} spells to the list`);
     }
 
     function setupSpellManager() {
@@ -2140,6 +2224,7 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
                 if (selectedSpell) {
                     character.spells.push(selectedSpell);
                     updateSpellList();
+                    updateCombatPage(); // Add this line
                 }
             }
         });
@@ -3047,6 +3132,23 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
             const element = document.getElementById(`spell-level-${level}`);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        },
+
+        castSpell: function(spellName) {
+            const spell = character.spells.find(s => s.name === spellName);
+            if (spell) {
+                let message = `Casting ${spell.name} (Level ${spell.level})`;
+                
+                // You can add more complex logic here based on the spell's properties
+                if (spell.damage) {
+                    const damageRoll = rollDice(spell.damage);
+                    message += `\nDamage: ${damageRoll}`;
+                }
+                
+                // Display the message (you can modify this to fit your UI)
+                showNotification(message);
+                addRollResult(message);
             }
         }
     };
