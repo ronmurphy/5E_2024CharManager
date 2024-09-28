@@ -3041,7 +3041,7 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         loadCharacter: loadCharacterFromFile,
         exportToPDF: exportToPDF,
         shortRest: shortRest,
-        levelUp: levelUp
+        levelUp: levelUp,
 
         scrollToSpellLevel: function(level) {
             const element = document.getElementById(`spell-level-${level}`);
