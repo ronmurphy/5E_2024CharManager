@@ -40,9 +40,15 @@ try {
 
     const steps = ['step1', 'step2', 'step3', 'step4', 'step5', 'step6'];
 
-    // Constants
-    const GRID_SIZE = 8;
-    const CELL_SIZE = 40;
+// Constants
+const GRID_SIZE = 8;
+const CELL_SIZE = 40;
+
+let dpiInfo = {
+    dpr: 1,
+    gridSize: GRID_SIZE,
+    canvasSize: 320
+};
 
     // Global variables
     let currentStep = 0;
@@ -976,15 +982,14 @@ try {
             return;
         }
         const inventoryCtx = inventoryCanvas.getContext('2d');
-    
-        // Set up canvas for high DPI displays
-        const dpr = window.devicePixelRatio || 1;
-        const rect = inventoryCanvas.getBoundingClientRect();
-        inventoryCanvas.width = rect.width * dpr;
-        inventoryCanvas.height = rect.height * dpr;
-        inventoryCanvas.style.width = `${rect.width}px`;
-        inventoryCanvas.style.height = `${rect.height}px`;
-        inventoryCtx.scale(dpr, dpr);
+
+        updateDPIInfo();
+
+        inventoryCanvas.width = dpiInfo.canvasSize * dpiInfo.dpr;
+        inventoryCanvas.height = dpiInfo.canvasSize * dpiInfo.dpr;
+        inventoryCanvas.style.width = `${dpiInfo.canvasSize}px`;
+        inventoryCanvas.style.height = `${dpiInfo.canvasSize}px`;
+        inventoryCtx.scale(dpiInfo.dpr, dpiInfo.dpr);
     
         let draggedItem = null;
         let dragOffset = { x: 0, y: 0 };
@@ -1021,12 +1026,10 @@ try {
         function handleStart(e) {
             e.preventDefault();
             const rect = inventoryCanvas.getBoundingClientRect();
-            const dpr = window.devicePixelRatio || 1;
-            const gridSize = Math.min(rect.width, rect.height) / GRID_SIZE;
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            const x = Math.floor((clientX - rect.left) / gridSize);
-            const y = Math.floor((clientY - rect.top) / gridSize);
+            const x = Math.floor((clientX - rect.left) / dpiInfo.cellSize);
+            const y = Math.floor((clientY - rect.top) / dpiInfo.cellSize);
     
             draggedItem = character.inventory.find(item =>
                 x >= item.x && x < item.x + item.width &&
@@ -1043,12 +1046,10 @@ try {
             if (!draggedItem) return;
             e.preventDefault();
             const rect = inventoryCanvas.getBoundingClientRect();
-            const dpr = window.devicePixelRatio || 1;
-            const gridSize = Math.min(rect.width, rect.height) / GRID_SIZE;
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            const x = Math.floor((clientX - rect.left) / gridSize);
-            const y = Math.floor((clientY - rect.top) / gridSize);
+            const x = Math.floor((clientX - rect.left) / dpiInfo.gridSize);
+            const y = Math.floor((clientY - rect.top) / dpiInfo.gridSize);
     
             draggedItem.x = Math.max(0, Math.min(x - dragOffset.x, GRID_SIZE - draggedItem.width));
             draggedItem.y = Math.max(0, Math.min(y - dragOffset.y, GRID_SIZE - draggedItem.height));
@@ -1186,23 +1187,24 @@ try {
     function drawGrid() {
         const inventoryCanvas = document.getElementById('inventory-canvas');
         const inventoryCtx = inventoryCanvas.getContext('2d');
-        const dpr = window.devicePixelRatio || 1;
-        const rect = inventoryCanvas.getBoundingClientRect();
-        const gridSize = Math.min(rect.width, rect.height) / GRID_SIZE;
     
         inventoryCtx.clearRect(0, 0, inventoryCanvas.width, inventoryCanvas.height);
         
         for (let i = 0; i < GRID_SIZE; i++) {
             for (let j = 0; j < GRID_SIZE; j++) {
-                inventoryCtx.strokeStyle = '#ddd';
-                inventoryCtx.strokeRect(i * gridSize, j * gridSize, gridSize, gridSize);
+                inventoryCtx.strokeRect(
+                    i * dpiInfo.cellSize, 
+                    j * dpiInfo.cellSize, 
+                    dpiInfo.cellSize, 
+                    dpiInfo.cellSize
+                );
             }
         }
         
-        character.inventory.forEach(item => drawItem(item, gridSize));
+        character.inventory.forEach(item => drawItem(item));
     }
     
-    function drawItem(item, gridSize) {
+    function drawItem(item) {
         const inventoryCanvas = document.getElementById('inventory-canvas');
         const inventoryCtx = inventoryCanvas.getContext('2d');
     
@@ -1211,14 +1213,29 @@ try {
     
         const img = new Image();
         img.onload = () => {
-            inventoryCtx.drawImage(img, item.x * gridSize, item.y * gridSize, item.width * gridSize, item.height * gridSize);
+            inventoryCtx.drawImage(
+                img, 
+                item.x * dpiInfo.cellSize, 
+                item.y * dpiInfo.cellSize, 
+                item.width * dpiInfo.cellSize, 
+                item.height * dpiInfo.cellSize
+            );
         };
         img.onerror = () => {
             inventoryCtx.fillStyle = '#999';
-            inventoryCtx.fillRect(item.x * gridSize, item.y * gridSize, item.width * gridSize, item.height * gridSize);
+            inventoryCtx.fillRect(
+                item.x * dpiInfo.gridSize, 
+                item.y * dpiInfo.gridSize, 
+                item.width * dpiInfo.gridSize, 
+                item.height * dpiInfo.gridSize
+            );
             inventoryCtx.fillStyle = 'black';
-            inventoryCtx.font = '12px Arial';
-            inventoryCtx.fillText(item.name, item.x * gridSize + 5, item.y * gridSize + 15);
+            inventoryCtx.font = `${12 * dpiInfo.dpr}px Arial`;
+            inventoryCtx.fillText(
+                item.name, 
+                item.x * dpiInfo.gridSize + 5, 
+                item.y * dpiInfo.gridSize + 15
+            );
         };
         img.src = imagePath;
     }
@@ -2775,6 +2792,24 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         });
     }
 
+    function updateDPIInfo() {
+        const inventoryCanvas = document.getElementById('inventory-canvas');
+        if (!inventoryCanvas) return;
+    
+        const dpr = window.devicePixelRatio || 1;
+        const rect = inventoryCanvas.getBoundingClientRect();
+        const smallestDimension = Math.min(rect.width, rect.height);
+    
+        dpiInfo = {
+            dpr: dpr,
+            gridSize: GRID_SIZE,
+            canvasSize: smallestDimension,
+            cellSize: smallestDimension / GRID_SIZE
+        };
+    
+        console.log('Updated DPI Info:', dpiInfo);
+    }
+
     function isMobileDevice() {
         return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
     }
@@ -2811,9 +2846,12 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
             inventoryCanvas.style.height = '320px';
         }
     
-        // Redraw the grid after adjusting layout
+        // Update DPI info and redraw the grid after adjusting layout
+        updateDPIInfo();
         setupInventoryManager();
     }
+
+
 
     function exportToPDF() {
         const { jsPDF } = window.jspdf;
@@ -2960,7 +2998,10 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
                 .catch(error => console.error('Error loading spells:', error));
         
             // Add a window resize event listener to adjust layout when the window size changes
-            window.addEventListener('resize', adjustInventoryLayout);
+            window.addEventListener('resize', function() {
+                updateDPIInfo();
+                adjustInventoryLayout();
+            });
         });
 
     window.myApp = {
