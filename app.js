@@ -1,5 +1,8 @@
+try {
 (function(window, document) {
     'use strict';
+
+    console.log("app.js is loading");
 
     // Create a namespace for our app
     window.myApp = window.myApp || {};
@@ -241,6 +244,19 @@
         { name: "Weapon Master", description: "Increase Strength or Dexterity by 1, gain proficiency with four weapons of your choice", appliesTo: "All classes", level: "Any" }
     ];
 
+    // function initializeUI() {
+    //     populateDropdowns();
+    //     setupEventListeners();
+    //     setupAbilityScores();
+    //     populateItemDropdown();
+    //     loadRaces();
+    //     document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
+    //     adjustInventoryLayout();
+    //     if (spells.length > 0) {
+    //         displayCharacterSheet();
+    //     }
+    // }
+
     function initializeUI() {
         populateDropdowns();
         setupEventListeners();
@@ -248,7 +264,7 @@
         populateItemDropdown();
         loadRaces();
         document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
-        adjustInventoryLayout();
+        // We'll handle adjustInventoryLayout separately
         if (spells.length > 0) {
             displayCharacterSheet();
         }
@@ -481,7 +497,8 @@
         updateAbilityScoreImprovementButtons();
     }
 
-    window.editCharacterName = function() {
+    function editCharacterName() {
+    // window.editCharacterName = function() {
         const newName = prompt("Enter a name for your character:");
         if (newName !== null) {
             character.name = newName.trim() || '';
@@ -1003,10 +1020,7 @@
         }
     
         function handleStart(e) {
-            // e.preventDefault();
-            // const rect = inventoryCanvas.getBoundingClientRect();
-            // const x = Math.floor(((e.clientX || e.touches[0].clientX) - rect.left) / CELL_SIZE);
-            // const y = Math.floor(((e.clientY || e.touches[0].clientY) - rect.top) / CELL_SIZE);
+            
             e.preventDefault();
             const rect = inventoryCanvas.getBoundingClientRect();
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
@@ -1026,11 +1040,7 @@
         }
     
         function handleMove(e) {
-            // if (!draggedItem) return;
-            // e.preventDefault();
-            // const rect = inventoryCanvas.getBoundingClientRect();
-            // const x = Math.floor(((e.clientX || e.touches[0].clientX) - rect.left) / CELL_SIZE);
-            // const y = Math.floor(((e.clientY || e.touches[0].clientY) - rect.top) / CELL_SIZE);
+
             if (!draggedItem) return;
             e.preventDefault();
             const rect = inventoryCanvas.getBoundingClientRect();
@@ -1305,6 +1315,10 @@
                 updateCharacterInventory();
                 showNotification(`${newItem.name} added to inventory.`);
                 updateCombatPage();
+
+                if (newItem.type === 'armor') {
+                    updateCharacterAC(newItem);
+                }
             } else {
                 showNotification('No space available in the inventory!');
             }
@@ -1330,9 +1344,16 @@
         inventoryDiv.querySelectorAll('.remove-item').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const index = parseInt(e.target.getAttribute('data-index'));
+                const removedItem = character.inventory[index];
                 character.inventory.splice(index, 1);
                 updateCharacterInventory();
                 drawGrid();
+    
+                // If the removed item was armor, update the AC
+                if (removedItem.type === 'armor') {
+                    const newArmor = character.inventory.find(item => item.type === 'armor');
+                    updateCharacterAC(newArmor);
+                }
             });
         });
     }
@@ -1455,6 +1476,10 @@
             <button id="long-rest-btn" onclick="myApp.longRest()">Long Rest</button>
         `;
 
+    // Update AC
+    const equippedArmor = character.inventory.find(item => item.type === 'armor');
+    updateCharacterAC(equippedArmor);
+
         const combatPage = document.createElement('div');
         combatPage.id = 'combat-page';
         combatPage.classList.add('category-page', 'hidden');
@@ -1541,9 +1566,9 @@
 // Add event listener for the edit currency button
 document.getElementById('edit-currency-btn').addEventListener('click', showCurrencyModal);
 
-        function updateCurrency(type, value) {
-            character.currency[type] = type === 'gems' ? value : parseInt(value);
-        }
+        // function updateCurrency(type, value) {
+        //     character.currency[type] = type === 'gems' ? value : parseInt(value);
+        // }
         populateCharacterSheetItemDropdown();
         setupInventoryManager();
         populateCombatPage();
@@ -2301,7 +2326,9 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         }
     }
 
-    window.levelUp = function() {
+
+    function levelUp() {
+    // window.levelUp = function() {
         character.level++;
         console.log("Leveled up to", character.level);
         character.maxHp += calculateHPIncrease(character.class, character.abilityScores.constitution);
@@ -2852,31 +2879,51 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         }
     }
 
-    fetch('spells.json')
-        .then(response => response.json())
-        .then(data => {
-            spells = data;
-            console.log('Spells loaded:', spells.length);
+    // fetch('spells.json')
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         spells = data;
+    //         console.log('Spells loaded:', spells.length);
 
-            if (document.getElementById('character-sheet').style.display !== 'none') {
-                displayCharacterSheet();
-            }
-        })
-        .catch(error => console.error('Error loading spells:', error));
+    //         if (document.getElementById('character-sheet').style.display !== 'none') {
+    //             displayCharacterSheet();
+    //         }
+    //     })
+    //     .catch(error => console.error('Error loading spells:', error));
 
-        function initializeUI() {
-            populateDropdowns();
-            setupEventListeners();
-            setupAbilityScores();
-            populateItemDropdown();
-            loadRaces();
-            document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
-            // Remove the direct call to adjustInventoryLayout here
-            if (spells.length > 0) {
-                displayCharacterSheet();
-            }
-        }
+        // function initializeUI() {
+        //     populateDropdowns();
+        //     setupEventListeners();
+        //     setupAbilityScores();
+        //     populateItemDropdown();
+        //     loadRaces();
+        //     document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
+        //     // Remove the direct call to adjustInventoryLayout here
+        //     if (spells.length > 0) {
+        //         displayCharacterSheet();
+        //     }
+        // }
         
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     initializeUI();
+        //     fetch('spells.json')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             spells = data;
+        //             console.log('Spells loaded:', spells.length);
+        //             if (document.getElementById('character-sheet').style.display !== 'none') {
+        //                 displayCharacterSheet();
+        //                 // Call adjustInventoryLayout after displaying the character sheet
+        //                 adjustInventoryLayout();
+        //             }
+        //         })
+        //         .catch(error => console.error('Error loading spells:', error));
+        
+        //     // Add a window resize event listener to adjust layout when the window size changes
+        //     window.addEventListener('resize', adjustInventoryLayout);
+        // });
+
+
         document.addEventListener('DOMContentLoaded', function() {
             initializeUI();
             fetch('spells.json')
@@ -2895,20 +2942,6 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
             // Add a window resize event listener to adjust layout when the window size changes
             window.addEventListener('resize', adjustInventoryLayout);
         });
-
-    // window.myApp = {
-    //     rollAbility: rollAbility,
-    //     rollSkill: rollSkill,
-    //     rollToHit: rollToHit,
-    //     rollDamage: rollDamage,
-    //     rollInitiative: rollInitiative,
-    //     changeHP: changeHP,
-    //     editCharacterName: editCharacterName,
-    //     generateRandomName: generateRandomName,
-    //     longRest: longRest,
-    //     scrollToSpellLevel: scrollToSpellLevel,
-    //     rollSavingThrow: rollSavingThrow
-    // };
 
     window.myApp = {
         rollAbility: rollAbility,
@@ -2931,13 +2964,14 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         setupInventoryManager: setupInventoryManager,
         initializeUI: initializeUI,
         displayCharacterSheet: displayCharacterSheet,
-        updateCurrency: updateCurrency,
+        // updateCurrency: updateCurrency,
         saveCharacter: saveCharacter,
-        loadCharacter: loadCharacter,
+        loadCharacter: loadCharacterFromFile,
         exportToPDF: exportToPDF,
         shortRest: shortRest,
         levelUp: levelUp
     };
+    console.log("myApp initialized:", window.myApp);
 
     window.onerror = function(message, source, lineno, colno, error) {
         console.error('An error occurred:', message, 'at', source, 'line', lineno);
@@ -2945,3 +2979,6 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
     };
 
 })(window, document);
+} catch (error) {
+    console.error("Error in app initialization:", error);
+  }
