@@ -320,7 +320,7 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     margin-bottom: 10px;
 }
 
-.spell-header {
+/* .spell-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -328,13 +328,27 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     padding: 10px;
     background-color: #f0f0f0;
     border-radius: 5px;
+} */
+
+.spell-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    background-color: #f0f0f0;
+    cursor: pointer;
 }
 
-.spell-details {
+/* .spell-details {
     padding: 10px;
     border: 1px solid #ddd;
     border-top: none;
     border-radius: 0 0 5px 5px;
+} */
+
+.spell-details {
+    padding: 10px;
+    background-color: #f9f9f9;
 }
 
 .feat-item {
@@ -670,12 +684,27 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     color: #4a4a4a;
 }
 
-.spell-level-btn {
+.spell-slots-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* .spell-level-btn {
     margin: 0 2px;
     padding: 2px 5px;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 3px;
+    cursor: pointer;
+} */
+
+.spell-level-btn {
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     cursor: pointer;
 }
 

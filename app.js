@@ -1605,28 +1605,24 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
             spellsPage.innerHTML = `
                 <div class="spells-container">
                     <div class="spell-slots-section">
-    <h4>Spell Slots</h4>
-    <div class="spell-slots-grid">
-        <div class="cantrips-row">
-            <span>Cantrips Known: ${calculateCantrips(character.class, character.level)}</span>
-        </div>
-        ${[1,2,3,4,5,6,7,8,9].map(level => `
-            <div class="spell-slot-cell">
-                <span>${level}:</span>
-                <input type="number" value="${spellSlots[level] || 0}" min="0" max="${spellSlots[level] || 0}" 
-                       onchange="updateSpellSlots(${level}, this.value)" ${spellSlots[level] ? '' : 'disabled'}>
-                <span>/${spellSlots[level] || 0}</span>
-            </div>
-        `).join('')}
-    </div>
-</div>
+                        <h4>Spell Slots</h4>
+                        <div class="spell-slots-row">
+                            <span>Cantrips: ${calculateCantrips(character.class, character.level)}</span>
+                            ${[1,2,3,4,5,6,7,8,9].map(level => 
+                                spellSlots[level] ? `
+                                <button class="spell-level-btn" onclick="myApp.scrollToSpellLevel(${level})">
+                                    ${level}: ${spellSlots[level]} / ${spellSlots[level]}
+                                </button>` : ''
+                            ).join('')}
+                        </div>
+                    </div>
                     <div class="spell-list-section">
                         <h4>Spells</h4>
                         <div class="spell-controls">
                             <select id="spell-select">
                                 <option value="">Select a spell</option>
                             </select>
-<button id="add-spell-btn">Add Spell</button>
+                            <button id="add-spell-btn">Add Spell</button>
                         </div>
                         <div id="spell-list" class="spell-list"></div>
                     </div>
@@ -2131,12 +2127,12 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         const addSpellBtn = document.getElementById('add-spell-btn');
         const spellSelect = document.getElementById('spell-select');
         const spellList = document.getElementById('spell-list');
-
+    
         if (!addSpellBtn || !spellSelect || !spellList) {
             console.error('Spell manager elements not found');
             return;
         }
-
+    
         addSpellBtn.addEventListener('click', () => {
             const selectedSpellName = spellSelect.value;
             if (selectedSpellName && !character.spells.some(s => s.name === selectedSpellName)) {
@@ -2144,51 +2140,54 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
                 if (selectedSpell) {
                     character.spells.push(selectedSpell);
                     updateSpellList();
-                    updateCombatPage();
                 }
             }
         });
-
-        function updateSpellList() {
-            for (let level = 0; level <= 9; level++) {
-                const levelGroup = document.getElementById(`spell-level-${level}`);
-                if (levelGroup) {
-                    levelGroup.innerHTML = `<h5>Level ${level} ${level === 0 ? '(Cantrips)' : ''}</h5>`;
-                }
-            }
-
-            character.spells.sort((a, b) => a.level - b.level).forEach(spell => {
-                const spellItem = document.createElement('div');
-                spellItem.classList.add('spell-item');
-                spellItem.innerHTML = `
-                    <div class="spell-header">
-                        <span>${spell.name}</span>
-                        <i class="bi bi-chevron-down"></i>
-                    </div>
-                    <div class="spell-details hidden">
-                        <p><strong>Classes:</strong> ${spell.classes.join(', ')}</p>
-                        <p>${spell.description}</p>
-                    </div>
-                `;
-
-                const levelGroup = document.getElementById(`spell-level-${spell.level}`);
-                if (levelGroup) {
-                    levelGroup.appendChild(spellItem);
-                }
-
-                const header = spellItem.querySelector('.spell-header');
-                const details = spellItem.querySelector('.spell-details');
-                const chevron = spellItem.querySelector('.bi-chevron-down');
-
-                header.addEventListener('click', () => {
-                    details.classList.toggle('hidden');
-                    chevron.classList.toggle('bi-chevron-up');
-                    chevron.classList.toggle('bi-chevron-down');
-                });
-            });
-        }
-
+    
         updateSpellList();
+    }
+    
+    function updateSpellList() {
+        const spellList = document.getElementById('spell-list');
+        spellList.innerHTML = '';
+    
+        for (let level = 0; level <= 9; level++) {
+            const levelSpells = character.spells.filter(spell => spell.level === level);
+            if (levelSpells.length > 0) {
+                const levelGroup = document.createElement('div');
+                levelGroup.id = `spell-level-${level}`;
+                levelGroup.innerHTML = `<h5>Level ${level} ${level === 0 ? '(Cantrips)' : ''}</h5>`;
+                
+                levelSpells.forEach(spell => {
+                    const spellItem = document.createElement('div');
+                    spellItem.classList.add('spell-item');
+                    spellItem.innerHTML = `
+                        <div class="spell-header">
+                            <span>${spell.name}</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="spell-details hidden">
+                            <p><strong>Classes:</strong> ${spell.classes.join(', ')}</p>
+                            <p>${spell.description}</p>
+                        </div>
+                    `;
+    
+                    const header = spellItem.querySelector('.spell-header');
+                    const details = spellItem.querySelector('.spell-details');
+                    const chevron = spellItem.querySelector('.bi-chevron-down');
+    
+                    header.addEventListener('click', () => {
+                        details.classList.toggle('hidden');
+                        chevron.classList.toggle('bi-chevron-up');
+                        chevron.classList.toggle('bi-chevron-down');
+                    });
+    
+                    levelGroup.appendChild(spellItem);
+                });
+    
+                spellList.appendChild(levelGroup);
+            }
+        }
     }
 
     function calculateCantrips(characterClass, level) {
@@ -3043,6 +3042,13 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         exportToPDF: exportToPDF,
         shortRest: shortRest,
         levelUp: levelUp
+
+        scrollToSpellLevel: function(level) {
+            const element = document.getElementById(`spell-level-${level}`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
     };
     console.log("myApp initialized:", window.myApp);
 
