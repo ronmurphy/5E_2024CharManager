@@ -41,14 +41,68 @@
     --secondary-color-dark: #c0392b;
 }
 
-body {
+/* body {
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
     color: var(--text-color);    margin: 0;
     padding: 0;
-    background-color: var(--background-color);}
+    background-color: var(--background-color);} */
 
-.container {
+/* Theme controls */
+.theme-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.theme-selector, .mode-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.theme-selector label, .mode-toggle label {
+    margin-right: 10px;
+}
+
+/* Default theme */
+body {
+    font-family: 'Roboto', sans-serif;
+    --primary-color: #3498db;
+    /* --primary-color: #4a4a4a; */
+    --secondary-color: #000000;
+    --text-color: #000000;
+    --background-color: #4a4a4a;
+    /* --background-color: #fff; */
+}
+
+
+/* Color themes */
+body.theme-red { --primary-color: #ff4136; }
+body.theme-green { --primary-color: #2ecc40; }
+body.theme-blue { --primary-color: #0074d9; }
+body.theme-orange { --primary-color: #ff851b; }
+body.theme-purple { --primary-color: #b10dc9; }
+body.theme-pink { --primary-color: #f012be; }
+
+/* Dark mode */
+body.dark-mode {
+    --text-color: #f0f0f0;
+    --background-color: #333;
+}
+
+/* Apply theme colors */
+body {
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.character-sheet-header, .stat, button {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+    .container {
     max-width: 100%;
     margin: 0 auto;
     padding: 20px;
@@ -82,9 +136,14 @@ button:hover, .action-button:hover {
     background-color: var(--primary-color-dark);
 }
 
-.small-button {
+/* .small-button {
     font-size: 0.8em;
     padding: 4px 8px;
+} */
+
+.small-button {
+    font-size: 0.8em;
+    padding: 2px 5px;
 }
 
 select, input[type="number"], input[type="text"], input[type="file"] {
@@ -320,15 +379,6 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     margin-bottom: 10px;
 }
 
-/* .spell-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-} */
 
 .spell-header {
     display: flex;
@@ -339,12 +389,6 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     cursor: pointer;
 }
 
-/* .spell-details {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-top: none;
-    border-radius: 0 0 5px 5px;
-} */
 
 .spell-details {
     padding: 10px;
@@ -524,7 +568,25 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .character-sheet-header {
-    flex-shrink: 0;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.character-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.character-name-section {
+    flex-grow: 1;
+}
+
+.hp-section {
+    text-align: right;
 }
 
 .character-info {
@@ -555,11 +617,17 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 }
 
 .stat {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
+    flex: 1;
+    min-width: 150px;
+    background-color: #e0e0e0;
+    padding: 10px;
     border-radius: 5px;
-    padding: 8px;
-    font-size: 0.9em;
+}
+
+.initiative-stat, .combined-stat {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .hp-stat, .initiative-stat {
@@ -570,7 +638,8 @@ select, input[type="number"], input[type="text"], input[type="file"] {
 
 .hp-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 5px;
     margin-top: 5px;
 }
 
@@ -691,14 +760,6 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     margin-bottom: 20px;
 }
 
-/* .spell-level-btn {
-    margin: 0 2px;
-    padding: 2px 5px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    cursor: pointer;
-} */
 
 .spell-level-btn {
     padding: 5px 10px;
@@ -729,7 +790,13 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     resize: vertical;
 }
 
+/* .notes-buttons {
+    margin-top: 10px;
+} */
+
 .notes-buttons {
+    display: flex;
+    justify-content: space-between;
     margin-top: 10px;
 }
 
@@ -898,7 +965,9 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     }
 
     .character-stats-grid {
-        grid-template-columns: 1fr 1fr;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
     .spell-level-btn {
@@ -1011,4 +1080,43 @@ select, input[type="number"], input[type="text"], input[type="file"] {
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .character-stats-grid {
+        flex-direction: column;
+    }
+
+    .stat {
+        width: 100%;
+    }
+}
+
+.theme-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: var(--card-background);
+    border-radius: 5px;
+}
+
+.theme-selector, .mode-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.theme-selector label, .mode-toggle label {
+    margin-right: 10px;
+}
+
+#color-theme {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#dark-mode-toggle {
+    width: auto;
+    margin: 0;
 }

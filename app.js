@@ -118,19 +118,19 @@ let dpiInfo = {
         { name: "Light hammer", type: "weapon", damage: "1d4", damageType: "bludgeoning", properties: ["Light", "Thrown (range 20/60)"], cost: "2 gp", weight: "2 lb." , width: 1, height: 1},
         { name: "Mace", type: "weapon", damage: "1d6", damageType: "bludgeoning", properties: [], cost: "5 gp", weight: "4 lb.", width: 1, height: 2 },
         { name: "Quarterstaff", type: "weapon", damage: "1d6", damageType: "bludgeoning", properties: ["Versatile (1d8)"], cost: "2 sp", weight: "4 lb.", width: 1, height: 3 },
-        { name: "Sickle", type: "weapon", damage: "1d4", damageType: "slashing", properties: ["Light"], cost: "1 gp", weight: "2 lb.", width: 2, height: 1 },
+        { name: "Sickle", type: "weapon", damage: "1d4", damageType: "slashing", properties: ["Light"], cost: "1 gp", weight: "2 lb.", width: 1, height: 1 },
         { name: "Spear", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Thrown (range 20/60)", "Versatile (1d8)"], cost: "1 gp", weight: "3 lb.", width: 1, height: 3 },
-        { name: "Crossbow light", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Loading", "Two-handed"], cost: "25 gp", weight: "5 lb.", width: 3, height: 1 },
+        { name: "Crossbow light", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Loading", "Two-handed"], cost: "25 gp", weight: "5 lb.", width: 1, height: 1 },
         { name: "Dart", type: "weapon", damage: "1d4", damageType: "piercing", properties: ["Finesse", "Thrown (range 20/60)"], cost: "5 cp", weight: "1/4 lb.", width: 1, height: 1 },
-        { name: "Shortbow", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Two-handed"], cost: "25 gp", weight: "2 lb.", width: 1, height: 2 },
+        { name: "Shortbow", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Two-handed"], cost: "25 gp", weight: "2 lb.", width: 1, height: 1 },
         { name: "Sling", type: "weapon", damage: "1d4", damageType: "bludgeoning", properties: ["Ammunition (range 30/120)"], cost: "1 sp", weight: "0 lb.", width: 1, height: 1 },
         { name: "Battleaxe", type: "weapon", damage: "1d8", damageType: "slashing", properties: ["Versatile (1d10)"], cost: "10 gp", weight: "4 lb.", width: 1, height: 2 },
         { name: "Flail", type: "weapon", damage: "1d8", damageType: "bludgeoning", properties: [], cost: "10 gp", weight: "2 lb.", width: 1, height: 2 },
         { name: "Glaive", type: "weapon", damage: "1d10", damageType: "slashing", properties: ["Heavy", "Reach", "Two-handed"], cost: "20 gp", weight: "6 lb.", width: 1, height: 3 },
-        { name: "Greataxe", type: "weapon", damage: "1d12", damageType: "slashing", properties: ["Heavy", "Two-handed"], cost: "30 gp", weight: "7 lb." , width: 1, height: 3},
+        { name: "Greataxe", type: "weapon", damage: "1d12", damageType: "slashing", properties: ["Heavy", "Two-handed"], cost: "30 gp", weight: "7 lb." , width: 1, height: 2},
         { name: "Greatsword", type: "weapon", damage: "2d6", damageType: "slashing", properties: ["Heavy", "Two-handed"], cost: "50 gp", weight: "6 lb.", width: 1, height: 3 },
         { name: "Halberd", type: "weapon", damage: "1d10", damageType: "slashing", properties: ["Heavy", "Reach", "Two-handed"], cost: "20 gp", weight: "6 lb.", width: 1, height: 3 },
-        { name: "Lance", type: "weapon", damage: "1d12", damageType: "piercing", properties: ["Reach", "Special"], cost: "10 gp", weight: "6 lb.", width: 1, height: 3 },
+        { name: "Lance", type: "weapon", damage: "1d12", damageType: "piercing", properties: ["Reach", "Special"], cost: "10 gp", weight: "6 lb.", width: 1, height: 2 },
         { name: "Longsword", type: "weapon", damage: "1d8", damageType: "slashing", properties: ["Versatile (1d10)"], cost: "15 gp", weight: "3 lb.", width: 1, height: 2 },
         { name: "Maul", type: "weapon", damage: "2d6", damageType: "bludgeoning", properties: ["Heavy", "Two-handed"], cost: "10 gp", weight: "10 lb.", width: 1, height: 2 },
         { name: "Morningstar", type: "weapon", damage: "1d8", damageType: "piercing", properties: [], cost: "15 gp", weight: "4 lb.", width: 1, height: 2 },
@@ -139,28 +139,28 @@ let dpiInfo = {
         { name: "Scimitar", type: "weapon", damage: "1d6", damageType: "slashing", properties: ["Finesse", "Light"], cost: "25 gp", weight: "3 lb.", width: 1, height: 2 },
         { name: "Shortsword", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Finesse", "Light"], cost: "10 gp", weight: "2 lb.", width: 1, height: 2 },
         { name: "Trident", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Thrown (range 20/60)", "Versatile (1d8)"], cost: "5 gp", weight: "4 lb." , width: 1, height: 3},
-        { name: "War pick", type: "weapon", damage: "1d8", damageType: "piercing", properties: [], cost: "5 gp", weight: "2 lb.", width: 1, height: 3 },
+        { name: "War pick", type: "weapon", damage: "1d8", damageType: "piercing", properties: [], cost: "5 gp", weight: "2 lb.", width: 1, height: 2 },
         { name: "Warhammer", type: "weapon", damage: "1d8", damageType: "bludgeoning", properties: ["Versatile (1d10)"], cost: "15 gp", weight: "2 lb." , width: 1, height: 2},
-        { name: "Whip", type: "weapon", damage: "1d4", damageType: "slashing", properties: ["Finesse", "Reach"], cost: "2 gp", weight: "3 lb.", width: 1, height: 2 },
-        { name: "Blowgun", type: "weapon", damage: "1", damageType: "piercing", properties: ["Ammunition (range 25/100)", "Loading"], cost: "10 gp", weight: "1 lb.", width: 1, height: 2 },
-        { name: "Crossbow hand", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Ammunition (range 30/120)", "Light", "Loading"], cost: "75 gp", weight: "3 lb.", width: 3, height: 1 },
-        { name: "Crossbow heavy", type: "weapon", damage: "1d10", damageType: "piercing", properties: ["Ammunition (range 100/400)", "Heavy", "Loading", "Two-handed"], cost: "50 gp", weight: "18 lb.", width: 4, height: 1 },
-        { name: "Longbow", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 150/600)", "Heavy", "Two-handed"], cost: "50 gp", weight: "2 lb." , width: 2, height: 3},
-        { name: "Net", type: "weapon", damage: "0", damageType: "0", properties: ["Special", "Thrown (range 5/15)"], cost: "1 gp", weight: "3 lb." , width: 1, height: 2},
+        { name: "Whip", type: "weapon", damage: "1d4", damageType: "slashing", properties: ["Finesse", "Reach"], cost: "2 gp", weight: "3 lb.", width: 1, height: 1 },
+        { name: "Blowgun", type: "weapon", damage: "1", damageType: "piercing", properties: ["Ammunition (range 25/100)", "Loading"], cost: "10 gp", weight: "1 lb.", width: 3, height: 1 },
+        { name: "Crossbow hand", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Ammunition (range 30/120)", "Light", "Loading"], cost: "75 gp", weight: "3 lb.", width: 2, height: 2 },
+        { name: "Crossbow heavy", type: "weapon", damage: "1d10", damageType: "piercing", properties: ["Ammunition (range 100/400)", "Heavy", "Loading", "Two-handed"], cost: "50 gp", weight: "18 lb.", width: 2, height: 2 },
+        { name: "Longbow", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 150/600)", "Heavy", "Two-handed"], cost: "50 gp", weight: "2 lb." , width: 1, height: 3},
+        { name: "Net", type: "weapon", damage: "0", damageType: "0", properties: ["Special", "Thrown (range 5/15)"], cost: "1 gp", weight: "3 lb." , width: 1, height: 1},
         // Armor
-        { name: "Padded", type: "armor", armorType: "Light", ac: 11, addDex: true, stealthDisadvantage: true, cost: "5 gp", weight: "8 lb." , width: 2, height: 3},
-        { name: "Leather", type: "armor", armorType: "Light", ac: 11, addDex: true, stealthDisadvantage: false, cost: "10 gp", weight: "10 lb." , width: 2, height: 3 },
-        { name: "Studded leather", type: "armor", armorType: "Light", ac: 12, addDex: true, stealthDisadvantage: false, cost: "45 gp", weight: "13 lb." , width: 2, height: 3 },
-        { name: "Hide", type: "armor", armorType: "Medium", ac: 12, addDex: true, maxDex: 2, stealthDisadvantage: false, cost: "10 gp", weight: "12 lb." , width: 2, height: 3 },
-        { name: "Chain shirt", type: "armor", armorType: "Medium", ac: 13, addDex: true, maxDex: 2, stealthDisadvantage: false, cost: "50 gp", weight: "20 lb." , width: 2, height: 3 },
-        { name: "Scale mail", type: "armor", armorType: "Medium", ac: 14, addDex: true, maxDex: 2, stealthDisadvantage: true, cost: "50 gp", weight: "45 lb." , width: 2, height: 3 },
-        { name: "Breastplate", type: "armor", armorType: "Medium", ac: 14, addDex: true, maxDex: 2, stealthDisadvantage: false, cost: "400 gp", weight: "20 lb." , width: 2, height: 3 },
-        { name: "Half plate", type: "armor", armorType: "Medium", ac: 15, addDex: true, maxDex: 2, stealthDisadvantage: true, cost: "750 gp", weight: "40 lb." , width: 2, height: 3 },
-        { name: "Ring mail", type: "armor", armorType: "Heavy", ac: 14, addDex: false, stealthDisadvantage: true, cost: "30 gp", weight: "40 lb." , width: 2, height: 3 },
-        { name: "Chain mail", type: "armor", armorType: "Heavy", ac: 16, addDex: false, stealthDisadvantage: true, strengthRequirement: 13, cost: "75 gp", weight: "55 lb." , width: 2, height: 3 },
-        { name: "Splint", type: "armor", armorType: "Heavy", ac: 17, addDex: false, stealthDisadvantage: true, strengthRequirement: 15, cost: "200 gp", weight: "60 lb." , width: 2, height: 3 },
-        { name: "Plate", type: "armor", armorType: "Heavy", ac: 18, addDex: false, stealthDisadvantage: true, strengthRequirement: 15, cost: "1,500 gp", weight: "65 lb." , width: 2, height: 3 },
-        { name: "Shield", type: "armor", armorType: "Shield", ac: 2, addDex: false, stealthDisadvantage: false, cost: "10 gp", weight: "6 lb." , width: 2, height: 3 },
+        { name: "Padded", type: "armor", armorType: "Light", ac: 11, addDex: true, stealthDisadvantage: true, cost: "5 gp", weight: "8 lb." , width: 2, height: 2 },
+        { name: "Leather", type: "armor", armorType: "Light", ac: 11, addDex: true, stealthDisadvantage: false, cost: "10 gp", weight: "10 lb." , width: 2, height: 2 },
+        { name: "Studded leather", type: "armor", armorType: "Light", ac: 12, addDex: true, stealthDisadvantage: false, cost: "45 gp", weight: "13 lb." , width: 2, height: 2  },
+        { name: "Hide", type: "armor", armorType: "Medium", ac: 12, addDex: true, maxDex: 2, stealthDisadvantage: false, cost: "10 gp", weight: "12 lb." , width: 2, height: 2 },
+        { name: "Chain shirt", type: "armor", armorType: "Medium", ac: 13, addDex: true, maxDex: 2, stealthDisadvantage: false, cost: "50 gp", weight: "20 lb." , width: 2, height: 2  },
+        { name: "Scale mail", type: "armor", armorType: "Medium", ac: 14, addDex: true, maxDex: 2, stealthDisadvantage: true, cost: "50 gp", weight: "45 lb." , width: 2, height: 2  },
+        { name: "Breastplate", type: "armor", armorType: "Medium", ac: 14, addDex: true, maxDex: 2, stealthDisadvantage: false, cost: "400 gp", weight: "20 lb." , width: 2, height: 2  },
+        { name: "Half plate", type: "armor", armorType: "Medium", ac: 15, addDex: true, maxDex: 2, stealthDisadvantage: true, cost: "750 gp", weight: "40 lb." , width: 2, height: 2  },
+        { name: "Ring mail", type: "armor", armorType: "Heavy", ac: 14, addDex: false, stealthDisadvantage: true, cost: "30 gp", weight: "40 lb." , width: 2, height: 2 },
+        { name: "Chain mail", type: "armor", armorType: "Heavy", ac: 16, addDex: false, stealthDisadvantage: true, strengthRequirement: 13, cost: "75 gp", weight: "55 lb." , width: 2, height: 2 },
+        { name: "Splint", type: "armor", armorType: "Heavy", ac: 17, addDex: false, stealthDisadvantage: true, strengthRequirement: 15, cost: "200 gp", weight: "60 lb." , width: 2, height: 2 },
+        { name: "Plate", type: "armor", armorType: "Heavy", ac: 18, addDex: false, stealthDisadvantage: true, strengthRequirement: 15, cost: "1,500 gp", weight: "65 lb." , width: 2, height: 2 },
+        { name: "Shield", type: "armor", armorType: "Shield", ac: 2, addDex: false, stealthDisadvantage: false, cost: "10 gp", weight: "6 lb." , width: 2, height: 2  },
         // Other items
         { name: "Backpack", type: "gear", cost: "2 gp", weight: "5 lb." , width: 2, height: 2 },
         { name: "Bedroll", type: "gear", cost: "1 gp", weight: "7 lb." , width: 2, height: 1 },
@@ -173,15 +173,15 @@ let dpiInfo = {
         { name: "Rope silk", type: "gear", cost: "10 gp", weight: "5 lb." , width: 2, height: 2 },
         { name: "Climber's kit", type: "gear", cost: "25 gp", weight: "12 lb." , width: 1, height: 1 },
         { name: "Fishing tackle", type: "gear", cost: "1 gp", weight: "4 lb.", width: 1, height: 1  },
-        { name: "Healer's kit", type: "gear", cost: "5 gp", weight: "3 lb.", width: 1, height: 1  },
+        { name: "Healer's kit", type: "gear", cost: "5 gp", weight: "3 lb.", width: 2, height: 1  },
         { name: "Herbalism kit", type: "gear", cost: "5 gp", weight: "3 lb." , width: 1, height: 1 },
-        { name: "Disguise kit", type: "gear", cost: "25 gp", weight: "3 lb.", width: 1, height: 1  },
+        { name: "Disguise kit", type: "gear", cost: "25 gp", weight: "3 lb.", width: 2, height: 2  },
         { name: "Forgery kit", type: "gear", cost: "15 gp", weight: "5 lb.", width: 1, height: 1  },
         { name: "Alchemist's supplies", type: "gear", cost: "50 gp", weight: "8 lb.", width: 1, height: 1  },
         { name: "Brewer's supplies", type: "gear", cost: "20 gp", weight: "9 lb.", width: 2, height: 2  },
         { name: "Calligrapher's supplies", type: "gear", cost: "10 gp", weight: "5 lb." , width: 1, height: 1 },
         { name: "Carpenter's tools", type: "gear", cost: "8 gp", weight: "6 lb.", width: 1, height: 1  },
-        { name: "Cartographer's tools", type: "gear", cost: "15 gp", weight: "6 lb." , width: 1, height: 1 },
+        { name: "Cartographer's tools", type: "gear", cost: "15 gp", weight: "6 lb." , width: 2, height: 1 },
         { name: "Cobbler's tools", type: "gear", cost: "5 gp", weight: "5 lb.", width: 1, height: 1  },
         { name: "Cook's utensils", type: "gear", cost: "1 gp", weight: "8 lb.", width: 2, height: 2  },
         { name: "Glassblower's tools", type: "gear", cost: "30 gp", weight: "5 lb." , width: 3, height: 1 },
@@ -195,8 +195,8 @@ let dpiInfo = {
         { name: "Weaver's tools", type: "gear", cost: "1 gp", weight: "5 lb.", width: 1, height: 1  },
         { name: "Woodcarver's tools", type: "gear", cost: "1 gp", weight: "5 lb.", width: 1, height: 1  },
         { name: "Navigator's tools", type: "gear", cost: "25 gp", weight: "2 lb.", width: 1, height: 1  },
-        { name: "Thieves' tools", type: "gear", cost: "25 gp", weight: "1 lb.", width: 1, height: 1  },
-        { name: "Musical instrument", type: "gear", cost: "varies", weight: "varies", width: 1, height: 1  }
+        { name: "Thieves' tools", type: "gear", cost: "25 gp", weight: "1 lb.", width: 2, height: 1  },
+        { name: "Musical instrument", type: "gear", cost: "varies", weight: "varies", width: 1, height: 2  }
     ];
 
     const skills = [
@@ -1282,6 +1282,44 @@ let dpiInfo = {
         character.inventory.forEach(item => drawItem(item));
     }
     
+    // old code to stretch images
+    // function drawItem(item) {
+    //     const inventoryCanvas = document.getElementById('inventory-canvas');
+    //     const inventoryCtx = inventoryCanvas.getContext('2d');
+    
+    //     const imageName = item.name.replace(/'/g, '').replace(/ /g, '_') + '.png';
+    //     const imagePath = `assets/images/${imageName}`;
+    
+    //     const img = new Image();
+    //     img.onload = () => {
+    //         inventoryCtx.drawImage(
+    //             img, 
+    //             item.x * dpiInfo.cellSize, 
+    //             item.y * dpiInfo.cellSize, 
+    //             item.width * dpiInfo.cellSize, 
+    //             item.height * dpiInfo.cellSize
+    //         );
+    //     };
+    //     img.onerror = () => {
+    //         inventoryCtx.fillStyle = '#999';
+    //         inventoryCtx.fillRect(
+    //             item.x * dpiInfo.gridSize, 
+    //             item.y * dpiInfo.gridSize, 
+    //             item.width * dpiInfo.gridSize, 
+    //             item.height * dpiInfo.gridSize
+    //         );
+    //         inventoryCtx.fillStyle = 'black';
+    //         inventoryCtx.font = `${12 * dpiInfo.dpr}px Arial`;
+    //         inventoryCtx.fillText(
+    //             item.name, 
+    //             item.x * dpiInfo.gridSize + 5, 
+    //             item.y * dpiInfo.gridSize + 15
+    //         );
+    //     };
+    //     img.src = imagePath;
+    // }
+    
+// aspect ratio fitting
     function drawItem(item) {
         const inventoryCanvas = document.getElementById('inventory-canvas');
         const inventoryCtx = inventoryCanvas.getContext('2d');
@@ -1291,14 +1329,39 @@ let dpiInfo = {
     
         const img = new Image();
         img.onload = () => {
+            // Calculate available space
+            const availableWidth = item.width * dpiInfo.cellSize;
+            const availableHeight = item.height * dpiInfo.cellSize;
+    
+            // Calculate image aspect ratio
+            const imageAspectRatio = img.width / img.height;
+    
+            // Calculate scaled dimensions
+            let drawWidth, drawHeight;
+            if (availableWidth / availableHeight > imageAspectRatio) {
+                // Fit to height
+                drawHeight = availableHeight;
+                drawWidth = availableHeight * imageAspectRatio;
+            } else {
+                // Fit to width
+                drawWidth = availableWidth;
+                drawHeight = availableWidth / imageAspectRatio;
+            }
+    
+            // Calculate position to center the image
+            const offsetX = (availableWidth - drawWidth) / 2;
+            const offsetY = (availableHeight - drawHeight) / 2;
+    
+            // Draw the image scaled to fit within the available space
             inventoryCtx.drawImage(
                 img, 
-                item.x * dpiInfo.cellSize, 
-                item.y * dpiInfo.cellSize, 
-                item.width * dpiInfo.cellSize, 
-                item.height * dpiInfo.cellSize
+                item.x * dpiInfo.cellSize + offsetX, 
+                item.y * dpiInfo.cellSize + offsetY, 
+                drawWidth, 
+                drawHeight
             );
         };
+    
         img.onerror = () => {
             inventoryCtx.fillStyle = '#999';
             inventoryCtx.fillRect(
@@ -1315,9 +1378,12 @@ let dpiInfo = {
                 item.y * dpiInfo.gridSize + 15
             );
         };
+    
         img.src = imagePath;
     }
     
+
+
     function findAvailablePosition(item) {
         for (let y = 0; y <= GRID_SIZE - item.height; y++) {
             for (let x = 0; x <= GRID_SIZE - item.width; x++) {
@@ -1546,7 +1612,8 @@ let dpiInfo = {
         const showNameButtons = !character.name || character.name === 'undefined';
 
         characterHeader.innerHTML = `
-            <div class="character-info">
+        <div class="character-info-row">
+            <div class="character-name-section">
                 <h2 id="character-name-display">${displayName}</h2>
                 ${showNameButtons ? `
                     <div class="name-buttons">
@@ -1554,29 +1621,28 @@ let dpiInfo = {
                         <button onclick="myApp.generateRandomName()" class="small-button"><i class="bi bi-dice-5"></i></button>
                     </div>
                 ` : ''}
-                <h3 id="character-level-race-class">Level ${character.level} ${character.race} ${character.class}</h3>
-                <div id="death-save-emojis"></div>
             </div>
-            <div class="character-stats-grid">
-                <div class="stat hp-stat">
-                    <div>HP: <span id="current-hp">${character.hp}</span>/<span id="max-hp">${character.maxHp}</span></div>
-                    <div class="hp-buttons">
-                        <button onclick="myApp.changeHP('damage')" class="small-button">Damage</button>
-                        <button onclick="myApp.changeHP('heal')" class="small-button">Heal</button>
-                    </div>
-                </div>
-                <div class="stat initiative-stat">
-                    <div>Initiative: +<span id="character-initiative">${character.initiative}</span></div>
-                    <button onclick="myApp.rollInitiative()" class="small-button">Roll</button>
-                </div>
-                <div class="stat combined-stat">
-                    <div>AC: <span id="character-ac">${character.ac}</span></div>
-                    <div>Speed: <span id="character-speed">${character.speed || 30}</span> ft.</div>
-                    <div>Prof: +<span id="character-proficiency">${character.proficiencyBonus}</span></div>
+            <div class="hp-section">
+                <div>HP: <span id="current-hp">${character.hp}</span>/<span id="max-hp">${character.maxHp}</span></div>
+                <div class="hp-buttons">
+                    <button onclick="myApp.changeHP('damage')" class="small-button">Damage</button>
+                    <button onclick="myApp.changeHP('heal')" class="small-button">Heal</button>
                 </div>
             </div>
-            <button id="long-rest-btn" onclick="myApp.longRest()">Long Rest</button>
-        `;
+        </div>
+        <h3 id="character-level-race-class">Level ${character.level} ${character.race} ${character.class}</h3>
+        <div class="character-stats-grid">
+            <div class="stat initiative-stat">
+                <div>Initiative: +<span id="character-initiative">${character.initiative}</span></div>
+                <button onclick="myApp.rollInitiative()" class="small-button">Roll</button>
+            </div>
+            <div class="stat combined-stat">
+                <div>AC: <span id="character-ac">${character.ac}</span></div>
+                <div>Speed: <span id="character-speed">${character.speed || 30}</span> ft.</div>
+                <div>Prof: +<span id="character-proficiency">${character.proficiencyBonus}</span></div>
+            </div>
+        </div>
+    `;
 
     // Update AC
     const equippedArmor = character.inventory.find(item => item.type === 'armor');
@@ -1725,6 +1791,34 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         const categoryPages = ['attributes-page', 'skills-feats-page', 'inventory-page', 'spells-page', 'combat-page','notes-page', 'roll-results-page'];
         let currentCategoryIndex = 0;
 
+        notesPage.innerHTML = `
+        <h3>Character Notes</h3>
+        <div id="theme-controls" class="theme-controls">
+            <div class="theme-selector">
+                <label for="color-theme">Color Theme:</label>
+                <select id="color-theme">
+                    <option value="default">Default</option>
+                    <option value="red">Red</option>
+                    <option value="green">Green</option>
+                    <option value="blue">Blue</option>
+                    <option value="orange">Orange</option>
+                    <option value="purple">Purple</option>
+                    <option value="pink">Pink</option>
+                </select>
+            </div>
+            <div class="mode-toggle">
+                <label for="dark-mode-toggle">Dark Mode:</label>
+                <input type="checkbox" id="dark-mode-toggle">
+            </div>
+        </div>
+        <textarea id="character-notes" placeholder="Add your character notes here...">${character.notes}</textarea>
+        <div class="notes-buttons">
+            <button id="level-up-btn" onclick="myApp.levelUp()" class="small-button">Level Up</button>
+            <button id="export-pdf-btn" class="small-button">Export to PDF</button>
+        </div>
+    `;
+
+
         document.getElementById('prev-category').addEventListener('click', () => {
             currentCategoryIndex = (currentCategoryIndex - 1 + categoryPages.length) % categoryPages.length;
             updateCategoryDisplay();
@@ -1747,6 +1841,11 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
             if (currentPage) {
                 currentPage.classList.remove('hidden');
                 currentPage.classList.add('active');
+                
+                // Initialize theme controls when the notes page is displayed
+                if (categoryPages[currentCategoryIndex] === 'notes-page') {
+                    // safeInitializeThemeControls();
+                }
             }
             document.getElementById('category-name').textContent = categoryPages[currentCategoryIndex].split('-')[0].charAt(0).toUpperCase() + categoryPages[currentCategoryIndex].split('-')[0].slice(1);
         }
@@ -2878,6 +2977,97 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         });
     }
 
+    function safeInitializeThemeControls() {
+        try {
+            initializeThemeControls();
+        } catch (error) {
+            console.error('Error initializing theme controls:', error);
+        }
+    }
+
+    function initializeTheme() {
+        const colorTheme = getCookie('colorTheme') || 'default';
+        const darkMode = getCookie('darkMode') === 'true';
+    
+        document.getElementById('color-theme').value = colorTheme;
+        document.getElementById('dark-mode-toggle').checked = darkMode;
+    
+        applyTheme(colorTheme, darkMode);
+    }
+
+    function initializeThemeControls() {
+        const themeControls = document.getElementById('theme-controls');
+        if (!themeControls) return;
+    
+        const colorThemeSelect = document.getElementById('color-theme');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+    
+        if (colorThemeSelect && darkModeToggle) {
+            const colorTheme = getCookie('colorTheme') || 'default';
+            const darkMode = getCookie('darkMode') === 'true';
+    
+            colorThemeSelect.value = colorTheme;
+            darkModeToggle.checked = darkMode;
+    
+            applyTheme(colorTheme, darkMode);
+    
+            colorThemeSelect.addEventListener('change', function() {
+                const newColorTheme = this.value;
+                const currentDarkMode = darkModeToggle.checked;
+                applyTheme(newColorTheme, currentDarkMode);
+                setCookie('colorTheme', newColorTheme);
+            });
+    
+            darkModeToggle.addEventListener('change', function() {
+                const currentColorTheme = colorThemeSelect.value;
+                const newDarkMode = this.checked;
+                applyTheme(currentColorTheme, newDarkMode);
+                setCookie('darkMode', newDarkMode);
+            });
+        }
+    }
+    
+    function applyTheme(colorTheme, darkMode) {
+        document.body.className = `theme-${colorTheme} ${darkMode ? 'dark-mode' : ''}`;
+    }
+    
+    function setCookie(name, value, days = 365) {
+        const d = new Date();
+        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+        const expires = "expires=" + d.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+    
+    function getCookie(name) {
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const ca = decodedCookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(name + "=") == 0) {
+                return c.substring(name.length + 1);
+            }
+        }
+        return "";
+    }
+    
+    function setupThemeControls() {
+        const colorThemeSelect = document.getElementById('color-theme');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+    
+        colorThemeSelect.addEventListener('change', function() {
+            const colorTheme = this.value;
+            const darkMode = darkModeToggle.checked;
+            applyTheme(colorTheme, darkMode);
+            setCookie('colorTheme', colorTheme);
+        });
+    
+        darkModeToggle.addEventListener('change', function() {
+            const colorTheme = colorThemeSelect.value;
+            const darkMode = this.checked;
+            applyTheme(colorTheme, darkMode);
+            setCookie('darkMode', darkMode);
+        });
+    }
     function updateDPIInfo() {
         const inventoryCanvas = document.getElementById('inventory-canvas');
         if (!inventoryCanvas) return;
@@ -3079,6 +3269,7 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
 
 
         document.addEventListener('DOMContentLoaded', function() {
+            // initializeTheme();
             initializeUI();
             fetch('spells.json')
                 .then(response => response.json())
