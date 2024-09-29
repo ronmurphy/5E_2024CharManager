@@ -311,9 +311,9 @@ let dpiInfo = {
         });
 
         document.getElementById('class').addEventListener('change', updateSubclassOptions);
-        document.getElementById('level').addEventListener('change', function() {
-            updateSubclassOptions();
-        });        
+        // document.getElementById('level').addEventListener('change', function() {
+        //     updateSubclassOptions();
+        // });        
         document.getElementById('background').addEventListener('change', updateBackgroundInfo);
         document.getElementById('save-character').addEventListener('click', saveCharacter);
         document.getElementById('edit-character').addEventListener('click', editCharacter);
@@ -327,7 +327,7 @@ let dpiInfo = {
             classSelect.addEventListener('change', function() {
                 console.log('Class changed');
                 updateClassInfo();
-                updateSubclassOptions();
+                // updateSubclassOptions();
             });
         } else {
             console.error('Class select element not found');
