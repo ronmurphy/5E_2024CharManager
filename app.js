@@ -310,7 +310,7 @@ let dpiInfo = {
             // updateSubclassOptions();
         });
 
-        document.getElementById('class').addEventListener('change', updateSubclassOptions);
+        // document.getElementById('class').addEventListener('change', updateSubclassOptions);
         // document.getElementById('level').addEventListener('change', function() {
         //     updateSubclassOptions();
         // });        
