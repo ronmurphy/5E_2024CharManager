@@ -57,6 +57,7 @@ let dpiInfo = {
     let deathSaveFailures = 0;
     let races = {};
     let spells = [];
+    let classesData = {};
 
     const raceInfo = {
         human: "Versatile and adaptable, humans gain +1 to all ability scores.",
@@ -73,22 +74,7 @@ let dpiInfo = {
         orc: "Fierce and strong, orcs gain +2 Strength and +1 Constitution, along with aggressive and powerful build traits."
     };
 
-    const classInfo = {
-        artificer: "Inventive crafters who combine magic and technology, artificers create magical objects and devices to aid them in combat and exploration.",
-        barbarian: "Fierce warriors who enter a battle rage, barbarians excel in combat with high strength and constitution.",
-        bard: "Magical entertainers who use music and oration to inspire allies and hinder foes.",
-        cleric: "Divine spellcasters who serve deities and channel holy power to heal and protect.",
-        druid: "Nature-oriented spellcasters who can shapeshift into animals and control the elements.",
-        fighter: "Versatile warriors skilled in all forms of combat and martial techniques.",
-        monk: "Martial artists who harness the power of their body and soul in combat.",
-        paladin: "Holy warriors who combine martial prowess with divine magic to uphold justice.",
-        ranger: "Skilled hunters and trackers who use a mix of martial and magical abilities.",
-        rogue: "Stealthy and skilled characters who excel at subterfuge and precision attacks.",
-        sorcerer: "Innate spellcasters who draw magic from their bloodline or magical essence.",
-        warlock: "Spellcasters who gain their powers through pacts with powerful otherworldly entities.",
-        wizard: "Scholarly magic-users who learn and cast spells through rigorous study and practice."
-    };
-
+    
     const backgroundInfo = {
         acolyte: "You have spent your life in service to a temple, learning religious lore and rituals.",
         charlatan: "You're an expert in deception, using your quick wit and charm to manipulate others.",
@@ -120,7 +106,7 @@ let dpiInfo = {
         { name: "Quarterstaff", type: "weapon", damage: "1d6", damageType: "bludgeoning", properties: ["Versatile (1d8)"], cost: "2 sp", weight: "4 lb.", width: 1, height: 3 },
         { name: "Sickle", type: "weapon", damage: "1d4", damageType: "slashing", properties: ["Light"], cost: "1 gp", weight: "2 lb.", width: 1, height: 1 },
         { name: "Spear", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Thrown (range 20/60)", "Versatile (1d8)"], cost: "1 gp", weight: "3 lb.", width: 1, height: 3 },
-        { name: "Crossbow light", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Loading", "Two-handed"], cost: "25 gp", weight: "5 lb.", width: 2, height: 2 },
+        { name: "Crossbow light", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Loading", "Two-handed"], cost: "25 gp", weight: "5 lb.", width: 1, height: 1 },
         { name: "Dart", type: "weapon", damage: "1d4", damageType: "piercing", properties: ["Finesse", "Thrown (range 20/60)"], cost: "5 cp", weight: "1/4 lb.", width: 1, height: 1 },
         { name: "Shortbow", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Ammunition (range 80/320)", "Two-handed"], cost: "25 gp", weight: "2 lb.", width: 1, height: 1 },
         { name: "Sling", type: "weapon", damage: "1d4", damageType: "bludgeoning", properties: ["Ammunition (range 30/120)"], cost: "1 sp", weight: "0 lb.", width: 1, height: 1 },
@@ -143,7 +129,7 @@ let dpiInfo = {
         { name: "Warhammer", type: "weapon", damage: "1d8", damageType: "bludgeoning", properties: ["Versatile (1d10)"], cost: "15 gp", weight: "2 lb." , width: 1, height: 2},
         { name: "Whip", type: "weapon", damage: "1d4", damageType: "slashing", properties: ["Finesse", "Reach"], cost: "2 gp", weight: "3 lb.", width: 1, height: 1 },
         { name: "Blowgun", type: "weapon", damage: "1", damageType: "piercing", properties: ["Ammunition (range 25/100)", "Loading"], cost: "10 gp", weight: "1 lb.", width: 3, height: 1 },
-        { name: "Crossbow hand", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Ammunition (range 30/120)", "Light", "Loading"], cost: "75 gp", weight: "3 lb.", width: 1, height: 1 },
+        { name: "Crossbow hand", type: "weapon", damage: "1d6", damageType: "piercing", properties: ["Ammunition (range 30/120)", "Light", "Loading"], cost: "75 gp", weight: "3 lb.", width: 2, height: 2 },
         { name: "Crossbow heavy", type: "weapon", damage: "1d10", damageType: "piercing", properties: ["Ammunition (range 100/400)", "Heavy", "Loading", "Two-handed"], cost: "50 gp", weight: "18 lb.", width: 2, height: 2 },
         { name: "Longbow", type: "weapon", damage: "1d8", damageType: "piercing", properties: ["Ammunition (range 150/600)", "Heavy", "Two-handed"], cost: "50 gp", weight: "2 lb." , width: 1, height: 3},
         { name: "Net", type: "weapon", damage: "0", damageType: "0", properties: ["Special", "Thrown (range 5/15)"], cost: "1 gp", weight: "3 lb." , width: 1, height: 1},
@@ -265,6 +251,7 @@ let dpiInfo = {
 
     function initializeUI() {
         populateDropdowns();
+        loadClassesData();
         setupEventListeners();
         setupAbilityScores();
         populateItemDropdown();
@@ -278,13 +265,14 @@ let dpiInfo = {
 
     function populateDropdowns() {
         populateDropdown('race', Object.keys(raceInfo));
-        populateDropdown('class', Object.keys(classInfo));
+        // We'll populate the class dropdown after loading the class data
         populateDropdown('background', Object.keys(backgroundInfo));
         populateDropdown('item-select', items.map(item => item.name));
     }
-
+    
     function populateDropdown(id, options) {
         const select = document.getElementById(id);
+        select.innerHTML = '<option value="">Select an option</option>';
         options.forEach(option => {
             const optionElement = document.createElement('option');
             optionElement.value = option;
@@ -292,13 +280,28 @@ let dpiInfo = {
             select.appendChild(optionElement);
         });
     }
+    
+    function loadClassesData() {
+        fetch('classes.json')
+            .then(response => response.json())
+            .then(data => {
+                classesData = data;
+                console.log('Classes data loaded:', Object.keys(classesData).length);
+                populateClassDropdown();
+            })
+            .catch(error => console.error('Error loading classes data:', error));
+    }
+    
+    function populateClassDropdown() {
+        populateDropdown('class', Object.keys(classesData));
+    }
 
     function setupEventListeners() {
         const newCharacterBtn = document.getElementById('new-character-btn');
         const loadCharacterBtn = document.getElementById('load-character-btn');
         const randomCharacterBtn = document.getElementById('random-character-btn');
         const fileInput = document.getElementById('file-input');
-
+    
         newCharacterBtn.addEventListener('click', startNewCharacter);
         loadCharacterBtn.addEventListener('click', () => fileInput.click());
         randomCharacterBtn.addEventListener('click', generateRandomCharacter);
@@ -306,12 +309,13 @@ let dpiInfo = {
         document.getElementById('random-name-btn').addEventListener('click', generateRandomName);
         document.getElementById('race').addEventListener('change', updateRaceInfo);
         document.getElementById('class').addEventListener('change', updateClassInfo);
+        document.getElementById('class').addEventListener('change', updateSubclassOptions);
         document.getElementById('level').addEventListener('change', updateSubclassOptions);
         document.getElementById('background').addEventListener('change', updateBackgroundInfo);
         document.getElementById('save-character').addEventListener('click', saveCharacter);
         document.getElementById('edit-character').addEventListener('click', editCharacter);
         document.getElementById('long-rest-btn').addEventListener('click', longRest);
-
+    
         steps.forEach((step, index) => {
             if (index < steps.length - 1) {
                 const nextButton = document.getElementById(`next${index + 1}`);
@@ -320,7 +324,7 @@ let dpiInfo = {
                 }
             }
         });
-
+    
         document.getElementById('finish').addEventListener('click', finishCharacter);
     }
 
@@ -558,7 +562,22 @@ let dpiInfo = {
     function updateClassInfo() {
         const selectedClass = document.getElementById('class').value;
         const classInfoDiv = document.getElementById('class-info');
-        classInfoDiv.textContent = classInfo[selectedClass] || "Select a class to see information.";
+        if (classesData[selectedClass]) {
+            const classData = classesData[selectedClass];
+            classInfoDiv.innerHTML = `
+                <p>${classData.description || 'No description available.'}</p>
+                <h4>Hit Die: d${classData.hd.faces}</h4>
+                <h4>Proficiencies:</h4>
+                <ul>
+                    ${classData.startingProficiencies.armor.map(armor => `<li>${armor}</li>`).join('')}
+                    ${classData.startingProficiencies.weapons.map(weapon => `<li>${weapon}</li>`).join('')}
+                    ${classData.startingProficiencies.tools.map(tool => `<li>${tool}</li>`).join('')}
+                    ${classData.startingProficiencies.skills.map(skill => `<li>${skill}</li>`).join('')}
+                </ul>
+            `;
+        } else {
+            classInfoDiv.textContent = "Select a class to see information.";
+        }
     }
 
     function updateSubclassOptions() {
@@ -566,169 +585,47 @@ let dpiInfo = {
         const selectedLevel = parseInt(document.getElementById('level').value);
         const subclassOptionsDiv = document.getElementById('subclass-options');
         subclassOptionsDiv.innerHTML = '';
-
-        const subclasses = getSubclasses(selectedClass);
-        if (subclasses.length > 0 && selectedLevel >= 3) {
-            const subclassSelect = document.createElement('select');
-            subclassSelect.id = 'subclass';
-            subclassSelect.innerHTML = '<option value="">Select a subclass</option>';
-            subclasses.forEach(subclass => {
-                const option = document.createElement('option');
-                option.value = subclass.name;
-                option.textContent = subclass.name;
-                subclassSelect.appendChild(option);
-            });
-            subclassOptionsDiv.appendChild(subclassSelect);
-
-            const subclassInfoDiv = document.createElement('div');
-            subclassInfoDiv.id = 'subclass-info';
-            subclassInfoDiv.classList.add('info-area');
-            subclassOptionsDiv.appendChild(subclassInfoDiv);
-
-            subclassSelect.addEventListener('change', () => {
-                const selectedSubclass = subclasses.find(sc => sc.name === subclassSelect.value);
-                subclassInfoDiv.textContent = selectedSubclass ? selectedSubclass.description : '';
-                character.subclass = selectedSubclass ? selectedSubclass.name : '';
-            });
+    
+        if (selectedLevel >= 3 && classesData[selectedClass]) {
+            const subclasses = classesData[selectedClass].subclass || [];
+            if (subclasses.length > 0) {
+                const subclassSelect = document.createElement('select');
+                subclassSelect.id = 'subclass';
+                subclassSelect.innerHTML = '<option value="">Select a subclass</option>';
+                subclasses.forEach(subclass => {
+                    const option = document.createElement('option');
+                    option.value = subclass.name;
+                    option.textContent = subclass.name;
+                    subclassSelect.appendChild(option);
+                });
+                subclassOptionsDiv.appendChild(subclassSelect);
+    
+                const subclassInfoDiv = document.createElement('div');
+                subclassInfoDiv.id = 'subclass-info';
+                subclassInfoDiv.classList.add('info-area');
+                subclassOptionsDiv.appendChild(subclassInfoDiv);
+    
+                subclassSelect.addEventListener('change', () => {
+                    const selectedSubclass = subclasses.find(sc => sc.name === subclassSelect.value);
+                    if (selectedSubclass) {
+                        subclassInfoDiv.innerHTML = `
+                            <h4>${selectedSubclass.name}</h4>
+                            <p>${selectedSubclass.subclassFeatures[0].entries[0]}</p>
+                        `;
+                    } else {
+                        subclassInfoDiv.textContent = '';
+                    }
+                    character.subclass = selectedSubclass ? selectedSubclass.name : '';
+                });
+            } else {
+                subclassOptionsDiv.innerHTML = '<p>No subclasses available for this class.</p>';
+            }
         } else {
             subclassOptionsDiv.innerHTML = '<p>Subclass options are available at level 3.</p>';
         }
     }
 
-    function getSubclasses(className) {
-        const subclasses = {
-            artificer: [
-                { name: "Alchemist", description: "Artificers who specialize in potions and transformative alchemy." },
-                { name: "Armorer", description: "Artificers who create and enhance magical armor to become living suits of combat." },
-                { name: "Artillerist", description: "Experts in crafting magical artillery, using cannons and explosives." },
-                { name: "Battle Smith", description: "Artificers who focus on crafting magical weapons and mechanical companions." }
-            ],
-            barbarian: [
-                { name: "Path of the Berserker", description: "A frenzy of rage that channels primal ferocity." },
-                { name: "Path of the Totem Warrior", description: "A spiritual connection with nature and animal totems." },
-                { name: "Path of the Ancestral Guardian", description: "Barbarians guided by ancestral spirits in battle." },
-                { name: "Path of the Storm Herald", description: "Warriors who harness the power of nature's storms." },
-                { name: "Path of the Zealot", description: "Fueled by divine rage, these barbarians fight for their gods." },
-                { name: "Path of the Beast", description: "Barbarians with bestial abilities from a primal force." },
-                { name: "Path of Wild Magic", description: "Barbarians who unleash magical chaos in battle." }
-            ],
-            bard: [
-                { name: "College of Lore", description: "Masters of knowledge and arcane secrets." },
-                { name: "College of Valor", description: "Inspirational warriors who lead through heroic deeds." },
-                { name: "College of Glamour", description: "Bards who use fey magic to beguile and inspire." },
-                { name: "College of Swords", description: "Skilled duelists who combine swordplay and performance." },
-                { name: "College of Whispers", description: "Bards who manipulate fear and secrets to control others." },
-                { name: "College of Creation", description: "Bards who harness the magic of creation itself." },
-                { name: "College of Eloquence", description: "Silver-tongued bards who excel in rhetoric and persuasion." }
-            ],
-            cleric: [
-                { name: "Knowledge Domain", description: "Seekers of truth and keepers of ancient lore." },
-                { name: "Life Domain", description: "Supreme healers blessed with divine power." },
-                { name: "Light Domain", description: "Guardians against darkness, wielding radiant energy." },
-                { name: "Nature Domain", description: "Clerics attuned to the natural world and its power." },
-                { name: "Tempest Domain", description: "Wielders of stormy power, commanding thunder and lightning." },
-                { name: "Trickery Domain", description: "Clerics of deception, illusion, and mischief." },
-                { name: "War Domain", description: "Clerics who lead armies and channel divine wrath in battle." },
-                { name: "Forge Domain", description: "Masters of creation and craftsmanship blessed by the gods." },
-                { name: "Grave Domain", description: "Guardians of the line between life and death." },
-                { name: "Order Domain", description: "Clerics who uphold law and maintain divine justice." },
-                { name: "Peace Domain", description: "Clerics devoted to harmony and reducing conflict." },
-                { name: "Twilight Domain", description: "Clerics who balance light and darkness, guarding the transition." }
-            ],
-            druid: [
-                { name: "Circle of the Land", description: "Mystics attuned to specific natural environments." },
-                { name: "Circle of the Moon", description: "Shapeshifters who embody the raw power of nature." },
-                { name: "Circle of Dreams", description: "Druids connected to the Feywild and the magic of dreams." },
-                { name: "Circle of the Shepherd", description: "Druids who call upon nature's spirits to protect and heal." },
-                { name: "Circle of Spores", description: "Druids who harness decay and fungal growth to fight." },
-                { name: "Circle of Stars", description: "Druids who draw power from the constellations and cosmos." },
-                { name: "Circle of Wildfire", description: "Druids attuned to the cycle of destruction and rebirth through fire." }
-            ],
-            fighter: [
-                { name: "Champion", description: "Masters of physical perfection and combat prowess." },
-                { name: "Battle Master", description: "Tactical experts who use maneuvers to control the battlefield." },
-                { name: "Eldritch Knight", description: "Warriors who combine martial skills with arcane magic." },
-                { name: "Arcane Archer", description: "Archers who infuse their arrows with magical energy." },
-                { name: "Cavalier", description: "Knights skilled in mounted combat and chivalry." },
-                { name: "Samurai", description: "Warriors driven by a relentless fighting spirit and discipline." },
-                { name: "Echo Knight", description: "Fighters who summon echoes of themselves to assist in battle." },
-                { name: "Rune Knight", description: "Fighters who harness the ancient power of runes." },
-                { name: "Psi Warrior", description: "Fighters who use psionic energy to enhance their combat abilities." }
-            ],
-            monk: [
-                { name: "Way of the Open Hand", description: "Masters of martial arts techniques." },
-                { name: "Way of Shadow", description: "Stealthy monks who manipulate darkness and deception." },
-                { name: "Way of the Four Elements", description: "Monks who channel elemental forces in their martial arts." },
-                { name: "Way of the Long Death", description: "Monks who study and manipulate the cycle of life and death." },
-                { name: "Way of the Sun Soul", description: "Monks who channel radiant energy into destructive blasts." },
-                { name: "Way of Mercy", description: "Monks who blend martial arts with healing or harm through ki." },
-                { name: "Way of the Astral Self", description: "Monks who project their soul into an astral form to fight." }
-            ],
-            paladin: [
-                { name: "Oath of Devotion", description: "Paragons of knightly virtue and righteousness." },
-                { name: "Oath of the Ancients", description: "Guardians of nature and light against darkness." },
-                { name: "Oath of Vengeance", description: "Paladins who seek retribution against great wrongs." },
-                { name: "Oath of Conquest", description: "Paladins who seek to dominate their foes and crush all opposition." },
-                { name: "Oath of Redemption", description: "Paladins who offer peace and seek to redeem their enemies." },
-                { name: "Oath of the Crown", description: "Paladins sworn to protect civilization and the rule of law." },
-                { name: "Oathbreaker", description: "Paladins who have forsaken their oaths to pursue darker ambitions." },
-                { name: "Oath of Glory", description: "Paladins who seek to achieve legendary feats and inspire others." },
-                { name: "Oath of the Watchers", description: "Paladins who protect the material plane from extraplanar threats." }
-            ],
-            ranger: [
-                { name: "Hunter", description: "Specialized warriors against dangerous prey." },
-                { name: "Beast Master", description: "Rangers with a deep connection to an animal companion." },
-                { name: "Gloom Stalker", description: "Rangers who strike from the shadows, thriving in darkness." },
-                { name: "Horizon Walker", description: "Rangers who protect the material plane from extraplanar threats." },
-                { name: "Monster Slayer", description: "Rangers skilled in fighting supernatural threats." },
-                { name: "Fey Wanderer", description: "Rangers with fey magic who traverse both the material and fey realms." },
-                { name: "Swarmkeeper", description: "Rangers who are bonded with a swarm of nature spirits or creatures." }
-            ],
-            rogue: [
-                { name: "Thief", description: "Masters of stealth, agility, and burglary." },
-                { name: "Assassin", description: "Stealthy killers skilled in disguise and poison." },
-                { name: "Arcane Trickster", description: "Rogues who combine stealth and magic in their tricks." },
-                { name: "Mastermind", description: "Strategists and schemers skilled in manipulation." },
-                { name: "Swashbuckler", description: "Daring rogues who specialize in one-on-one combat." },
-                { name: "Inquisitive", description: "Rogues who excel at rooting out secrets and hidden truths." },
-                { name: "Scout", description: "Skilled explorers and survivalists who thrive in the wilderness." },
-                { name: "Phantom", description: "Rogues who have a connection to death and the spirits of the dead." },
-                { name: "Soulknife", description: "Rogues who wield psychic energy as weapons." }
-            ],
-            sorcerer: [
-                { name: "Draconic Bloodline", description: "Sorcerers with the power of dragons in their veins." },
-                { name: "Wild Magic", description: "Chaotic spellcasters with unpredictable magical effects." },
-                { name: "Divine Soul", description: "Sorcerers who carry the power of the divine in their blood." },
-                { name: "Shadow Magic", description: "Sorcerers who draw power from the Shadowfell." },
-                { name: "Storm Sorcery", description: "Sorcerers who command the power of wind and lightning." },
-                { name: "Aberrant Mind", description: "Sorcerers with psionic power and aberrant origins." },
-                { name: "Clockwork Soul", description: "Sorcerers with magic derived from the order of Mechanus." }
-            ],
-            warlock: [
-                { name: "The Archfey", description: "Servants of capricious and powerful fey entities." },
-                { name: "The Fiend", description: "Those who have made pacts with infernal powers." },
-                { name: "The Great Old One", description: "Warlocks who draw power from ancient, unknowable entities." },
-                { name: "The Hexblade", description: "Warlocks bound to powerful magical weapons." },
-                { name: "The Celestial", description: "Warlocks who have made pacts with angelic beings." },
-                { name: "The Fathomless", description: "Warlocks connected to the dark powers of the deep sea." },
-                { name: "The Genie", description: "Warlocks who have forged pacts with noble genies." }
-            ],
-            wizard: [
-                { name: "School of Evocation", description: "Masters of powerful elemental magic." },
-                { name: "School of Abjuration", description: "Experts in protective and warding magic." },
-                { name: "School of Conjuration", description: "Wizards who specialize in summoning creatures and objects." },
-                { name: "School of Divination", description: "Wizards who specialize in predicting the future." },
-                { name: "School of Enchantment", description: "Wizards who charm and beguile the minds of others." },
-                { name: "School of Illusion", description: "Wizards who master deception and illusionary magic." },
-                { name: "School of Necromancy", description: "Wizards who manipulate life and death." },
-                { name: "School of Transmutation", description: "Wizards who alter the physical properties of objects and creatures." },
-                { name: "School of War Magic", description: "Wizards who blend defensive and offensive spells in battle." },
-                { name: "Bladesinging", description: "Wizards who combine swordsmanship with spellcasting." },
-                { name: "Order of Scribes", description: "Wizards dedicated to the study and transcription of magic." }
-            ]
-        };
-        return subclasses[className] || [];
-    }
+    
 
     function updateBackgroundInfo() {
         const selectedBackground = document.getElementById('background').value;
@@ -1242,6 +1139,9 @@ let dpiInfo = {
         console.log('Cell size:', dpiInfo.cellSize, 'pixels');
     }
 
+
+
+
     function handleItemClick(e) {
         const rect = e.target.getBoundingClientRect();
         const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
@@ -1282,43 +1182,7 @@ let dpiInfo = {
         character.inventory.forEach(item => drawItem(item));
     }
     
-    // old code to stretch images
-    // function drawItem(item) {
-    //     const inventoryCanvas = document.getElementById('inventory-canvas');
-    //     const inventoryCtx = inventoryCanvas.getContext('2d');
-    
-    //     const imageName = item.name.replace(/'/g, '').replace(/ /g, '_') + '.png';
-    //     const imagePath = `assets/images/${imageName}`;
-    
-    //     const img = new Image();
-    //     img.onload = () => {
-    //         inventoryCtx.drawImage(
-    //             img, 
-    //             item.x * dpiInfo.cellSize, 
-    //             item.y * dpiInfo.cellSize, 
-    //             item.width * dpiInfo.cellSize, 
-    //             item.height * dpiInfo.cellSize
-    //         );
-    //     };
-    //     img.onerror = () => {
-    //         inventoryCtx.fillStyle = '#999';
-    //         inventoryCtx.fillRect(
-    //             item.x * dpiInfo.gridSize, 
-    //             item.y * dpiInfo.gridSize, 
-    //             item.width * dpiInfo.gridSize, 
-    //             item.height * dpiInfo.gridSize
-    //         );
-    //         inventoryCtx.fillStyle = 'black';
-    //         inventoryCtx.font = `${12 * dpiInfo.dpr}px Arial`;
-    //         inventoryCtx.fillText(
-    //             item.name, 
-    //             item.x * dpiInfo.gridSize + 5, 
-    //             item.y * dpiInfo.gridSize + 15
-    //         );
-    //     };
-    //     img.src = imagePath;
-    // }
-    
+        
 // aspect ratio fitting
     function drawItem(item) {
         const inventoryCanvas = document.getElementById('inventory-canvas');
@@ -1496,6 +1360,19 @@ let dpiInfo = {
         }
     }
 
+    function addToInventory(item) {
+        const newItem = items.find(i => i.name === item) || { name: item, width: 1, height: 1 };
+        const position = findAvailablePosition(newItem);
+        if (position) {
+            newItem.x = position.x;
+            newItem.y = position.y;
+            character.inventory.push(newItem);
+            console.log(`Added ${newItem.name} to inventory`);
+        } else {
+            console.log(`No space available for ${newItem.name}`);
+        }
+    }
+
     function updateCharacterInventory() {
         const inventoryDiv = document.getElementById('character-inventory');
         if (!inventoryDiv) {
@@ -1591,6 +1468,19 @@ let dpiInfo = {
             warlock: "Alchemist's supplies",
             wizard: "Alchemist's supplies"
         };
+
+        // Add starting equipment
+    const classData = classesData[character.class];
+    if (classData && classData.startingEquipment) {
+        classData.startingEquipment.default.forEach(item => {
+            if (typeof item === 'string') {
+                addToInventory(item);
+            } else if (item.choose) {
+                // For simplicity, choose the first item in each choice
+                addToInventory(item.choose[0]);
+            }
+        });
+    }
 
         const toolkit = items.find(item => item.name === classToolkits[character.class]);
         if (toolkit) {
@@ -3223,54 +3113,37 @@ document.getElementById('edit-currency-btn').addEventListener('click', showCurre
         }
     }
 
-    // fetch('spells.json')
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         spells = data;
-    //         console.log('Spells loaded:', spells.length);
-
-    //         if (document.getElementById('character-sheet').style.display !== 'none') {
-    //             displayCharacterSheet();
-    //         }
-    //     })
-    //     .catch(error => console.error('Error loading spells:', error));
-
-        // function initializeUI() {
-        //     populateDropdowns();
-        //     setupEventListeners();
-        //     setupAbilityScores();
-        //     populateItemDropdown();
-        //     loadRaces();
-        //     document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
-        //     // Remove the direct call to adjustInventoryLayout here
-        //     if (spells.length > 0) {
-        //         displayCharacterSheet();
-        //     }
-        // }
-        
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     initializeUI();
-        //     fetch('spells.json')
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             spells = data;
-        //             console.log('Spells loaded:', spells.length);
-        //             if (document.getElementById('character-sheet').style.display !== 'none') {
-        //                 displayCharacterSheet();
-        //                 // Call adjustInventoryLayout after displaying the character sheet
-        //                 adjustInventoryLayout();
-        //             }
-        //         })
-        //         .catch(error => console.error('Error loading spells:', error));
-        
-        //     // Add a window resize event listener to adjust layout when the window size changes
-        //     window.addEventListener('resize', adjustInventoryLayout);
-        // });
 
 
+    // function loadClassesData() {
+    //     fetch('classes.json')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             classesData = data;
+    //             console.log('Classes data loaded:', Object.keys(classesData).length);
+    //             updateClassDropdown();
+    //         })
+    //         .catch(error => console.error('Error loading classes data:', error));
+    // }
+    
+    function updateClassDropdown() {
+        const classSelect = document.getElementById('class');
+        classSelect.innerHTML = '<option value="">Select a class</option>';
+        Object.keys(classesData).forEach(className => {
+            const option = document.createElement('option');
+            option.value = className;
+            option.textContent = className.charAt(0).toUpperCase() + className.slice(1);
+            classSelect.appendChild(option);
+        });
+    }
+
+ 
         document.addEventListener('DOMContentLoaded', function() {
             // initializeTheme();
             initializeUI();
+            setupEventListeners();
+
+            
             fetch('spells.json')
                 .then(response => response.json())
                 .then(data => {
