@@ -286,15 +286,23 @@ let dpiInfo = {
             .then(response => response.json())
             .then(data => {
                 classesData = data;
-                console.log('Classes data loaded:', Object.keys(classesData).length);
+                console.log('Classes data loaded:', classesData.length);
                 populateClassDropdown();
             })
             .catch(error => console.error('Error loading classes data:', error));
     }
     
     function populateClassDropdown() {
-        populateDropdown('class', Object.keys(classesData));
+        const classSelect = document.getElementById('class');
+        classSelect.innerHTML = '<option value="">Select a class</option>';
+        classesData.forEach((classData, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = classData.name;
+            classSelect.appendChild(option);
+        });
     }
+    
 
     function setupEventListeners() {
         const newCharacterBtn = document.getElementById('new-character-btn');
@@ -308,7 +316,10 @@ let dpiInfo = {
         fileInput.addEventListener('change', loadCharacterFromFile);
         document.getElementById('random-name-btn').addEventListener('click', generateRandomName);
         document.getElementById('race').addEventListener('change', updateRaceInfo);
-        document.getElementById('class').addEventListener('change', updateClassInfo);
+        document.getElementById('class').addEventListener('change', function() {
+            updateClassInfo();
+            updateSubclassOptions();
+        });
         document.getElementById('class').addEventListener('change', updateSubclassOptions);
         document.getElementById('level').addEventListener('change', updateSubclassOptions);
         document.getElementById('background').addEventListener('change', updateBackgroundInfo);
@@ -562,17 +573,17 @@ let dpiInfo = {
     function updateClassInfo() {
         const selectedClass = document.getElementById('class').value;
         const classInfoDiv = document.getElementById('class-info');
-        if (classesData[selectedClass]) {
+        if (selectedClass !== "" && classesData[selectedClass]) {
             const classData = classesData[selectedClass];
             classInfoDiv.innerHTML = `
-                <p>${classData.description || 'No description available.'}</p>
-                <h4>Hit Die: d${classData.hd.faces}</h4>
+                <p>${classData.class[0].description || 'No description available.'}</p>
+                <h4>Hit Die: d${classData.class[0].hd.faces}</h4>
                 <h4>Proficiencies:</h4>
                 <ul>
-                    ${classData.startingProficiencies.armor.map(armor => `<li>${armor}</li>`).join('')}
-                    ${classData.startingProficiencies.weapons.map(weapon => `<li>${weapon}</li>`).join('')}
-                    ${classData.startingProficiencies.tools.map(tool => `<li>${tool}</li>`).join('')}
-                    ${classData.startingProficiencies.skills.map(skill => `<li>${skill}</li>`).join('')}
+                    ${classData.class[0].startingProficiencies.armor.map(armor => `<li>${armor}</li>`).join('')}
+                    ${classData.class[0].startingProficiencies.weapons.map(weapon => `<li>${typeof weapon === 'string' ? weapon : weapon.proficiency}</li>`).join('')}
+                    ${classData.class[0].startingProficiencies.tools.map(tool => `<li>${tool}</li>`).join('')}
+                    ${classData.class[0].startingProficiencies.skills[0].choose.from.map(skill => `<li>${skill}</li>`).join('')}
                 </ul>
             `;
         } else {
