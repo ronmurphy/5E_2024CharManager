@@ -1531,17 +1531,17 @@ let dpiInfo = {
         };
 
         // Add starting equipment
-    const classData = classesData[character.class];
-    if (classData && classData.startingEquipment) {
-        classData.startingEquipment.default.forEach(item => {
-            if (typeof item === 'string') {
-                addToInventory(item);
-            } else if (item.choose) {
-                // For simplicity, choose the first item in each choice
-                addToInventory(item.choose[0]);
-            }
-        });
-    }
+    // const classData = classesData[character.class];
+    // if (classData && classData.startingEquipment) {
+    //     classData.startingEquipment.default.forEach(item => {
+    //         if (typeof item === 'string') {
+    //             addToInventory(item);
+    //         } else if (item.choose) {
+    //             // For simplicity, choose the first item in each choice
+    //             addToInventory(item.choose[0]);
+    //         }
+    //     });
+    // }
 
         const toolkit = items.find(item => item.name === classToolkits[character.class]);
         if (toolkit) {
