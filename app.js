@@ -741,7 +741,7 @@ let dpiInfo = {
                     character.class = document.getElementById('class').value;
                     character.level = parseInt(document.getElementById('level').value);
                     updateClassInfo();
-                    updateSubclassOptions();
+                    // updateSubclassOptions();
                     break;
             case 3:
                 character.background = document.getElementById('background').value;
