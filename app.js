@@ -308,9 +308,11 @@ let dpiInfo = {
             updateClassInfo();
             updateSubclassOptions();
         });
+
         document.getElementById('class').addEventListener('change', updateSubclassOptions);
-        document.getElementById('level').addEventListener('change', updateSubclassOptions);
-        document.getElementById('background').addEventListener('change', updateBackgroundInfo);
+        document.getElementById('level').addEventListener('change', function() {
+            updateSubclassOptions();
+        });        document.getElementById('background').addEventListener('change', updateBackgroundInfo);
         document.getElementById('save-character').addEventListener('click', saveCharacter);
         document.getElementById('edit-character').addEventListener('click', editCharacter);
         document.getElementById('long-rest-btn').addEventListener('click', longRest);
@@ -596,20 +598,23 @@ let dpiInfo = {
     }
 
     function updateSubclassOptions() {
-        const selectedClass = document.getElementById('class').value;
+        console.log('updateSubclassOptions called');
+        const selectedClassIndex = document.getElementById('class').value;
         const selectedLevel = parseInt(document.getElementById('level').value);
         const subclassOptionsDiv = document.getElementById('subclass-options');
         subclassOptionsDiv.innerHTML = '';
     
-        if (selectedLevel >= 3 && classesData[selectedClass]) {
-            const subclasses = classesData[selectedClass].subclass || [];
+        if (selectedLevel >= 3 && selectedClassIndex !== "" && classesData[selectedClassIndex]) {
+            const classData = classesData[selectedClassIndex];
+            const subclasses = classData.subclasses || [];
+    
             if (subclasses.length > 0) {
                 const subclassSelect = document.createElement('select');
                 subclassSelect.id = 'subclass';
                 subclassSelect.innerHTML = '<option value="">Select a subclass</option>';
-                subclasses.forEach(subclass => {
+                subclasses.forEach((subclass, index) => {
                     const option = document.createElement('option');
-                    option.value = subclass.name;
+                    option.value = index;
                     option.textContent = subclass.name;
                     subclassSelect.appendChild(option);
                 });
@@ -621,22 +626,25 @@ let dpiInfo = {
                 subclassOptionsDiv.appendChild(subclassInfoDiv);
     
                 subclassSelect.addEventListener('change', () => {
-                    const selectedSubclass = subclasses.find(sc => sc.name === subclassSelect.value);
-                    if (selectedSubclass) {
+                    const selectedSubclassIndex = subclassSelect.value;
+                    if (selectedSubclassIndex !== "") {
+                        const selectedSubclass = subclasses[selectedSubclassIndex];
                         subclassInfoDiv.innerHTML = `
                             <h4>${selectedSubclass.name}</h4>
-                            <p>${selectedSubclass.subclassFeatures[0].entries[0]}</p>
+                            <p>Source: ${selectedSubclass.source}</p>
+                            <p>Features: ${selectedSubclass.subclassFeatures.join(', ')}</p>
                         `;
+                        character.subclass = selectedSubclass.name;
                     } else {
                         subclassInfoDiv.textContent = '';
+                        character.subclass = '';
                     }
-                    character.subclass = selectedSubclass ? selectedSubclass.name : '';
                 });
             } else {
                 subclassOptionsDiv.innerHTML = '<p>No subclasses available for this class.</p>';
             }
         } else {
-            subclassOptionsDiv.innerHTML = '<p>Subclass options are available at level 3.</p>';
+            subclassOptionsDiv.innerHTML = '<p>Subclass options are available at level 3 and above.</p>';
         }
     }
 
@@ -690,12 +698,12 @@ let dpiInfo = {
                 character.race = document.getElementById('race').value;
                 updateRaceInfo();
                 break;
-            case 1:
-                character.class = document.getElementById('class').value;
-                character.level = parseInt(document.getElementById('level').value);
-                updateClassInfo();
-                updateSubclassOptions();
-                break;
+                case 1:
+                    character.class = document.getElementById('class').value;
+                    character.level = parseInt(document.getElementById('level').value);
+                    updateClassInfo();
+                    updateSubclassOptions();
+                    break;
             case 3:
                 character.background = document.getElementById('background').value;
                 updateBackgroundInfo();
