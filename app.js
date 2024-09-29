@@ -276,6 +276,7 @@ let dpiInfo = {
                 classesData = data;
                 console.log('Classes data loaded:', classesData.length);
                 populateClassDropdown();
+                updateSubclassOptions(); // Add this line
             })
             .catch(error => console.error('Error loading classes data:', error));
     }
@@ -317,6 +318,30 @@ let dpiInfo = {
         document.getElementById('edit-character').addEventListener('click', editCharacter);
         document.getElementById('long-rest-btn').addEventListener('click', longRest);
     
+
+        const classSelect = document.getElementById('class');
+        const levelSelect = document.getElementById('level');
+    
+        if (classSelect) {
+            classSelect.addEventListener('change', function() {
+                console.log('Class changed');
+                updateClassInfo();
+                updateSubclassOptions();
+            });
+        } else {
+            console.error('Class select element not found');
+        }
+    
+        if (levelSelect) {
+            levelSelect.addEventListener('change', function() {
+                console.log('Level changed');
+                updateSubclassOptions();
+            });
+        } else {
+            console.error('Level select element not found');
+        }
+
+
         steps.forEach((step, index) => {
             if (index < steps.length - 1) {
                 const nextButton = document.getElementById(`next${index + 1}`);
@@ -602,11 +627,24 @@ let dpiInfo = {
         const selectedClassIndex = document.getElementById('class').value;
         const selectedLevel = parseInt(document.getElementById('level').value);
         const subclassOptionsDiv = document.getElementById('subclass-options');
+    
+        console.log('Selected class index:', selectedClassIndex);
+        console.log('Selected level:', selectedLevel);
+        console.log('Subclass options div:', subclassOptionsDiv);
+    
+        if (!subclassOptionsDiv) {
+            console.error('Subclass options div not found');
+            return;
+        }
+    
         subclassOptionsDiv.innerHTML = '';
     
         if (selectedLevel >= 3 && selectedClassIndex !== "" && classesData[selectedClassIndex]) {
             const classData = classesData[selectedClassIndex];
             const subclasses = classData.subclasses || [];
+    
+            console.log('Class data:', classData);
+            console.log('Subclasses:', subclasses);
     
             if (subclasses.length > 0) {
                 const subclassSelect = document.createElement('select');
