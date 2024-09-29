@@ -57,7 +57,7 @@ let dpiInfo = {
     let deathSaveFailures = 0;
     let races = {};
     let spells = [];
-    let classesData = {};
+    let classesData = [];
 
     const raceInfo = {
         human: "Versatile and adaptable, humans gain +1 to all ability scores.",
@@ -236,18 +236,6 @@ let dpiInfo = {
         { name: "Weapon Master", description: "Increase Strength or Dexterity by 1, gain proficiency with four weapons of your choice", appliesTo: "All classes", level: "Any" }
     ];
 
-    // function initializeUI() {
-    //     populateDropdowns();
-    //     setupEventListeners();
-    //     setupAbilityScores();
-    //     populateItemDropdown();
-    //     loadRaces();
-    //     document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
-    //     adjustInventoryLayout();
-    //     if (spells.length > 0) {
-    //         displayCharacterSheet();
-    //     }
-    // }
 
     function initializeUI() {
         populateDropdowns();
@@ -571,21 +559,37 @@ let dpiInfo = {
     }
 
     function updateClassInfo() {
-        const selectedClass = document.getElementById('class').value;
+        const selectedIndex = document.getElementById('class').value;
         const classInfoDiv = document.getElementById('class-info');
-        if (selectedClass !== "" && classesData[selectedClass]) {
-            const classData = classesData[selectedClass];
-            classInfoDiv.innerHTML = `
-                <p>${classData.class[0].description || 'No description available.'}</p>
-                <h4>Hit Die: d${classData.class[0].hd.faces}</h4>
+        if (selectedIndex !== "" && classesData[selectedIndex]) {
+            const classData = classesData[selectedIndex];
+            let infoHTML = `
+                <h3>${classData.name}</h3>
+                <p>Source: ${classData.source}, Page: ${classData.page}</p>
+                <h4>Hit Die: d${classData.hd.faces}</h4>
                 <h4>Proficiencies:</h4>
-                <ul>
-                    ${classData.class[0].startingProficiencies.armor.map(armor => `<li>${armor}</li>`).join('')}
-                    ${classData.class[0].startingProficiencies.weapons.map(weapon => `<li>${typeof weapon === 'string' ? weapon : weapon.proficiency}</li>`).join('')}
-                    ${classData.class[0].startingProficiencies.tools.map(tool => `<li>${tool}</li>`).join('')}
-                    ${classData.class[0].startingProficiencies.skills[0].choose.from.map(skill => `<li>${skill}</li>`).join('')}
-                </ul>
-            `;
+                <ul>`;
+            
+            if (classData.startingProficiencies) {
+                if (classData.startingProficiencies.armor) {
+                    infoHTML += classData.startingProficiencies.armor.map(armor => `<li>Armor: ${armor}</li>`).join('');
+                }
+                if (classData.startingProficiencies.weapons) {
+                    infoHTML += classData.startingProficiencies.weapons.map(weapon => 
+                        `<li>Weapon: ${typeof weapon === 'string' ? weapon : JSON.stringify(weapon)}</li>`
+                    ).join('');
+                }
+                if (classData.startingProficiencies.tools) {
+                    infoHTML += classData.startingProficiencies.tools.map(tool => `<li>Tool: ${tool}</li>`).join('');
+                }
+                if (classData.startingProficiencies.skills && classData.startingProficiencies.skills[0]?.choose?.from) {
+                    infoHTML += `<li>Skills (choose ${classData.startingProficiencies.skills[0].choose.count}): 
+                        ${classData.startingProficiencies.skills[0].choose.from.join(', ')}</li>`;
+                }
+            }
+            
+            infoHTML += `</ul>`;
+            classInfoDiv.innerHTML = infoHTML;
         } else {
             classInfoDiv.textContent = "Select a class to see information.";
         }
